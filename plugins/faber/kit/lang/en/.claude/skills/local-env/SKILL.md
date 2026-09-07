@@ -1,46 +1,46 @@
 ---
 name: local-env
-description: Opera o ambiente LOCAL descartável da fábrica — subir, resetar, aplicar migrations e seeds sintéticos, sempre via faber/scripts/local-env.sh (que delega aos comandos FABER_CMD_LOCAL_* do faber.env). Módulo opcional (FABER_LOCAL_ENV=on). Use para validações locais do senior-developer, do QA e do db-guardian; ambiente descartável com autonomia total (P4). Jamais toca alvo remoto.
+description: Operates the factory's disposable LOCAL environment — bring it up, reset it, apply migrations and synthetic seeds, always through faber/scripts/local-env.sh (which delegates to the FABER_CMD_LOCAL_* commands in faber.env). Optional module (FABER_LOCAL_ENV=on). Use for the senior-developer's, QA's and db-guardian's local validations; a disposable environment with full autonomy (P4). It never touches a remote target.
 ---
 
-# local-env — ambiente local descartável
+# local-env — the disposable local environment
 
-Fonte: `faber/ARCHITECTURE.md` §11, P4 (autonomia total no local — e somente
-no local). Mecânica: `faber/scripts/local-env.sh` (nunca comandos soltos) —
-cada subcomando delega ao comando configurado em `faber/config/faber.env`.
-Módulo opcional: `FABER_LOCAL_ENV=on`.
+Source: `faber/ARCHITECTURE.md` §11, P4 (full autonomy locally — and only
+locally). Mechanics: `faber/scripts/local-env.sh` (never loose commands) — each
+subcommand delegates to the command configured in `faber/config/faber.env`.
+Optional module: `FABER_LOCAL_ENV=on`.
 
-## Comandos
+## Commands
 
-| Ação | Comando | Delega a |
+| Action | Command | Delegates to |
 |---|---|---|
-| Subir o stack | `faber/scripts/local-env.sh up` | `FABER_CMD_LOCAL_UP` |
-| Estado | `faber/scripts/local-env.sh status` | `FABER_CMD_LOCAL_STATUS` |
-| Recriar banco + todas as migrations | `faber/scripts/local-env.sh reset` | `FABER_CMD_LOCAL_RESET` |
-| Seeds sintéticos | `faber/scripts/local-env.sh seed` | `FABER_CMD_LOCAL_SEED` |
-| Parar | `faber/scripts/local-env.sh stop` | `FABER_CMD_LOCAL_STOP` |
-| Relatório consolidado | `faber/scripts/local-env.sh report` | (gerado pelo script: estado + últimas ações) |
+| Bring the stack up | `faber/scripts/local-env.sh up` | `FABER_CMD_LOCAL_UP` |
+| State | `faber/scripts/local-env.sh status` | `FABER_CMD_LOCAL_STATUS` |
+| Recreate the database + every migration | `faber/scripts/local-env.sh reset` | `FABER_CMD_LOCAL_RESET` |
+| Synthetic seeds | `faber/scripts/local-env.sh seed` | `FABER_CMD_LOCAL_SEED` |
+| Stop | `faber/scripts/local-env.sh stop` | `FABER_CMD_LOCAL_STOP` |
+| Consolidated report | `faber/scripts/local-env.sh report` | (produced by the script: state + the last actions) |
 
-Validação que alimenta gate/handoff: rode via `evidence.sh` —
+A validation that feeds a gate or a handoff: run it through `evidence.sh` —
 `faber/scripts/evidence.sh TASK-XXX reset-local -- faber/scripts/local-env.sh reset`
 
-## Regras
+## Rules
 
-1. **Só local.** O script tem guard estrutural (recusa alvo que não seja
-   `127.0.0.1`/`localhost`) e, por fora, o H1 nega refs/ambientes de produção
-   (`FABER_REFS_DENY`) e pede confirmação para os remotos
-   (`FABER_REFS_CONFIRM` / `FABER_CMDS_CONFIRM`). Banco remoto de
-   qualquer ambiente: **nunca** por esta skill (§19).
-2. **Ferramenta indisponível = não executado.** `FABER_LOCAL_ENV=off`,
-   comando `FABER_CMD_LOCAL_*` vazio ou infra parada → o script falha com
-   instrução; o log da falha (via `evidence.sh`) é a evidência da
-   indisponibilidade. Registre **"não executado"** explícito no handoff — jamais
-   infira que a migration/seed aplicaria (§15).
-3. **Infra primeiro.** Dependência local parada (ex.: Docker) → `up` falha com
-   instrução; peça a @@FABER_OWNER_NAME@@ para iniciá-la — não tente
-   instalar/iniciar por conta própria.
-4. **Seeds:** `seed` roda o comando configurado e pressupõe os pré-requisitos
-   documentados em `@@FABER_SPECS_DIR@@/global/05-TESTING.md` (ex.: usuários
-   de teste criados). Sem eles, o erro é esperado, não "flaky".
-5. **Descartável de verdade:** quebrou, resete (`reset`); não conserte estado
-   local à mão — o valor do ambiente é ser reproduzível pelas migrations.
+1. **Local only.** The script has a structural guard (it refuses any target that
+   is not `127.0.0.1`/`localhost`) and, from outside, H1 denies production refs
+   and environments (`FABER_REFS_DENY`) and asks for confirmation on remote ones
+   (`FABER_REFS_CONFIRM` / `FABER_CMDS_CONFIRM`). A remote database of any
+   environment: **never** through this skill (§19).
+2. **Tool unavailable = not executed.** `FABER_LOCAL_ENV=off`, an empty
+   `FABER_CMD_LOCAL_*`, or infra that is down → the script fails with
+   instructions; the failure log (through `evidence.sh`) is the evidence of the
+   unavailability. Record an explicit **"not executed"** in the handoff — never
+   infer that the migration or the seed would have applied (§15).
+3. **Infra first.** A local dependency that is stopped (e.g. Docker) → `up`
+   fails with instructions; ask @@FABER_OWNER_NAME@@ to start it — do not try to
+   install or start it yourself.
+4. **Seeds:** `seed` runs the configured command and assumes the prerequisites
+   documented in `@@FABER_SPECS_DIR@@/global/05-TESTING.md` (e.g. the test users
+   exist). Without them the error is expected, not "flaky".
+5. **Genuinely disposable:** if it breaks, reset it (`reset`); never fix local
+   state by hand — the environment's value is that the migrations reproduce it.

@@ -1,41 +1,46 @@
 ---
 name: requirements-discovery
-description: Extrair evidências de transcrições e documentos, estruturar requisitos e conduzir esclarecimentos para BRD/PRD na fábrica. Use antes do PO em discovery ou ao incorporar novas fontes a um pacote existente.
+description: Extract evidence from transcripts and documents, structure requirements, and run the clarification round that produces the factory's BRD/PRD. Use before the PO in discovery, or when folding new sources into an existing package.
 ---
 
-# Discovery de requisitos
+# Requirements discovery
 
-Leia [o contrato](references/contract.md) ao criar ou atualizar o pacote.
-Use os quatro templates em `faber/templates/requirements/`. Não copie um
-template sobre trabalho existente. Leia fontes por partes quando necessário,
-mantendo registro de cobertura; a economia de contexto não permite omitir
-trechos silenciosamente.
+Read [the contract](references/contract.md) before creating or updating a
+package. Use the four templates in `faber/templates/requirements/`. Never copy a
+template over existing work. Read sources in parts when you must, keeping a
+record of the coverage; economising on context does not license omitting
+passages silently.
 
-1. Registre as fontes e os SHA-256 dos arquivos. Preserve speaker/timestamp
-   se presentes; para anotações, use seção/linha. Nunca invente localização.
-2. Extraia citações e classifique declaração, decisão ou inferência. Declaração
-   não é automaticamente fato verificado; solução sugerida não é requisito aprovado.
-3. Estruture contexto, objetivos, usuários, escopo, jornadas, regras, dados,
-   qualidades, requisitos e dependências. Cada requisito tem ID estável,
-   evidências e critérios de aceite; hipóteses e conflitos ficam explícitos.
-4. Produza `requirements/BRD.md` e `requirements/PRD.md` conforme o guia de
-   PRD/BRD do projeto. Cabeçalho: revisão, status rascunho/validado e origem
-   `model.yaml`. PRD preserva todos os IDs ativos. Lacunas aparecem nos drafts.
-5. Use `requirements-readiness`. Priorize perguntas que mudam regra, escopo,
-   acesso, integração ou aceite. Cada pergunta informa origem, impacto e quem
-   pode responder. Agrupe normalmente até cinco; ajuste ao contexto.
-6. Respostas recebidas viram fontes de decisão em arquivo, com evidência;
-   atualize os requisitos e resoluções afetados, incremente a revisão.
-7. Quando completo, entregue ao CTO para PO e QA. Para a projeção de SDD,
-   leia [Spec Kit](references/spec-kit.md). Não faça refinamento técnico.
+1. Record the sources and the SHA-256 of each file. Preserve speaker and
+   timestamp where they exist; for notes, use the section and line. Never invent
+   a location.
+2. Extract quotations and classify each as a statement, a decision or an
+   inference. A statement is not automatically a verified fact; a suggested
+   solution is not an approved requirement.
+3. Structure the context, goals, users, scope, journeys, rules, data, qualities,
+   requirements and dependencies. Every requirement gets a stable ID, its
+   evidence and its acceptance criteria; assumptions and conflicts stay explicit.
+4. Produce `requirements/BRD.md` and `requirements/PRD.md` following the
+   project's PRD/BRD guide. The header carries the revision, the status (draft or
+   validated) and the origin `model.yaml`. The PRD preserves every active ID.
+   Gaps appear in the drafts.
+5. Use `requirements-readiness`. Prioritise the questions that change a rule,
+   the scope, access, an integration or an acceptance criterion. Each question
+   states its origin, its impact and who can answer it. Group them, normally up
+   to five; adjust to the context.
+6. Answers you receive become decision sources in a file, with evidence; update
+   the affected requirements and resolutions, and increment the revision.
+7. When it is complete, hand it to the CTO for the PO and QA. For the SDD
+   projection, read [Spec Kit](references/spec-kit.md). Do not do technical
+   refinement.
 
-Não preencha números, prazos, regras ou métricas por plausibilidade. Requisito
-inferido permanece proposed até confirmação ou sustentação suficiente em
-evidência explícita. `validated` significa reconciliado com as fontes e
-verificável; `approved` exige decisão humana referenciada. A aprovação de
-desenvolvimento pertence ao G1, mesmo se os requisitos estiverem validated.
+Never fill in numbers, deadlines, rules or metrics by plausibility. An inferred
+requirement stays `proposed` until it is confirmed or sufficiently supported by
+explicit evidence. `validated` means reconciled with the sources and verifiable;
+`approved` requires a referenced human decision. Approval to develop belongs to
+G1, even when the requirements are validated.
 
-Se novas fontes contradizem uma versão aprovada, registre a divergência,
-preserve histórico no git e reabra o esclarecimento; não substitua decisões
-silenciosamente. Sem informação nova, devolva a pendência ao CTO e respeite
-o anti-loop existente.
+If new sources contradict an approved version, record the divergence, preserve
+the history in git, and reopen the clarification; never replace decisions
+silently. With no new information, hand the pending item back to the CTO and
+respect the existing anti-loop.

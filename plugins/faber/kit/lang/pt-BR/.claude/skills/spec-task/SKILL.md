@@ -15,7 +15,7 @@ Templates em `faber/templates/`. Idioma: PT-BR (P6).
 | feature | `spec-feature.template.md` |
 | design | `spec-feature.template.md` |
 | bug | `spec-bug.template.md` |
-| incidente | `spec-incident.template.md` |
+| incident | `spec-incident.template.md` |
 | tech-debt | `spec-technical.template.md` |
 | infra | `spec-technical.template.md` |
 | security | `spec-technical.template.md` |

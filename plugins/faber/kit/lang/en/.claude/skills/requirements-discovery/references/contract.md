@@ -1,97 +1,106 @@
-# Contrato de arquivos — schema_version 1
+# File contract — schema_version 1
 
-Todos os paths abaixo são relativos à pasta da demanda ou bootstrap. Os quatro
-YAML de entrada ficam em `requirements/`. IDs são strings estáveis e únicos;
-use SRC-NNN, EV-NNN, REQ-NNN, AC-NNN, Q-NNN, CF-NNN, ASM-NNN. Nunca renumere
-IDs existentes. Não reutilize IDs de itens excluídos.
+Every path below is relative to the demand's or the bootstrap's folder. The four
+input YAML files live in `requirements/`. IDs are stable, unique strings; use
+SRC-NNN, EV-NNN, REQ-NNN, AC-NNN, Q-NNN, CF-NNN, ASM-NNN. Never renumber an
+existing ID. Never reuse the ID of a deleted item.
 
 ## sources.yaml
 
-`schema_version: 1`, `sources: []`. Cada fonte contém:
+`schema_version: 1`, `sources: []`. Each source carries:
 `id`, `kind` (transcript/notes/document/decision/audio), `path`, `sha256`,
-`required` booleano, `coverage` (full/partial/pending/excluded),
-`exclusion_reason` (obrigatório se required=false).
-Path relativo à pasta da demanda, ou absoluto quando externo ao repositório.
-Ao mover para outro computador, relocalize os paths e regenere a revisão.
-Calcule hash por `python3 -c` com hashlib ou ferramenta SHA-256 disponível.
+`required` (boolean), `coverage` (full/partial/pending/excluded),
+`exclusion_reason` (mandatory when `required=false`).
+The path is relative to the demand's folder, or absolute when it lives outside
+the repository. When moving to another machine, relocate the paths and
+regenerate the revision. Compute the hash with `python3 -c` and hashlib, or with
+whatever SHA-256 tool is available.
 
-Toda fonte deve ser um arquivo legível na validação; URL deve ser acompanhada
-de extrato local identificado, data de consulta e endereço original. Não
-importe arquivos externos sem autorização de acesso. Não envie dados a serviços.
+Every source must be a readable file at validation time; a URL must come with a
+local extract that is identified, dated by consultation, and carries the original
+address. Do not import external files without authorisation to access them. Do
+not send data to third-party services.
 
-`full` significa cobertura integral relevante ao escopo explicitamente definido,
-nunca apenas que foi aberto o arquivo. Fontes obrigatórias precisam de full.
-Áudio obrigatório referencia `transcript_source: SRC-NNN` de transcrição também
-obrigatória e full. Evidências apontam para a transcrição, não para bytes de áudio.
-Ao existir só anotação, não a apresente como transcrição integral.
+`full` means complete coverage of what is relevant to the explicitly defined
+scope — never merely that the file was opened. Obligatory sources require `full`.
+An obligatory audio source references `transcript_source: SRC-NNN` of a
+transcript that is itself obligatory and `full`. Evidence points at the
+transcript, never at audio bytes. Where only a note exists, do not present it as
+a complete transcript.
 
 ## evidence.yaml
 
-`schema_version: 1`, `evidence: []`. Cada evidência:
+`schema_version: 1`, `evidence: []`. Each piece of evidence:
 `id`, `source` (SRC), `locator`, `quote`, `kind` (statement/decision/inference).
-Adicione speaker, timestamp e interpretação quando conhecidos. O validador
-confere integridade de referências e presença de citação/localização; a
-fidelidade da citação e da interpretação é responsabilidade do BA e da revisão.
+Add speaker, timestamp and interpretation when they are known. The validator
+checks referential integrity and the presence of a quotation and a location; the
+faithfulness of the quotation and of the interpretation is the BA's
+responsibility, and the review's.
 
 ## model.yaml
 
-`schema_version: 1`, `revision` inteiro positivo. Narrativas de negócio em:
-`context`, `objectives`, `users`, `scope`, `out_of_scope`, `workflows`,
+`schema_version: 1`, `revision` a positive integer. The business narratives live
+in: `context`, `objectives`, `users`, `scope`, `out_of_scope`, `workflows`,
 `business_rules`, `data_integrations`, `quality`, `risks`, `decisions`.
-Referencie EVs nas narrativas. Estruture de forma proporcional ao projeto.
+Reference EVs inside the narratives. Structure it proportionally to the project.
 
-`requirements: []`, cada item:
+`requirements: []`, each item:
 
 ```yaml
 id: REQ-001
 type: functional
-statement: Enunciado do comportamento com condições observáveis.
+statement: The behaviour, stated with observable conditions.
 status: proposed
 evidence: [EV-001]
 dependencies: []
 acceptance_criteria:
   - id: AC-001
-    statement: Condição inicial, ação e resultado observável.
+    statement: Initial condition, action, and observable result.
 ```
 
-Tipos: business/stakeholder/functional/nonfunctional/transition.
-Status: draft/proposed/validated/approved/rejected/deprecated. Os dois últimos
-exigem `reason` e são excluídos do escopo ativo. Preserve sua origem histórica.
-Requisitos ativos precisam de evidências e pelo menos um aceite. Dependências
-apontam a requisitos ativos; ciclos devem ser resolvidos no planejamento.
-Para requisitos approved, registre também a decisão humana nas evidências;
-o status sozinho não comprova autorização. `approved` não aprova G1.
+Types: business/stakeholder/functional/nonfunctional/transition.
+Statuses: draft/proposed/validated/approved/rejected/deprecated. The last two
+require a `reason` and are excluded from the active scope. Preserve their
+historical origin. Active requirements need evidence and at least one acceptance
+criterion. Dependencies point at active requirements; cycles must be resolved in
+planning. For `approved` requirements, also record the human decision in the
+evidence; the status alone does not prove authorisation. `approved` does not
+approve G1.
 
-`questions`, `conflicts`, `assumptions`: listas de objetos com `id`, `statement`,
-`severity` (blocker/high/medium/low), `status` e `resolution_evidence`.
-Status inicial open; resoluções são resolved (questions/conflicts) ou validated
-(assumptions). Resolução exige EV existente. Blocker/high aberto bloqueia.
-Omissão conhecida de questão crítica é falha de análise, mesmo se a nota passar.
+`questions`, `conflicts`, `assumptions`: lists of objects with `id`, `statement`,
+`severity` (blocker/high/medium/low), `status` and `resolution_evidence`. The
+initial status is `open`; resolutions are `resolved` (questions and conflicts) or
+`validated` (assumptions). A resolution requires an EV that exists. An open
+blocker or high item blocks. Knowingly omitting a critical question is an
+analysis failure, even when the score passes.
 
-## assessment.yaml e readiness.json
+## assessment.yaml and readiness.json
 
-`schema_version: 1`, `checks` com todas as chaves do template. Cada check:
-`status`, `reason`, `evidence`. Status: missing/partial/verified/not-applicable.
-Somente data e integrations aceitam not-applicable, com evidência e motivo.
-Não applicable é conclusão sustentada; desconhecimento é missing.
-O script calcula `readiness.json`: nota, bloqueios, revisão e hash de entradas.
-Esse relatório é uma projeção; nunca edite a nota para fazer o gate passar.
+`schema_version: 1`, `checks` carrying every key from the template. Each check:
+`status`, `reason`, `evidence`. Statuses: missing/partial/verified/not-applicable.
+Only `data` and `integrations` accept `not-applicable`, with evidence and a
+reason. Not-applicable is a supported conclusion; not knowing is `missing`.
+The script computes `readiness.json`: the score, the blockers, the revision and
+the hash of the inputs. That report is a projection; never edit the score to make
+the gate pass.
 
-## delivery.json, aprovação e fonte de verdade
+## delivery.json, approval and the source of truth
 
-O comando seal registra hashes das entradas e de BRD, PRD, speckit/spec.md e,
-em demandas, spec.md/refinamento.md. Execute somente após revisão PO/QA e
-refinamento. O selo não é aprovação; G1 continua sendo do Owner.
+The `seal` command records the hashes of the inputs and of BRD, PRD,
+`speckit/spec.md` and, on a demand, `spec.md` and `refinamento.md`. Run it only
+after the PO/QA review and the refinement. The seal is not an approval; G1 is
+still the Owner's.
 
-Antes do desenvolvimento, o gate recalcula hashes e verifica se G1 corresponde
-ao selo atual. Mudanças nas fontes, requisitos ou documentos exigem revisão e
-novo selo; mudança após aprovação exige renovar G1.
+Before development, the gate recomputes the hashes and checks that G1 matches the
+current seal. Changes to the sources, the requirements or the documents require a
+review and a new seal; a change after approval requires renewing G1.
 
-No bootstrap, o selo cobre somente as três projeções. Registre o hash do selo
-com a aprovação do PRD/BRD em CONTEXT.md. Uma demanda originada do backlog
-recebe seu próprio pacote com escopo e fontes relevantes, preservando IDs e
-origem do bootstrap, e passa pelo G1 normal.
+During bootstrap, the seal covers only the three projections. Record the seal's
+hash alongside the PRD/BRD approval in `CONTEXT.md`. A demand born from the
+backlog gets its own package with the relevant scope and sources, preserving the
+IDs and the origin from the bootstrap, and goes through the normal G1.
 
-`state.yaml` governa workflow; `model.yaml` registra requisitos; spec da demanda
-governa desenvolvimento; SPEC RFC global é consolidada após merge. Atualizar
-requisito exige atualizar seus derivados, nunca manter versões concorrentes.
+`state.yaml` governs the workflow; `model.yaml` holds the requirements; the
+demand's spec governs development; the global SPEC RFC is consolidated after the
+merge. Updating a requirement requires updating its derivatives — never keep
+competing versions.

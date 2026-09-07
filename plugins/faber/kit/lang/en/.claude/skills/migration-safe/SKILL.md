@@ -1,49 +1,51 @@
 ---
 name: migration-safe
-description: Cria migrations seguras do padrão da fábrica para bancos relacionais — template com os termos exigidos pelo hook H3 (FABER_MIGRATION_CHECKS; ex. GRANT+RLS+policy+trigger+search_path), análise de destrutividade obrigatória e rollback reverso documentado. Use SEMPRE que uma demanda alterar o banco (tipo banco, ou impacto em dados detectado). Migrations aplicadas são imutáveis.
+description: Creates safe migrations in the factory's pattern for relational databases — a template carrying the statements hook H3 requires (FABER_MIGRATION_CHECKS; e.g. GRANT + RLS + policy + trigger + search_path), a mandatory destructiveness analysis, and a documented reverse rollback. Use WHENEVER a demand changes the database (type database, or a detected data impact). Applied migrations are immutable.
 ---
 
-# migration-safe — migrations seguras e imutáveis
+# migration-safe — safe, immutable migrations
 
-Fonte: `faber/ARCHITECTURE.md` §11, §13-H2/H3, §19; specs
-`@@FABER_SPECS_DIR@@/global/01-DATABASE.md` (modelo/regras de acesso — leia
-por seção) e `03-SECURITY.md` (seção *Invariantes intocáveis*). Template:
-`faber/templates/migration.template.sql` (Postgres com RLS como exemplo —
-adapte ao banco do projeto). Migrations vivem em `@@FABER_MIGRATIONS_DIR@@/`
-(`FABER_MIGRATIONS_DIR`; vazio = módulo desligado).
+Source: `faber/ARCHITECTURE.md` §11, §13-H2/H3, §19; specs
+`@@FABER_SPECS_DIR@@/global/01-DATABASE.md` (the model and access rules — read
+by section) and `03-SECURITY.md` (the *Untouchable invariants* section).
+Template: `faber/templates/migration.template.sql` (Postgres with RLS as the
+example — adapt it to your project's database). Migrations live in
+`@@FABER_MIGRATIONS_DIR@@/` (`FABER_MIGRATIONS_DIR`; empty = the module is off).
 
-## Procedimento
+## Procedure
 
-1. **Timestamp novo, sempre:** `date +%Y%m%d%H%M%S` →
-   `@@FABER_MIGRATIONS_DIR@@/<timestamp>_<slug>.sql`. Timestamp já existente
-   no histórico = H2 nega (imutabilidade); jamais edite migration aplicada —
-   correção é **nova migration corretiva**.
-2. **Parta do template** e preencha todos os `{{...}}`; seção não aplicável
-   (ex.: sem trigger) é removida **e registrada na análise** do cabeçalho.
-3. **Análise de destrutividade (obrigatória, no cabeçalho):**
-   - Aditivo (`create table/index/policy`, `add column nullable`): seguro.
-   - Destrutivo (`drop`, `alter column type`, `rename`, `delete`,
-     `truncate`, `add column not null` sem default): exige detalhar dados
-     afetados, compatibilidade com o código em produção (deploy não é
-     atômico com o CI) e plano de mitigação. Na dúvida → `clarification`.
-4. **Rollback reverso:** bloco comentado ao final do arquivo com os comandos
-   que desfazem a mudança — nunca executado ali; vira migration corretiva se
-   necessário.
-5. **Invariantes do projeto** (o hook H3 valida a presença dos termos listados
-   em `FABER_MIGRATION_CHECKS`; §13-H3). No exemplo Postgres/RLS:
-   - `search_path` fixado em toda função (`set search_path = public`);
-   - controle de acesso por linha (RLS) habilitado em toda tabela nova +
-     policies por perfil;
-   - GRANTs mínimos (nunca `grant all`; papel anônimo só com exigência da spec);
-   - **as invariantes de segurança declaradas em `03-SECURITY.md` (seção
-     *Invariantes intocáveis*) não mudam sem revisão explícita de
+1. **A new timestamp, always:** `date +%Y%m%d%H%M%S` →
+   `@@FABER_MIGRATIONS_DIR@@/<timestamp>_<slug>.sql`. A timestamp that already
+   exists in the history = H2 denies it (immutability); never edit an applied
+   migration — a fix is a **new, corrective migration**.
+2. **Start from the template** and fill every `{{...}}`; a section that does not
+   apply (e.g. no trigger) is removed **and recorded in the header's analysis**.
+3. **Destructiveness analysis (mandatory, in the header):**
+   - Additive (`create table/index/policy`, `add column nullable`): safe.
+   - Destructive (`drop`, `alter column type`, `rename`, `delete`, `truncate`,
+     `add column not null` with no default): you must detail the data affected,
+     the compatibility with the code in production (deployment is not atomic with
+     CI) and the mitigation plan. When in doubt → `clarification`.
+4. **Reverse rollback:** a commented block at the end of the file with the
+   commands that undo the change — never executed there; it becomes a corrective
+   migration if needed.
+5. **The project's invariants** (hook H3 validates the presence of the statements
+   listed in `FABER_MIGRATION_CHECKS`; §13-H3). In the Postgres/RLS example:
+   - `search_path` pinned in every function (`set search_path = public`);
+   - row-level access control (RLS) enabled on every new table, plus policies
+     per persona;
+   - minimum GRANTs (never `grant all`; the anonymous role only when the spec
+     requires it);
+   - **the security invariants declared in `03-SECURITY.md` (the *Untouchable
+     invariants* section) do not change without an explicit review by
      @@FABER_OWNER_NAME@@** (§19).
-6. **Teste local antes do handoff** (Skill `local-env`):
+6. **Test locally before the handoff** (skill `local-env`):
    `faber/scripts/evidence.sh TASK-XXX reset-local -- faber/scripts/local-env.sh reset`
-   (aplica todas as migrations do zero — a evidência do reset verde é o
-   critério objetivo de que a migration é aplicável; ambiente local
-   indisponível = "não executado" explícito).
-7. **Aplicação remota é do CI** (pipeline no merge). Ambientes remotos que
-   exigem confirmação (`FABER_REFS_CONFIRM` / `FABER_CMDS_CONFIRM`): só
-   com confirmação explícita de @@FABER_OWNER_NAME@@, por execução;
-   refs/ambientes de produção (`FABER_REFS_DENY`) — nunca por agente (H1).
+   (it applies every migration from scratch — the evidence of a green reset is
+   the objective criterion that the migration applies; a local environment that
+   is unavailable = an explicit "not executed").
+7. **Applying to a remote belongs to CI** (the pipeline, on merge). Remote
+   environments that require confirmation (`FABER_REFS_CONFIRM` /
+   `FABER_CMDS_CONFIRM`): only with @@FABER_OWNER_NAME@@'s explicit
+   confirmation, per execution; production refs and environments
+   (`FABER_REFS_DENY`) — never by an agent (H1).

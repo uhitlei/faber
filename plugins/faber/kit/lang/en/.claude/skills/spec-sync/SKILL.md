@@ -1,45 +1,48 @@
 ---
 name: spec-sync
-description: Consolida a spec de uma demanda concluída em @@FABER_SPECS_DIR@@/ no padrão RFC (17 seções) — atualiza a SPEC.md da feature, o CHANGELOG e os diagramas .mmd, sem duplicar conteúdo. Use no doc-writer, no Done (G9). Merge, nunca cópia.
+description: Consolidates a finished demand's spec into @@FABER_SPECS_DIR@@/ in the RFC pattern (17 sections) — updates the feature's SPEC.md, the CHANGELOG and the .mmd diagrams, without duplicating content. Use in the doc-writer, at Done (G9). A merge, never a copy.
 ---
 
-# spec-sync — consolidação canônica em @@FABER_SPECS_DIR@@/
+# spec-sync — canonical consolidation into @@FABER_SPECS_DIR@@/
 
-Fonte: `faber/ARCHITECTURE.md` §11, §15 (merge **nunca** duplicação); estrutura
-canônica `@@FABER_SPECS_DIR@@/features/NN-nome/SPEC.md` (`FABER_SPECS_DIR`).
-Idioma PT-BR (P6).
+Source: `faber/ARCHITECTURE.md` §11, §15 (a merge, **never** duplication); the
+canonical structure `@@FABER_SPECS_DIR@@/features/NN-name/SPEC.md`
+(`FABER_SPECS_DIR`). Language: `FABER_LANG`.
 
-## Onde consolidar
+## Where to consolidate
 
-| Impacto da demanda | Destino canônico |
+| The demand's impact | Canonical destination |
 |---|---|
-| Feature existente | `@@FABER_SPECS_DIR@@/features/NN-nome/SPEC.md` |
-| Banco / segurança / deploy… | a global correspondente em `@@FABER_SPECS_DIR@@/global/` |
-| Fluxo/modelo que mudou | fonte `.mmd` em `@@FABER_SPECS_DIR@@/assets/diagrams/` (+ `.png` render) |
+| An existing feature | `@@FABER_SPECS_DIR@@/features/NN-name/SPEC.md` |
+| Database / security / deployment… | the matching global spec in `@@FABER_SPECS_DIR@@/global/` |
+| A flow or model that changed | the `.mmd` source in `@@FABER_SPECS_DIR@@/assets/diagrams/` (plus the `.png` render) |
 
-## Padrão RFC (ordem canônica — proporcional)
+## The RFC pattern (canonical order — proportional)
 
-Use esta ordem; **inclua só as seções aplicáveis** (a feature mais completa do
-projeto pode usar as 16 primeiras; bug/técnica usam bem menos). A **seção 17
-(CHANGELOG) é sempre criada/atualizada** quando uma demanda toca a feature.
+Use this order; **include only the applicable sections** (the project's most
+complete feature might use the first 16; a bug or a technical demand uses far
+fewer). **Section 17 (CHANGELOG) is always created or updated** when a demand
+touches the feature.
 
-1. Resumo · 2. Personas · 3. Requisitos funcionais · 4. Requisitos não-funcionais ·
-5. Fluxos · 6. Modelo de dados · 7. RPCs · 8. UI/UX · 9. Regras de negócio detalhadas ·
-10. Edge cases · 11. Segurança · 12. Performance · 13. Testes · 14. Snippets críticos ·
-15. Open questions · 16. Referências · **17. CHANGELOG**.
+1. Summary · 2. Personas · 3. Functional requirements · 4. Non-functional
+requirements · 5. Flows · 6. Data model · 7. RPCs · 8. UI/UX · 9. Detailed
+business rules · 10. Edge cases · 11. Security · 12. Performance · 13. Tests ·
+14. Critical snippets · 15. Open questions · 16. References · **17. CHANGELOG**.
 
-## Como consolidar (merge, nunca duplicação — §15)
+## How to consolidate (a merge, never duplication — §15)
 
-1. Leia a `spec.md`, o `decisions.md` e as evidências da demanda + a SPEC.md atual da
-   feature.
-2. **Atualize as seções afetadas** da SPEC.md canônica — reescreva o trecho que mudou,
-   **não** anexe um bloco novo paralelo. Regra de negócio que virou verdade nova
-   **substitui** a antiga.
-3. **CHANGELOG (seção 17):** adicione uma entrada `- <data> · TASK-XXX — <o que mudou>`
-   (mais recente no topo). É o histórico rastreável da feature.
-4. **Diagramas:** se fluxo/modelo mudou, atualize o `.mmd` correspondente (fonte); **não**
-   edite o `.png` à mão (é render). Diagrama novo → `assets/diagrams/NN-nome.mmd`.
-5. **Glossário / Open questions:** promova termos novos; **feche** as open questions que
-   a demanda resolveu.
-6. Consolide **só o que está registrado** (decisões, evidências) — dúvida vai para Open
-   questions, nunca se preenche de cabeça.
+1. Read the demand's `spec.md`, `decisions.md` and evidence, plus the feature's
+   current SPEC.md.
+2. **Update the affected sections** of the canonical SPEC.md — rewrite the part
+   that changed, do **not** append a new parallel block. A business rule that
+   became a new truth **replaces** the old one.
+3. **CHANGELOG (section 17):** add an entry
+   `- <date> · TASK-XXX — <what changed>` (newest at the top). It is the
+   feature's traceable history.
+4. **Diagrams:** if a flow or model changed, update the matching `.mmd` (the
+   source); do **not** edit the `.png` by hand (it is a render). A new diagram →
+   `assets/diagrams/NN-name.mmd`.
+5. **Glossary / Open questions:** promote new terms; **close** the open questions
+   the demand resolved.
+6. Consolidate **only what is recorded** (decisions, evidence) — a doubt goes to
+   Open questions, and is never filled in from memory.

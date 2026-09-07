@@ -1,21 +1,21 @@
 ---
 name: spec-task
-description: Seleciona e preenche o template de spec proporcional ao tipo da demanda da fábrica (TASK-XXX). Use ao criar, revisar ou completar o spec.md de uma demanda — nunca escrever spec de cabeça sem template.
+description: Selects and fills the spec template proportional to the type of a factory demand (TASK-XXX). Use when creating, reviewing or completing a demand's spec.md — never write a spec from memory without a template.
 ---
 
-# spec-task — templates proporcionais por tipo
+# spec-task — proportional templates, by type
 
-Fonte: `faber/ARCHITECTURE.md` §11 (Skill), §14 (tipos), §18 (DoR do G1).
-Templates em `faber/templates/`. Idioma: PT-BR (P6).
+Source: `faber/ARCHITECTURE.md` §11 (the skill), §14 (types), §18 (the DoR for
+G1). Templates live in `faber/templates/`. Language: `FABER_LANG`.
 
-## Seleção do template (tipo → arquivo)
+## Selecting the template (type → file)
 
-| Tipo (slug do `_schema.tipos`) | Template |
+| Type (slug from `_schema.types`) | Template |
 |---|---|
 | feature | `spec-feature.template.md` |
 | design | `spec-feature.template.md` |
 | bug | `spec-bug.template.md` |
-| incidente | `spec-incident.template.md` |
+| incident | `spec-incident.template.md` |
 | tech-debt | `spec-technical.template.md` |
 | infra | `spec-technical.template.md` |
 | security | `spec-technical.template.md` |
@@ -23,25 +23,25 @@ Templates em `faber/templates/`. Idioma: PT-BR (P6).
 | docs | `spec-technical.template.md` |
 | spike | `spec-spike.template.md` |
 
-Nuances por tipo estão comentadas dentro de cada template (ex.: `security`
-sem exploit em issue pública; `database` com db-guardian desde o refinamento;
-`design` com a seção de impactos UX como centro).
+The nuances per type are commented inside each template (e.g. `security` with no
+exploit in a public issue; `database` with the db-guardian involved from the
+refinement onward; `design` with the UX-impact section at its centre).
 
-## Como preencher
+## How to fill it in
 
-1. Copiar o template para `faber/tasks/TASK-XXX/spec.md`.
-2. Substituir todos os `{{...}}`; **remover os comentários `<!-- -->`** ao
-   preencher (eles são instruções, não conteúdo).
-3. Nenhum `{{...}}` pode sobrar — placeholder restante = spec incompleta
-   (bloqueia o DoR/G1).
-4. ACs numerados (`AC-1`, `AC-2`…) e testáveis: são a base da matriz
-   requisito×teste do QA e da validação do G5.
-5. Proporcionalidade (§11): a spec deve estar **no nível do template do
-   tipo** — não inchar bug simples com seções de feature, não afinar feature
-   grande. Seção não aplicável recebe "nenhuma"/"não se aplica" explícito,
-   nunca fica com placeholder.
-6. Dúvida crítica aberta → estado `clarification` e pergunta a
-   @@FABER_OWNER_NAME@@; parar é sempre preferível a avançar com dúvida
-   (§6.2). O PO nunca inventa regra de negócio.
-7. A spec é viva: mudanças durante refinamento/desenvolvimento são editadas
-   na própria `spec.md` com registro no `history`/`decisions.md` da demanda.
+1. Copy the template to `faber/tasks/TASK-XXX/spec.md`.
+2. Replace every `{{...}}`; **remove the `<!-- -->` comments** as you go (they
+   are instructions, not content).
+3. No `{{...}}` may survive — a leftover placeholder means an incomplete spec
+   (it blocks the DoR and G1).
+4. Acceptance criteria numbered (`AC-1`, `AC-2`…) and testable: they are the
+   basis of QA's requirement × test matrix and of the G5 validation.
+5. Proportionality (§11): the spec must sit **at the level of the type's
+   template** — do not bloat a simple bug with feature sections, and do not
+   thin out a large feature. A section that does not apply gets an explicit
+   "none" or "not applicable", and never keeps its placeholder.
+6. An open critical doubt → state `clarification` and a question to
+   @@FABER_OWNER_NAME@@; stopping always beats advancing with a doubt (§6.2).
+   The PO never invents a business rule.
+7. The spec is alive: changes during refinement or development are edited in
+   `spec.md` itself, with a record in the demand's `history` / `decisions.md`.

@@ -27,7 +27,7 @@ Pega: cor **hex em classe arbitrária** `[#...]`, **utilitárias absolutas**
 (`text-[hsl(0_0%_100%)]` é o mesmo branco que `text-white`, só noutra sintaxe).
 `hsl(var(--token))` **não** é violação — uso legítimo de token continua liberado.
 
-Saída: `VIOLACOES_HARDCODE` + `EXCECOES_DECLARADAS` + `VERDICT`, exit 0/2/3:
+Saída: `HARDCODE_VIOLATIONS` + `DECLARED_EXCEPTIONS` + `VERDICT`, exit 0/2/3:
 
 | Veredito | Significado | Ação |
 |---|---|---|

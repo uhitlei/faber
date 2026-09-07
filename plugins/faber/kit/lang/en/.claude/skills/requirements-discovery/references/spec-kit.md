@@ -1,25 +1,29 @@
-# Projeção para Spec-Driven Development
+# Projection to Spec-Driven Development
 
-Saída de negócio: `requirements/speckit/spec.md`. Preserve REQ/AC IDs.
-Inclua revisão do modelo, objetivo, usuários, jornadas priorizadas, requisitos,
-cenários de aceite, exceções, critérios de sucesso e dúvidas remanescentes.
-Use o template real `.specify/templates/spec-template.md` quando existir.
-Sem Spec Kit instalado, use essas seções em Markdown e registre no cabeçalho
-`projeção SDD — não executada/validada pelo CLI Spec Kit`.
+The business output is `requirements/speckit/spec.md`. Preserve the REQ/AC IDs.
+Include the model's revision, the goal, the users, the prioritised journeys, the
+requirements, the acceptance scenarios, the exceptions, the success criteria and
+the remaining doubts. Use the real template `.specify/templates/spec-template.md`
+when it exists. With no Spec Kit installed, use those sections in Markdown and
+record in the header: `SDD projection — not executed or validated by the Spec Kit
+CLI`.
 
-O CTO registra no documento qual template e versão/commit foram utilizados,
-quando verificáveis. Não invente versão nem assuma comandos da versão mais
-recente. A disponibilidade do CLI é verificada no projeto quando for utilizado.
+The CTO records in the document which template and which version or commit were
+used, where that is verifiable. Do not invent a version and do not assume the
+commands of the latest release. The CLI's availability is checked in the project
+at the point it is used.
 
-PO converte essa projeção à spec do tipo da demanda, preservando os IDs. Se o
-projeto usa Spec Kit operacionalmente, CTO e senior-developer produzem plan,
-research, data-model, contracts e tasks após o esclarecimento, usando os
-templates instalados. Não atribua escolha de arquitetura ao BA nem declare
-esses arquivos existentes antes de criá-los. Execução técnica continua pelo
-refinamento/G1 do kit. Não execute implementação automática do Spec Kit antes
-do G1 e não instale ferramentas como efeito colateral do discovery.
+The PO converts that projection into the spec for the demand's type, preserving
+the IDs. If the project uses Spec Kit operationally, the CTO and the
+senior-developer produce the plan, research, data model, contracts and tasks
+after the clarification round, using the installed templates. Do not assign
+architectural choices to the BA, and do not declare those files to exist before
+they are created. Technical execution still runs through the kit's refinement and
+G1. Do not run Spec Kit's automated implementation before G1, and do not install
+tools as a side effect of discovery.
 
-Uma revisão aprovada corresponde a um único conjunto de requisitos. Ao
-alterar PRD, BRD ou spec, reconcilie o modelo, refaça as projeções afetadas e
-revalide o selo. Na consolidação G9, doc-writer preserva os IDs e a origem na
-SPEC RFC; o pacote de discovery continua como trilha histórica da demanda.
+An approved revision corresponds to exactly one set of requirements. When the
+PRD, the BRD or the spec changes, reconcile the model, redo the affected
+projections and revalidate the seal. At the G9 consolidation, the doc-writer
+preserves the IDs and the origin in the SPEC RFC; the discovery package remains
+as the demand's historical trail.

@@ -1,48 +1,49 @@
 ---
 name: evidence
-description: Gera evidência executada real (evidence/NN-*.log) para gates e handoffs da fábrica — todo comando de validação roda via faber/scripts/evidence.sh. Use sempre que um resultado de comando precisar virar evidência; evidência narrada é inválida.
+description: Produces real, executed evidence (evidence/NN-*.log) for the factory's gates and handoffs — every validation command runs through faber/scripts/evidence.sh. Use whenever a command's result has to become evidence; narrated evidence is invalid.
 ---
 
-# evidence — evidência executada, nunca narrada
+# evidence — executed, never narrated
 
-Fonte: `faber/ARCHITECTURE.md` §11 (Skill), §15 (anti-"falsa alegação de
-execução"), §17 (handoff sem evidência = inválido), R6 (2 MB).
+Source: `faber/ARCHITECTURE.md` §11 (the skill), §15 (anti "false claim of
+execution"), §17 (a handoff with no evidence is invalid), R6 (2 MB).
 
-## Regra de ouro
+## The golden rule
 
-Evidência é o **arquivo gravado por execução real** — o `gate-check.sh`
-confere o arquivo, não a sua narrativa. Output colado de memória, log editado
-ou criado à mão = evidência inválida.
+Evidence is the **file written by a real execution** — `gate-check.sh` inspects
+the file, not your narrative. Output pasted from memory, an edited log, or one
+created by hand, is invalid evidence.
 
-## Como usar
+## How to use it
 
 ```
-faber/scripts/evidence.sh <TASK-XXX> <slug> -- <comando> [args...]
+faber/scripts/evidence.sh <TASK-XXX> <slug> -- <command> [args...]
 ```
 
-- Pipelines/redirecionamentos: `... -- bash -c "@@FABER_CMD_LINT@@ 2>&1 | tail -50"`
-  (exceção: o comando E2E `@@FABER_CMD_E2E@@` é chamado **direto**, sem pipe —
-  ver Skill `e2e-runner`)
-- O exit code do comando é **propagado** — encadeie:
-  `evidence.sh TASK-XXX test-run -- @@FABER_CMD_TEST@@ && <próximo passo>`
-- `NN` incrementa sozinho; o log sai em `evidence/NN-<slug>.log` com
-  cabeçalho (comando, início, fim, duração, exit code) + output integral.
+- Pipelines and redirections: `... -- bash -c "@@FABER_CMD_LINT@@ 2>&1 | tail -50"`
+  (the exception: the E2E command `@@FABER_CMD_E2E@@` is called **directly**,
+  with no pipe — see the `e2e-runner` skill)
+- The command's exit code is **propagated** — chain on it:
+  `evidence.sh TASK-XXX test-run -- @@FABER_CMD_TEST@@ && <next step>`
+- `NN` increments by itself; the log lands in `evidence/NN-<slug>.log` with a
+  header (command, start, end, duration, exit code) plus the full output.
 
-## Slugs convencionais
+## Conventional slugs
 
-`lint`, `build`, `test-run`, `e2e`, `repro`, `teste-antes`, `teste-depois`,
-`sonar`, `db-validacao` — descritivos e curtos. O gate G3 procura
-`*lint*`/`*build*`/`*test*` em `evidence/` (gate-check).
+`lint`, `build`, `test-run`, `e2e`, `repro`, `test-before`, `test-after`,
+`sonar`, `db-validation` — descriptive and short. Gate G3 looks for
+`*lint*`/`*build*`/`*test*` inside `evidence/` (gate-check).
 
-## Regras complementares
+## Supplementary rules
 
-1. **Ferramenta indisponível** (Sonar fora do ar, rede caída): rode o comando
-   mesmo assim via `evidence.sh` — o log da falha É a evidência da
-   indisponibilidade. Declare "não executado" no handoff; **jamais** inferir
-   resultado (CLAUDE.md §4).
-2. **Log > 2 MB** (R6): o script avisa — não commite; deixe o arquivo fora do
-   commit e **referencie o caminho** (ou URL do relatório) no handoff.
-3. Um comando = uma evidência. Validações distintas (lint, build, test) geram
-   logs distintos — não agrupe num só.
-4. Handoffs referenciam os paths dos logs em `evidence:` (§17); handoff sem
-   evidência referenciada é rejeitado pelo gate-check.
+1. **Tool unavailable** (Sonar down, network out): run the command anyway
+   through `evidence.sh` — the failure log IS the evidence of the
+   unavailability. Declare "not executed" in the handoff; **never** infer a
+   result (CLAUDE.md §4).
+2. **A log over 2 MB** (R6): the script warns you — do not commit it; leave the
+   file out of the commit and **reference the path** (or the report's URL) in
+   the handoff.
+3. One command, one piece of evidence. Distinct validations (lint, build, test)
+   produce distinct logs — never group them into one.
+4. Handoffs reference the logs' paths under `evidence:` (§17); a handoff with no
+   evidence referenced is rejected by gate-check.

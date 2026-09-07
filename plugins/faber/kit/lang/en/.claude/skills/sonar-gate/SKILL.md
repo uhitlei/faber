@@ -1,87 +1,89 @@
 ---
 name: sonar-gate
-description: Módulo opcional (FABER_SONAR=on). Publica a análise da branch da demanda num projeto-espelho do Sonar (sonar-task.sh) e consulta as issues Critical/High dela (sonar-gate.sh, via SONAR_TOKEN/SONAR_HOST_URL por nome) para formar a evidência do G5. Use na validação (devsecops/CTO). API indisponível, projeto sem análise ou análise de outro commit vira "não executado", jamais inferido. Critical/High nunca é excepcionável.
+description: Optional module (FABER_SONAR=on). Publishes the demand branch's analysis to a Sonar mirror project (sonar-task.sh) and queries its Critical/High issues (sonar-gate.sh, through SONAR_TOKEN/SONAR_HOST_URL by name) to form the evidence for G5. Use during validation (devsecops/CTO). An unavailable API, a project with no analysis, or an analysis of a different commit becomes "not executed", never inferred. Critical/High is never exceptable.
 ---
 
-# sonar-gate — Critical/High do Sonar como evidência
+# sonar-gate — Sonar's Critical/High as evidence
 
-Fonte: `faber/ARCHITECTURE.md` §11, §18-G5, §21-R3; `07-ENV-AND-SECRETS` §4.
-Mecânica determinística: `faber/scripts/sonar-task.sh` +
-`faber/scripts/sonar-gate.sh` (zero LLM). **Módulo opcional:** só vale com
-`FABER_SONAR=on` e `FABER_SONAR_PROJECT_KEY` preenchido em
-`faber/config/faber.env`; desligado → registre "Sonar não configurado — não
-executado" (o devsecops valida pelo CI da branch). PT-BR (P6).
+Source: `faber/ARCHITECTURE.md` §11, §18-G5, §21-R3; `07-ENV-AND-SECRETS` §4.
+Deterministic mechanics: `faber/scripts/sonar-task.sh` +
+`faber/scripts/sonar-gate.sh` (zero LLM). **Optional module:** it only applies
+with `FABER_SONAR=on` and `FABER_SONAR_PROJECT_KEY` filled in
+`faber/config/faber.env`; with it off → record "Sonar not configured — not
+executed" (devsecops validates through the branch CI). Language: `FABER_LANG`.
 
-## Como usar (dois passos)
+## How to use it (two steps)
 
-Rodar o scanner de uma feature branch contra o projeto do trunk
-(`$FABER_SONAR_PROJECT_KEY`) **sobrescreveria o trunk** com código não
-mergeado (servidores sem análise multi-branch). Por isso a demanda é medida num
-**projeto-espelho** `<PROJECT_KEY>-TASK-XXX`, publicado **localmente**: o CI
-continua analisando só o trunk, em push a `@@FABER_TRUNK@@`/`@@FABER_MAIN@@`.
+Running the scanner for a feature branch against the trunk's project
+(`$FABER_SONAR_PROJECT_KEY`) **would overwrite the trunk** with unmerged code
+(on servers with no multi-branch analysis). So the demand is measured in a
+**mirror project** `<PROJECT_KEY>-TASK-XXX`, published **locally**: CI keeps
+analysing only the trunk, on pushes to `@@FABER_TRUNK@@`/`@@FABER_MAIN@@`.
 
 ```bash
-# 1. publica a análise da branch no espelho (gera cobertura, escaneia e ESPERA
-#    o servidor processar; falha fechada em qualquer erro)
-faber/scripts/evidence.sh TASK-XXX sonar-analise -- \
+# 1. publish the branch's analysis to the mirror (generates coverage, scans and
+#    WAITS for the server to process it; fails closed on any error)
+faber/scripts/evidence.sh TASK-XXX sonar-analysis -- \
   faber/scripts/sonar-task.sh TASK-XXX
 
-# 2. veredito sobre o espelho, com a catraca contra o trunk
+# 2. the verdict on the mirror, with the ratchet against the trunk
 faber/scripts/evidence.sh TASK-XXX sonar -- \
   faber/scripts/sonar-gate.sh --project "${FABER_SONAR_PROJECT_KEY}-TASK-XXX" \
     --branch feature/TASK-XXX --baseline "$FABER_SONAR_PROJECT_KEY"
 
-# 3. no G9, apague o espelho (faxina)
+# 3. at G9, delete the mirror (cleanup)
 faber/scripts/sonar-task.sh delete TASK-XXX
 ```
 
-O passo 1 é obrigatório antes do passo 2: o gate **recusa** (exit 3) uma análise
-cuja `revision` não seja o commit local avaliado — veredito só vale para o
-código que foi analisado.
+Step 1 is mandatory before step 2: the gate **refuses** (exit 3) an analysis
+whose `revision` is not the local commit being evaluated — a verdict only holds
+for the code that was analysed.
 
-Uso direto no trunk: `sonar-gate.sh @@FABER_TRUNK@@` — mede a branch do
-projeto `$FABER_SONAR_PROJECT_KEY` e exige que o ref local
-`refs/heads/@@FABER_TRUNK@@` seja o commit analisado.
+Direct use on the trunk: `sonar-gate.sh @@FABER_TRUNK@@` — it measures the
+branch of the project `$FABER_SONAR_PROJECT_KEY` and requires the local ref
+`refs/heads/@@FABER_TRUNK@@` to be the analysed commit.
 
-## Saída parseável
+## Parseable output
 
-`PROJECT`, `BRANCH`, `MODO`, `ANALISE`, `REVISION`, `REVISION_CHECKED`,
+`PROJECT`, `BRANCH`, `MODE`, `ANALYSIS`, `REVISION`, `REVISION_CHECKED`,
 `QUALITY_GATE`, `CRITICAL_LEGACY`, `HIGH_IMPACT`, `CRITICAL_HIGH`,
-`BASELINE_*`, `NEW_VS_BASELINE`, `NEW=` (uma por issue nova), `CATRACA`,
-`MOTIVO`, `VERDICT` (`approved` | `rejected` | `not-executed`) + exit code
-(`0` | `2` | `3`).
+`BASELINE_*`, `NEW_VS_BASELINE`, `NEW=` (one per new issue), `RATCHET`,
+`REASON`, `VERDICT` (`approved` | `rejected` | `not-executed`) plus the exit
+code (`0` | `2` | `3`).
 
-- `CRITICAL_LEGACY` = modelo **legacy** (`BLOCKER,CRITICAL`);
-  `HIGH_IMPACT` = modelo de **impacto** (`BLOCKER,HIGH`);
-  `CRITICAL_HIGH` = a **união** dos dois (por chave de issue, não soma nem max).
+- `CRITICAL_LEGACY` = the **legacy** model (`BLOCKER,CRITICAL`);
+  `HIGH_IMPACT` = the **impact** model (`BLOCKER,HIGH`);
+  `CRITICAL_HIGH` = the **union** of the two (by issue key — not a sum, not a max).
 
-## Interpretação (§18-G5)
+## Interpretation (§18-G5)
 
-- **aprovado** (exit 0) = `CRITICAL_HIGH=0`, ou `NEW_VS_BASELINE=0` quando a
-  catraca está ligada (dívida herdada, toda ela já no trunk). O
-  `QUALITY_GATE` é **informativo**: ele reprova por hotspots por revisar e por
-  New Code Period indefinido, que não é a regra pedida — não bloqueia o G5.
-- **reprovado** (exit 2) = há Critical/High **novo** (as linhas `NEW=` dizem
-  `regra|arquivo|hash`), ou qualquer Critical/High quando não há catraca →
-  **jamais excepcionável** (§2, §19). Medium/Low → registrados; exceção só com
-  **decisão do CTO documentada** em `decisions.md`.
-- **not-executed** (exit 3) = token/host ausente, API off, projeto sem análise,
-  **análise de outro commit**, dado inconsistente (união menor que as contagens
-  da API), parâmetro fora do padrão → registre "não executado" explícito;
-  **nunca** infira "passou" (§15). O G5 fica pendente no eixo Sonar.
+- **approved** (exit 0) = `CRITICAL_HIGH=0`, or `NEW_VS_BASELINE=0` when the
+  ratchet is on (inherited debt, all of it already in the trunk).
+  `QUALITY_GATE` is **informational**: it fails on unreviewed hotspots and on an
+  undefined New Code Period, which is not the rule being asked for — it does not
+  block G5.
+- **rejected** (exit 2) = there is a **new** Critical/High (the `NEW=` lines give
+  `rule|file|hash`), or any Critical/High when there is no ratchet → **never
+  exceptable** (§2, §19). Medium/Low → recorded; an exception only with a
+  **documented CTO decision** in `decisions.md`.
+- **not-executed** (exit 3) = a missing token or host, the API down, a project
+  with no analysis, **an analysis of a different commit**, inconsistent data (the
+  union smaller than the API's counts), a non-standard parameter → record an
+  explicit "not executed"; **never** infer "passed" (§15). G5 stays pending on
+  the Sonar axis.
 
-## Regras
+## Rules
 
-1. `SONAR_TOKEN` e `SONAR_HOST_URL` entram **por nome**, via env da sessão ou
-   do arquivo local não versionado apontado por `SONAR_ENV_FILE` (P2); nunca em
-   arquivo versionado, nunca logados. Nenhum dos dois scripts imprime o valor
-   de qualquer um deles.
-2. A Skill só **consulta e publica análise**; **não** configura o pipeline.
-   Alterar o job do Sonar em `.github/workflows/` exige tarefa DevSecOps
-   aprovada (H2).
-3. Escopo e cobertura vêm de `sonar-project.properties` (o `sonar-task.sh` só
-   sobrescreve a identidade do espelho). A versão do scanner é **fixa** no
-   script e sai na evidência (`SCANNER=`).
-4. O baseline da catraca é o trunk (`$FABER_SONAR_PROJECT_KEY`) **lido na
-   hora** — nunca um número escrito à mão. Ele envelhece se o CI do trunk parar
-   de rodar.
+1. `SONAR_TOKEN` and `SONAR_HOST_URL` arrive **by name**, through the session's
+   environment or the unversioned local file pointed at by `SONAR_ENV_FILE` (P2);
+   never in a versioned file, never logged. Neither script ever prints either
+   value.
+2. The skill only **queries and publishes an analysis**; it does **not**
+   configure the pipeline. Changing the Sonar job in `.github/workflows/`
+   requires an approved DevSecOps task (H2).
+3. Scope and coverage come from `sonar-project.properties` (`sonar-task.sh` only
+   overrides the mirror's identity). The scanner's version is **pinned** in the
+   script and appears in the evidence (`SCANNER=`).
+4. The ratchet's baseline is the trunk (`$FABER_SONAR_PROJECT_KEY`), **read at
+   the time** — never a number written by hand. It goes stale if the trunk's CI
+   stops running.

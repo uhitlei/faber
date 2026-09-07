@@ -7,7 +7,7 @@
 | Campo | Valor |
 |---|---|
 | Demanda | {{TASK-XXX}} |
-| Tipo | incidente |
+| Tipo | incident |
 | Severidade | {{SEV1 total \| SEV2 degradado \| SEV3 pontual}} |
 | Início / fim do impacto | {{AAAA-MM-DDTHH:MM}} → {{...}} |
 

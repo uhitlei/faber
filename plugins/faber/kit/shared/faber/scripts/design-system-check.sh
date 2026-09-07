@@ -93,9 +93,9 @@ $M
 EOF
 done
 
-echo "ARQUIVOS_ANALISADOS=$N_ARQ"
-echo "VIOLACOES_HARDCODE=$VIOL"
-echo "EXCECOES_DECLARADAS=$EXC"
+echo "FILES_ANALYSED=$N_ARQ"
+echo "HARDCODE_VIOLATIONS=$VIOL"
+echo "DECLARED_EXCEPTIONS=$EXC"
 if [ "$EXC" -gt 0 ]; then
   echo "--- exceções declaradas (ds-exception) — legítimas, mas visíveis ---"
   printf '%s' "$EXCECOES" | sed '/^$/d'
@@ -106,7 +106,7 @@ if [ "$VIOL" -eq 0 ]; then
   else
     echo "VERDICT=compliant"
   fi
-  echo "NOTA=checklist manual (44px, dark+light, mobile, reuso) na Skill design-system-check"
+  echo "NOTE=checklist manual (44px, dark+light, mobile, reuso) na Skill design-system-check"
   exit 0
 fi
 echo "VERDICT=non-compliant"
