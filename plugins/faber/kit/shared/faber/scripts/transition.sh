@@ -31,10 +31,10 @@ TASKS="$DIR/../tasks"
 uso() { echo "uso: transition.sh <TASK-XXX> <estado-destino> [--reason \"...\"] [--by <quem>] [--pr <url>]"; exit 1; }
 [ $# -ge 2 ] || uso
 TASK="$1"; DESTINO="$2"; shift 2
-MOTIVO=""; POR="cto"; PR=""
+REASON=""; POR="cto"; PR=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --reason) MOTIVO="${2:?--reason exige texto}"; shift 2 ;;
+    --reason) REASON="${2:?--reason exige texto}"; shift 2 ;;
     --by)    POR="${2:?--by exige valor}"; shift 2 ;;
     --pr)     PR="${2:?--pr exige numero/url}"; shift 2 ;;
     *) uso ;;
@@ -49,8 +49,8 @@ ATUAL=$(python3 -c "import yaml,sys;print(yaml.safe_load(open(sys.argv[1]))['sta
 
 # blocked: bloqueio precisa estar gravado ANTES do gate-check (que o valida)
 if [ "$DESTINO" = "blocked" ]; then
-  [ -n "$MOTIVO" ] || { echo "ERRO: blocked exige --reason (§6.2)"; exit 1; }
-  python3 - "$STATE" "$MOTIVO" "$ATUAL" <<'PY'
+  [ -n "$REASON" ] || { echo "ERRO: blocked exige --reason (§6.2)"; exit 1; }
+  python3 - "$STATE" "$REASON" "$ATUAL" <<'PY'
 import sys, yaml
 from datetime import datetime
 d = yaml.safe_load(open(sys.argv[1]))
@@ -73,13 +73,13 @@ PY
 fi
 
 # gate-check: nenhuma transição sem ele (§6.2). Bloqueou → desfaz o rascunho.
-if ! "$GC" "$TASK" "$DESTINO" ${MOTIVO:+--reason "$MOTIVO"}; then
+if ! "$GC" "$TASK" "$DESTINO" ${REASON:+--reason "$REASON"}; then
   git checkout -q -- "$STATE" 2>/dev/null || true
   exit 1
 fi
 
 # aplica a transição no state.yaml
-python3 - "$STATE" "$ATUAL" "$DESTINO" "$POR" "$MOTIVO" <<'PY' || exit 2
+python3 - "$STATE" "$ATUAL" "$DESTINO" "$POR" "$REASON" <<'PY' || exit 2
 import sys, yaml
 from datetime import datetime
 d = yaml.safe_load(open(sys.argv[1]))
@@ -94,13 +94,13 @@ if sys.argv[2] == "blocked" and sys.argv[3] != "blocked":
 yaml.safe_dump(d, open(sys.argv[1], "w"), allow_unicode=True, sort_keys=False)
 PY
 
-git add "$STATE" && git commit -q -m "chore($TASK): transição $ATUAL -> $DESTINO${MOTIVO:+ — $MOTIVO}" \
+git add "$STATE" && git commit -q -m "chore($TASK): transição $ATUAL -> $DESTINO${REASON:+ — $REASON}" \
   || { echo "ERRO: commit da transição falhou"; exit 2; }
 echo "state: $ATUAL -> $DESTINO (commit $(git log --oneline -1 | cut -d' ' -f1))"
 
 # projeções issue/board (falha = aviso; reconciliáveis depois — R4)
 "$BOARD" mover "$N" "$DESTINO" || echo "AVISO: board não movido (board.sh move $N $DESTINO)"
-"$BOARD" comentar "$N" "🏭 **$TASK**: \`$ATUAL\` → \`$DESTINO\`${MOTIVO:+ — motivo: $MOTIVO} (gate-check: liberada; por: $POR)" \
+"$BOARD" comentar "$N" "🏭 **$TASK**: \`$ATUAL\` → \`$DESTINO\`${REASON:+ — motivo: $REASON} (gate-check: liberada; por: $POR)" \
   || echo "AVISO: comentário não postado"
 
 echo "OK: $TASK agora em '$DESTINO'"

@@ -45,27 +45,27 @@ projeto `$FABER_SONAR_PROJECT_KEY` e exige que o ref local
 
 ## Saída parseável
 
-`PROJECT`, `BRANCH`, `MODO`, `ANALISE`, `REVISION`, `REVISAO_CONFERIDA`,
-`QUALITY_GATE`, `CRITICAL_LEGACY`, `HIGH_IMPACTO`, `CRITICAL_HIGH`,
-`BASELINE_*`, `NOVAS_VS_BASELINE`, `NOVA=` (uma por issue nova), `CATRACA`,
-`MOTIVO`, `VEREDITO` (`approved` | `rejected` | `nao-executado`) + exit code
+`PROJECT`, `BRANCH`, `MODO`, `ANALISE`, `REVISION`, `REVISION_CHECKED`,
+`QUALITY_GATE`, `CRITICAL_LEGACY`, `HIGH_IMPACT`, `CRITICAL_HIGH`,
+`BASELINE_*`, `NEW_VS_BASELINE`, `NEW=` (uma por issue nova), `CATRACA`,
+`MOTIVO`, `VERDICT` (`approved` | `rejected` | `not-executed`) + exit code
 (`0` | `2` | `3`).
 
 - `CRITICAL_LEGACY` = modelo **legacy** (`BLOCKER,CRITICAL`);
-  `HIGH_IMPACTO` = modelo de **impacto** (`BLOCKER,HIGH`);
+  `HIGH_IMPACT` = modelo de **impacto** (`BLOCKER,HIGH`);
   `CRITICAL_HIGH` = a **união** dos dois (por chave de issue, não soma nem max).
 
 ## Interpretação (§18-G5)
 
-- **aprovado** (exit 0) = `CRITICAL_HIGH=0`, ou `NOVAS_VS_BASELINE=0` quando a
+- **aprovado** (exit 0) = `CRITICAL_HIGH=0`, ou `NEW_VS_BASELINE=0` quando a
   catraca está ligada (dívida herdada, toda ela já no trunk). O
   `QUALITY_GATE` é **informativo**: ele reprova por hotspots por revisar e por
   New Code Period indefinido, que não é a regra pedida — não bloqueia o G5.
-- **reprovado** (exit 2) = há Critical/High **novo** (as linhas `NOVA=` dizem
+- **reprovado** (exit 2) = há Critical/High **novo** (as linhas `NEW=` dizem
   `regra|arquivo|hash`), ou qualquer Critical/High quando não há catraca →
   **jamais excepcionável** (§2, §19). Medium/Low → registrados; exceção só com
   **decisão do CTO documentada** em `decisions.md`.
-- **nao-executado** (exit 3) = token/host ausente, API off, projeto sem análise,
+- **not-executed** (exit 3) = token/host ausente, API off, projeto sem análise,
   **análise de outro commit**, dado inconsistente (união menor que as contagens
   da API), parâmetro fora do padrão → registre "não executado" explícito;
   **nunca** infira "passou" (§15). O G5 fica pendente no eixo Sonar.

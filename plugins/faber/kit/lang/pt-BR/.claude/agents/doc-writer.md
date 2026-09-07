@@ -57,8 +57,8 @@ demanda; `@@FABER_SPECS_DIR@@/` relativo à raiz do repo):
 
 ```yaml
 task: TASK-XXX
-de: doc-writer
-para: cto
+from_agent: doc-writer
+to_agent: cto
 suggested_state: <done | blocked>   # fica em done; o CTO aprova o G9
 inputs_consumed: [spec.md, decisions.md]
 outputs_produced: [@@FABER_SPECS_DIR@@/features/NN-nome/SPEC.md]

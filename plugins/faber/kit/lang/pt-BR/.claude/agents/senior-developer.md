@@ -84,8 +84,8 @@ prefixo existente + 1) neste formato YAML:
 
 ```yaml
 task: TASK-XXX
-de: senior-developer
-para: cto
+from_agent: senior-developer
+to_agent: cto
 suggested_state: <developed | refinement | blocked>
 inputs_consumed: [spec.md, refinamento.md]      # paths, nunca conteúdo
 outputs_produced: [src/..., @@FABER_MIGRATIONS_DIR@@/...]

@@ -42,12 +42,12 @@ O dev implementou. Você **revisa** a aderência ao DS e escreve **`design-revie
 
 1. Rode a Skill `design-system-check` (Parte 1 automática) contra o diff.
 2. Checklist **manual** (Parte 2): reuso, 44px, dark+light, mobile, contraste AA.
-3. `nao-conforme` (hardcode ou padrão duplicado) → **reprova**; troca por token antes
+3. `non-compliant` (hardcode ou padrão duplicado) → **reprova**; troca por token antes
    do G5.
-4. `conforme-com-excecoes` → **não é aprovação automática**: o script lista as
+4. `compliant-with-exceptions` → **não é aprovação automática**: o script lista as
    exceções declaradas (`// ds-exception:`). Leia cada uma e confirme que está
    justificada em `02-DESIGN-SYSTEM.md` (seção de exceções; ex.: cor de marca de
-   terceiro). Exceção não justificada = reprova, como `nao-conforme`.
+   terceiro). Exceção não justificada = reprova, como `non-compliant`.
 
 ## Evidência obrigatória (antes do handoff — §4, §17)
 
@@ -56,7 +56,7 @@ faber/scripts/evidence.sh TASK-XXX ds-check -- faber/scripts/design-system-check
 ```
 
 Modo 2: contra o diff da demanda. Modo 1: contra os componentes que você mandou
-reusar (prova que a base é conforme). `nao-executado` (ferramenta indisponível
+reusar (prova que a base é conforme). `not-executed` (ferramenta indisponível
 ou `FABER_DESIGN_SYSTEM=off`) = registre explícito (§15); nesse caso o parecer
 se apoia no checklist manual e a evidência é o comando de verificação que você
 executar (ex.: grep dos componentes citados), sempre via `evidence.sh`.
@@ -68,11 +68,11 @@ pasta da demanda; produto relativo à raiz do repo):
 
 ```yaml
 task: TASK-XXX
-de: product-designer
-para: cto
+from_agent: product-designer
+to_agent: cto
 suggested_state: <specifying | validation | in-development | blocked>
 # Modo 1 (design): specifying (design pronto, o CTO avança). Modo 2 (validação):
-# validation (conforme) | in-development (nao-conforme: hardcode/padrão duplicado) | blocked.
+# validation (conforme) | in-development (non-compliant: hardcode/padrão duplicado) | blocked.
 inputs_consumed: [spec.md, @@FABER_SPECS_DIR@@/global/02-DESIGN-SYSTEM.md]
 outputs_produced: [design.md]      # Modo 1 → design.md; Modo 2 → design-review.md
 evidence: [evidence/NN-ds-check.log]

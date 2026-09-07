@@ -31,8 +31,8 @@ Registre `handoffs/NN-ba-para-cto.md` no contrato existente, com:
 
 ```yaml
 task: TASK-XXX
-de: business-analyst
-para: cto
+from_agent: business-analyst
+to_agent: cto
 suggested_state: clarification
 inputs_consumed: [requirements/sources.yaml]
 outputs_produced: [requirements/model.yaml, requirements/BRD.md, requirements/PRD.md, requirements/readiness.json]

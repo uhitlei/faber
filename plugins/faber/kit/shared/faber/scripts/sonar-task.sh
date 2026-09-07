@@ -40,7 +40,7 @@
 # Exit codes:
 #   0  ok            análise publicada e processada pelo servidor
 #   1  uso           argumentos inválidos
-#   3  nao-executado pré-requisito ausente (token/host/rede/ferramenta)
+#   3  not-executed pré-requisito ausente (token/host/rede/ferramenta)
 #   4  cobertura     `npm run test:coverage` falhou ou não gerou lcov.info
 #   5  scanner       o sonar-scanner terminou com erro
 #   6  servidor      a tarefa de processamento (Compute Engine) falhou/expirou
@@ -53,7 +53,7 @@ faber_require_install
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 RAIZ="$(cd "$DIR/../.." && pwd)"          # raiz do worktree em uso
 
-falha() { echo "RESULTADO=falha"; echo "MOTIVO=$1"; exit "$2"; }
+falha() { echo "RESULTADO=falha"; echo "REASON=$1"; exit "$2"; }
 uso() {
   echo "uso: sonar-task.sh <TASK-XXX> [--branch <nome>] [--no-coverage]"
   echo "     sonar-task.sh delete <TASK-XXX>"

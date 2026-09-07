@@ -25,11 +25,11 @@ TASKS="$DIR/../tasks"
 uso() { echo "uso: workflow-unlock.sh <TASK-XXX> --by <owner> [--reason \"...\"] [--revoke]"; exit 1; }
 [ $# -ge 1 ] || uso
 TASK="$1"; shift
-POR=""; MOTIVO=""; ACAO="autorizar"
+POR=""; REASON=""; ACAO="autorizar"
 while [ $# -gt 0 ]; do
   case "$1" in
     --by)     POR="${2:?}"; shift 2 ;;
-    --reason)  MOTIVO="${2:?}"; shift 2 ;;
+    --reason)  REASON="${2:?}"; shift 2 ;;
     --revoke) ACAO="revogar"; shift ;;
     *) uso ;;
   esac
@@ -40,7 +40,7 @@ STATE="$TASKS/$TASK/state.yaml"
 [ -f "$STATE" ] || { echo "ERRO: $STATE não existe"; exit 1; }
 N="${TASK##TASK-}"
 
-python3 - "$TEMPLATE" "$STATE" "$POR" "$MOTIVO" "$ACAO" <<'PY' || exit 1
+python3 - "$TEMPLATE" "$STATE" "$POR" "$REASON" "$ACAO" <<'PY' || exit 1
 import sys, yaml
 from datetime import datetime
 owner = (yaml.safe_load(open(sys.argv[1]))["_schema"].get("owner")) or "owner"
@@ -63,6 +63,6 @@ RC=$?; [ $RC -eq 0 ] || exit $RC
 
 git add "$STATE" && git commit -q -m "chore($TASK): workflow_unlock $ACAO por $POR" \
   || { echo "ERRO: commit falhou"; exit 2; }
-"$BOARD" comentar "$N" "🏭 **$TASK**: workflow_unlock **$ACAO** (por: $POR${MOTIVO:+; motivo: $MOTIVO})" \
+"$BOARD" comentar "$N" "🏭 **$TASK**: workflow_unlock **$ACAO** (por: $POR${REASON:+; motivo: $REASON})" \
   || echo "AVISO: comentário não postado"
 echo "OK: workflow_unlock $ACAO registrado e commitado"

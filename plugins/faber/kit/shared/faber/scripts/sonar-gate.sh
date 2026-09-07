@@ -30,9 +30,9 @@
 #
 #  A-1. AMARRAÇÃO AO COMMIT. O veredito só vale para o código que foi analisado:
 #       a `revision` da última análise é comparada com o commit local da branch
-#       avaliada. Divergiu (ou não dá para provar) → `nao-executado`. Antes, uma
+#       avaliada. Divergiu (ou não dá para provar) → `not-executed`. Antes, uma
 #       análise de três commits atrás continuava dizendo "approved".
-#  A-2. CATRACA POR DIFERENÇA DE CONJUNTOS. Comparar TOTAIS deixava passar a
+#  A-2. RATCHET POR DIFERENÇA DE CONJUNTOS. Comparar TOTAIS deixava passar a
 #       troca "removi 5 herdadas, introduzi 5 novas". Agora o que reprova é a
 #       existência de issue Critical/High no projeto medido que NÃO existe no
 #       baseline.
@@ -58,9 +58,9 @@
 #       ANTES de virarem URL (um rótulo com `&` desligava o filtro do gate).
 #  M-2. A união é conferida contra as contagens da API (`C_UNI >= C_LEG` e
 #       `C_UNI >= C_IMP`) e o status do `jq` da paginação é checado: página que
-#       não rende chaves vira `nao-executado`, nunca uma união subcontada.
+#       não rende chaves vira `not-executed`, nunca uma união subcontada.
 #
-# CATRACA: enquanto a dívida herdada não zera, `--baseline`
+# RATCHET: enquanto a dívida herdada não zera, `--baseline`
 # compara o projeto medido com o trunk LIDO NA HORA. Zero Critical/High aprova;
 # nenhuma issue nova em relação ao baseline aprova (com os números impressos);
 # qualquer issue nova reprova, com as identidades listadas. O número nunca fica
@@ -79,7 +79,7 @@
 # NUNCA imprime o token. Saída = linhas CHAVE=VALOR + exit code:
 #   0  aprovado       zero Critical/High (ou, com catraca, nenhuma issue nova)
 #   2  reprovado      há Critical/High acima do permitido (não excepcionável)
-#   3  nao-executado  token/host/rede/jq ausentes, projeto ou branch SEM
+#   3  not-executed  token/host/rede/jq ausentes, projeto ou branch SEM
 #                     análise, análise de outro commit, dado inconsistente —
 #                     sempre com MOTIVO específico. Ausência de dado NUNCA é
 #                     aprovação.
@@ -92,7 +92,7 @@ PROJ="${SONAR_PROJECT_KEY:-}"
 BRANCH=""
 BASELINE=""
 
-nao_executado() { echo "VEREDITO=nao-executado"; echo "MOTIVO=$1"; exit 3; }
+nao_executado() { echo "VERDICT=not-executed"; echo "REASON=$1"; exit 3; }
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -104,10 +104,10 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-# MODO=overall quando há projeto-espelho (Community não tem branch); MODO=branch
+# MODE=overall quando há projeto-espelho (Community não tem branch); MODE=branch
 # é o caminho legado, para o projeto do trunk (`FABER_SONAR_PROJECT_KEY`), onde a "branch" do Sonar existe.
-if [ -n "$PROJ" ]; then MODO="overall"; else
-  PROJ="${FABER_SONAR_PROJECT_KEY:-}"; MODO="branch"
+if [ -n "$PROJ" ]; then MODE="overall"; else
+  PROJ="${FABER_SONAR_PROJECT_KEY:-}"; MODE="branch"
   [ -n "$PROJ" ] || nao_executado "FABER_SONAR_PROJECT_KEY vazio em faber/config/faber.env (projeto do trunk no Sonar)"
 fi
 [ -n "$BRANCH" ] || BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
@@ -130,7 +130,7 @@ command -v git  >/dev/null 2>&1 || nao_executado "git ausente — sem git é imp
 
 HOST="${SONAR_HOST_URL%/}"      # remove barra final se houver
 # Sufixo de branch aplicado às consultas: só existe no modo legado.
-Q_BRANCH=""; [ "$MODO" = "branch" ] && Q_BRANCH="&branch=$BRANCH"
+Q_BRANCH=""; [ "$MODE" = "branch" ] && Q_BRANCH="&branch=$BRANCH"
 
 # call_api <path> — faz a chamada, separa corpo (BODY) e código HTTP (CODE) e
 # trata TODA falha como "não executado" com MOTIVO específico. O token vai por
@@ -153,7 +153,7 @@ call_api() {
              # MEDIDO. Com `--baseline` em modo trunk, o alvo da consulta é o
              # baseline — a mensagem antiga nomeava o projeto errado e mandava
              # o operador reescanear a demanda por um 404 do trunk.
-             if [ "$MODO" = "branch" ] && [ "$ALVO" = "$PROJ" ]; then
+             if [ "$MODE" = "branch" ] && [ "$ALVO" = "$PROJ" ]; then
                nao_executado "projeto '$PROJ' ou branch '$BRANCH' sem análise no Sonar (HTTP 404). Servidores sem análise multi-branch só têm branch no trunk. Para a branch de uma demanda, use o espelho: sonar-task.sh TASK-XXX && sonar-gate.sh --project <PROJECT_KEY>-TASK-XXX"
              fi
              nao_executado "projeto '$ALVO' não encontrado no Sonar (HTTP 404) — o espelho já foi publicado? rode faber/scripts/sonar-task.sh TASK-XXX (se '$ALVO' for o baseline, ele nunca é ignorado: sem baseline não há catraca)" ;;
@@ -241,8 +241,8 @@ call_api "authentication/validate"
 # por "approved" sem ninguém ter analisado nada.
 call_api "project_analyses/search?project=$PROJ&ps=1$Q_BRANCH"
 [ "$(echo "$BODY" | jq -r '.analyses | length')" -gt 0 ] 2>/dev/null \
-  || nao_executado "projeto '$PROJ' (modo $MODO) sem NENHUMA análise no Sonar — rode faber/scripts/sonar-task.sh antes do gate"
-ANALISE="$(echo "$BODY" | jq -r '.analyses[0].date // "?"')"
+  || nao_executado "projeto '$PROJ' (modo $MODE) sem NENHUMA análise no Sonar — rode faber/scripts/sonar-task.sh antes do gate"
+ANALYSIS="$(echo "$BODY" | jq -r '.analyses[0].date // "?"')"
 REVISION="$(echo "$BODY" | jq -r '.analyses[0].revision // "?"')"
 
 # 1b. A-1 — a análise é DESTE código? Sem esta conferência, `sonar-task.sh`
@@ -269,7 +269,7 @@ git rev-parse --is-inside-work-tree >/dev/null 2>&1 \
 # atualiza, então ele TAMBÉM vale como prova: qualquer ref local que aponte para
 # o commit analisado prova a correspondência (é sempre o mesmo SHA sendo
 # comparado; aceitar mais candidatos não afrouxa nada).
-if [ "$MODO" = "overall" ]; then
+if [ "$MODE" = "overall" ]; then
   CANDIDATOS="HEAD"
 else
   CANDIDATOS="refs/heads/$BRANCH refs/remotes/origin/$BRANCH"
@@ -297,13 +297,13 @@ P_LEG="$C_LEG"; P_IMP="$C_IMP"; P_UNI="$C_UNI"
 
 echo "PROJECT=$PROJ"
 echo "BRANCH=$BRANCH"
-echo "MODO=$MODO"
-echo "ANALISE=$ANALISE"
+echo "MODE=$MODE"
+echo "ANALYSIS=$ANALYSIS"
 echo "REVISION=$REVISION"
-echo "REVISAO_CONFERIDA=$REF_LOCAL=$REV_LOCAL"
+echo "REVISION_CHECKED=$REF_LOCAL=$REV_LOCAL"
 echo "QUALITY_GATE=$QG (informativo — D-2: não bloqueia o G5)"
 echo "CRITICAL_LEGACY=$P_LEG"
-echo "HIGH_IMPACTO=$P_IMP"
+echo "HIGH_IMPACT=$P_IMP"
 echo "CRITICAL_HIGH=$P_UNI"
 
 # 4. Catraca (D-3 + A-2): baseline lido NA HORA, nunca um número fixo em arquivo
@@ -322,7 +322,7 @@ if [ -n "$BASELINE" ]; then
     || nao_executado "falha ao comparar os conjuntos de issues (projeto x baseline)"
   NOVAS="$(grep -c . "$TMPD/novas.ids" | tr -d ' ')"
   case "$NOVAS" in ''|*[!0-9]*) nao_executado "falha ao contar as issues novas em relação ao baseline" ;; esac
-  echo "NOVAS_VS_BASELINE=$NOVAS"
+  echo "NEW_VS_BASELINE=$NOVAS"
 
   if [ "$NOVAS" -gt 0 ]; then
     # As identidades novas, com a key da issue no projeto medido (para abrir no
@@ -330,24 +330,24 @@ if [ -n "$BASELINE" ]; then
     while IFS= read -r id; do
       [ -n "$id" ] || continue
       det="$(awk -F'\t' -v i="$id" '$1==i {print "key="$2" linha="$3; exit}' "$TMPD/proj.map")"
-      echo "NOVA=$id $det"
+      echo "NEW=$id $det"
     done < <(head -50 "$TMPD/novas.ids")
-    [ "$NOVAS" -gt 50 ] && echo "NOVA=... (${NOVAS} no total; 50 listadas)"
-    echo "CATRACA=issue-nova"
-    echo "MOTIVO=$NOVAS issue(s) Critical/High existem em '$PROJ' e NÃO existem no baseline '$BASELINE' — a demanda introduziu dívida nova (D-3/§18-G5: não excepcionável). Identidade = regra|caminho|hash da linha"
-    echo "VEREDITO=reprovado"; exit 2
+    [ "$NOVAS" -gt 50 ] && echo "NEW=... (${NOVAS} no total; 50 listadas)"
+    echo "RATCHET=issue-nova"
+    echo "REASON=$NOVAS issue(s) Critical/High existem em '$PROJ' e NÃO existem no baseline '$BASELINE' — a demanda introduziu dívida nova (D-3/§18-G5: não excepcionável). Identidade = regra|caminho|hash da linha"
+    echo "VERDICT=rejected"; exit 2
   fi
 
-  if [ "$P_UNI" -eq 0 ]; then echo "CATRACA=zero"; else
-    echo "CATRACA=sem-novas ($P_UNI herdada(s) do baseline, 0 nova(s))"
-    echo "MOTIVO=dívida herdada de $P_UNI Critical/High, toda ela já presente no baseline '$BASELINE' — aprovado pela catraca (D-3); a meta continua sendo zero"
+  if [ "$P_UNI" -eq 0 ]; then echo "RATCHET=zero"; else
+    echo "RATCHET=sem-novas ($P_UNI herdada(s) do baseline, 0 nova(s))"
+    echo "REASON=dívida herdada de $P_UNI Critical/High, toda ela já presente no baseline '$BASELINE' — aprovado pela catraca (D-3); a meta continua sendo zero"
   fi
-  echo "VEREDITO=aprovado"; exit 0
+  echo "VERDICT=approved"; exit 0
 fi
 
 # 5. Sem catraca: a régua é zero (§18-G5).
 if [ "$P_UNI" -eq 0 ]; then
-  echo "VEREDITO=aprovado"; exit 0
+  echo "VERDICT=approved"; exit 0
 fi
-echo "MOTIVO=$P_UNI issue(s) Critical/High abertas (legacy=$P_LEG, impacto=$P_IMP) — §18-G5: não excepcionável"
-echo "VEREDITO=reprovado"; exit 2
+echo "REASON=$P_UNI issue(s) Critical/High abertas (legacy=$P_LEG, impacto=$P_IMP) — §18-G5: não excepcionável"
+echo "VERDICT=rejected"; exit 2

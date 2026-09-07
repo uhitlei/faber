@@ -79,8 +79,8 @@ existente + 1), paths **relativos à pasta da demanda** (exceto
 
 ```yaml
 task: TASK-XXX
-de: product-owner
-para: cto
+from_agent: product-owner
+to_agent: cto
 suggested_state: <specifying | clarification>   # fico na fase; quem avança é o CTO
 inputs_consumed: [@@FABER_SPECS_DIR@@/features/...]  # paths, nunca conteúdo colado
 outputs_produced: [spec.md]

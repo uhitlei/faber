@@ -89,8 +89,8 @@ pasta da demanda; migrations relativas à raiz do repo):
 
 ```yaml
 task: TASK-XXX
-de: db-guardian
-para: cto
+from_agent: db-guardian
+to_agent: cto
 suggested_state: <refinement | validation | in-development | blocked>
 # Modo 1: refinement (pré-análise pronta). Modo 2: validation (migration aprovada) |
 # in-development (reprova: destrutividade/acesso/exposição) | blocked (mexe em invariante intocável).

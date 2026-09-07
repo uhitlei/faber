@@ -38,7 +38,7 @@ pelos scripts — nunca manual. Trabalhe no worktree da demanda.
      congelado e as seções citadas de `06-CONVENTIONS`/`03-SECURITY`. Nada de
      handoffs do dev ou narrativa da implementação (contamina).
 
-5. **G4:** se o veredicto for `bloqueado` → espelhe as tarefas de correção na
+5. **G4:** se o veredicto for `blocked` → espelhe as tarefas de correção na
    issue e regrida: `faber/scripts/transition.sh TASK-XXX in-development --reason "review: <resumo>"`
    (correções voltam por este mesmo fluxo). Senão:
    - `faber/scripts/gate-set.sh TASK-XXX G4 approved --by cto --evidence "review.md"`

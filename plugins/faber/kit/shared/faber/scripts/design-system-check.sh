@@ -14,14 +14,14 @@
 #   sem args → arquivos .tsx/.ts/.css ALTERADOS vs <remote>/<trunk> (escopo da demanda).
 #   src/index.css e tailwind.config.ts são excluídos (é onde as cores moram).
 #
-# Saída = CHAVE=VALOR + exit: 0 conforme · 2 violações · 3 nao-executado.
+# Saída = CHAVE=VALOR + exit: 0 conforme · 2 violações · 3 not-executed.
 # =============================================================================
 set -u
 # shellcheck source=lib/config.sh
 . "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/config.sh"
 faber_require_install
 
-nao_executado() { echo "VEREDITO=nao-executado"; echo "MOTIVO=$1"; exit 3; }
+nao_executado() { echo "VERDICT=not-executed"; echo "REASON=$1"; exit 3; }
 command -v grep >/dev/null 2>&1 || nao_executado "grep ausente"
 
 # 1. alvos: args explícitos, ou o diff vs o trunk (bash 3.2 — sem mapfile)
@@ -102,14 +102,14 @@ if [ "$EXC" -gt 0 ]; then
 fi
 if [ "$VIOL" -eq 0 ]; then
   if [ "$EXC" -gt 0 ]; then
-    echo "VEREDITO=conforme-com-excecoes"
+    echo "VERDICT=compliant-with-exceptions"
   else
-    echo "VEREDITO=conforme"
+    echo "VERDICT=compliant"
   fi
   echo "NOTA=checklist manual (44px, dark+light, mobile, reuso) na Skill design-system-check"
   exit 0
 fi
-echo "VEREDITO=nao-conforme"
+echo "VERDICT=non-compliant"
 echo "--- linhas com hardcode (arquivo:linha:trecho) ---"
 printf '%s' "$ACHADOS" | sed '/^$/d'
 exit 2

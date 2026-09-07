@@ -12,7 +12,7 @@
 # rule|caminho|hash) são parte do que precisa ser testado; um jq de mentira
 # testaria o stub. Há um cenário que remove o jq do PATH para cobrir a ausência.
 # O `git` também é real, num repo-sandbox com HEAD conhecido: é contra ele que a
-# guarda A-1 (análise ≠ HEAD → nao-executado) é exercida.
+# guarda A-1 (análise ≠ HEAD → not-executed) é exercida.
 #
 # Cobre: união com sobreposição, união inconsistente (M-2), baseline 404,
 # HTTP 500, projeto sem análise, revisão divergente do HEAD (A-1), catraca com
@@ -136,14 +136,14 @@ caso "união com sobreposição = 4 (não 6, não 3)" 0 "CRITICAL_HIGH=4" \
      --project "$P" --branch main --baseline "$B"
 caso "as duas contagens saem separadas na evidência"   0 "CRITICAL_LEGACY=3" \
      --project "$P" --branch main --baseline "$B"
-caso "catraca sem issue nova aprova"              0 "NOVAS_VS_BASELINE=0" \
+caso "catraca sem issue nova aprova"              0 "NEW_VS_BASELINE=0" \
      --project "$P" --branch main --baseline "$B"
 
 # ── 2. União inconsistente (M-2): a API diz 5, a página entrega 1 chave ──────
 novo_cenario inconsistente; analises "$P" "$HEAD_SHA"
 issues "$P" leg 5 "ts:S1,src/a.ts,h1,k1"
 issues "$P" imp auto "ts:S1,src/a.ts,h1,k1"
-caso "união menor que a contagem da API = nao-executado" 3 "união inconsistente" \
+caso "união menor que a contagem da API = not-executed" 3 "união inconsistente" \
      --project "$P" --branch main
 
 # ── 3. Baseline inexistente (404) bloqueia — nunca vira "baseline zero" ──────
@@ -152,25 +152,25 @@ issues "$P" leg auto "ts:S1,src/a.ts,h1,k1"
 issues "$P" imp auto "ts:S1,src/a.ts,h1,k1"
 analises "$B" "irrelevante"     # o baseline existe como projeto…
                                 # …mas issues/search dele responde 404 (sem fixture)
-caso "baseline 404 = nao-executado (nomeia o baseline)" 3 "projeto 'TRK' não encontrado" \
+caso "baseline 404 = not-executed (nomeia o baseline)" 3 "projeto 'TRK' não encontrado" \
      --project "$P" --branch main --baseline "$B"
 
 # ── 4. HTTP 500 em issues/search ────────────────────────────────────────────
 novo_cenario http500; analises "$P" "$HEAD_SHA"
 issues "$P" leg auto "ts:S1,src/a.ts,h1,k1"; fxcode "issues.$P.leg.1" 500
-caso "HTTP 500 = nao-executado" 3 "HTTP 500" --project "$P" --branch main
+caso "HTTP 500 = not-executed" 3 "HTTP 500" --project "$P" --branch main
 
 # ── 5. Projeto provisionado e nunca escaneado (o pior fail-open) ─────────────
 novo_cenario semanalise; fx "analyses.$P" '{"analyses":[]}'
 fx "qg.$P" '{"projectStatus":{"status":"NONE"}}'
 issues "$P" leg auto; issues "$P" imp auto
-caso "projeto sem NENHUMA análise = nao-executado" 3 "sem NENHUMA análise" \
+caso "projeto sem NENHUMA análise = not-executed" 3 "sem NENHUMA análise" \
      --project "$P" --branch main
 
 # ── 6. A-1: análise publicada é de outro commit ─────────────────────────────
 novo_cenario revisaovelha; analises "$P" "0000000000000000000000000000000000000000"
 issues "$P" leg auto; issues "$P" imp auto
-caso "revisão analisada ≠ HEAD = nao-executado" 3 "veredito recusado sobre código diferente" \
+caso "revisão analisada ≠ HEAD = not-executed" 3 "veredito recusado sobre código diferente" \
      --project "$P" --branch main
 
 # ── 6b. A-1: análise sem revisão publicada ──────────────────────────────────
@@ -178,7 +178,7 @@ novo_cenario semrevisao
 fx "analyses.$P" '{"analyses":[{"date":"2026-08-17T00:00:00+0000"}]}'
 fx "qg.$P" '{"projectStatus":{"status":"OK"}}'
 issues "$P" leg auto; issues "$P" imp auto
-caso "análise sem sonar.scm.revision = nao-executado" 3 "não publicou a revisão" \
+caso "análise sem sonar.scm.revision = not-executed" 3 "não publicou a revisão" \
      --project "$P" --branch main
 
 # ── 7. A-2: catraca com issue NOVA (mesmo total, conjunto diferente) ────────
@@ -189,9 +189,9 @@ issues "$P" leg auto "ts:S1,src/a.ts,h1,k1" "ts:S9,src/novo.ts,h9,k9"
 issues "$P" imp auto "ts:S1,src/a.ts,h1,k1" "ts:S9,src/novo.ts,h9,k9"
 issues "$B" leg auto "ts:S1,src/a.ts,h1,b1" "ts:S7,src/velho.ts,h7,b7"
 issues "$B" imp auto "ts:S1,src/a.ts,h1,b1" "ts:S7,src/velho.ts,h7,b7"
-caso "issue nova com total igual = reprovado"  2 "NOVA=ts:S9|src/novo.ts|h9" \
+caso "issue nova com total igual = reprovado"  2 "NEW=ts:S9|src/novo.ts|h9" \
      --project "$P" --branch main --baseline "$B"
-caso "issue nova: contagem impressa"           2 "NOVAS_VS_BASELINE=1" \
+caso "issue nova: contagem impressa"           2 "NEW_VS_BASELINE=1" \
      --project "$P" --branch main --baseline "$B"
 
 # ── 7b. Issue que SAIU do projeto (só herdadas) aprova ──────────────────────
@@ -200,29 +200,29 @@ issues "$P" leg auto "ts:S1,src/a.ts,h1,k1"
 issues "$P" imp auto "ts:S1,src/a.ts,h1,k1"
 issues "$B" leg auto "ts:S1,src/a.ts,h1,b1" "ts:S7,src/velho.ts,h7,b7"
 issues "$B" imp auto "ts:S1,src/a.ts,h1,b1" "ts:S7,src/velho.ts,h7,b7"
-caso "só dívida herdada = aprovado pela catraca" 0 "CATRACA=sem-novas" \
+caso "só dívida herdada = aprovado pela catraca" 0 "RATCHET=sem-novas" \
      --project "$P" --branch main --baseline "$B"
 
 # ── 8. Tudo limpo ───────────────────────────────────────────────────────────
 novo_cenario limpo; analises "$P" "$HEAD_SHA"; analises "$B" "irrelevante"
 issues "$P" leg auto; issues "$P" imp auto
 issues "$B" leg auto; issues "$B" imp auto
-caso "zero Critical/High = aprovado"            0 "CATRACA=zero" \
+caso "zero Critical/High = aprovado"            0 "RATCHET=zero" \
      --project "$P" --branch main --baseline "$B"
-caso "zero Critical/High sem catraca = aprovado" 0 "VEREDITO=aprovado" \
+caso "zero Critical/High sem catraca = aprovado" 0 "VERDICT=approved" \
      --project "$P" --branch main
 
 # ── 9. M-1: parâmetro que desligaria o filtro do gate ───────────────────────
 novo_cenario injecao; analises "$P" "$HEAD_SHA"
 issues "$P" leg auto "ts:S1,src/a.ts,h1,k1"; issues "$P" imp auto "ts:S1,src/a.ts,h1,k1"
-caso "branch com & = nao-executado (M-1)" 3 "rótulo de branch fora do padrão" \
+caso "branch com & = not-executed (M-1)" 3 "rótulo de branch fora do padrão" \
      --project "$P" --branch 'main&resolved=true'
-caso "projeto com & = nao-executado (M-1)" 3 "chave de projeto fora do padrão" \
+caso "projeto com & = not-executed (M-1)" 3 "chave de projeto fora do padrão" \
      --project "$P&resolved=true" --branch main
-caso "baseline com & = nao-executado (M-1)" 3 "chave de baseline fora do padrão" \
+caso "baseline com & = not-executed (M-1)" 3 "chave de baseline fora do padrão" \
      --project "$P" --branch main --baseline 'TRK&x=1'
 
-# ── 10. Ferramenta ausente = nao-executado, nunca aprovado ──────────────────
+# ── 10. Ferramenta ausente = not-executed, nunca aprovado ──────────────────
 novo_cenario semjq; analises "$P" "$HEAD_SHA"
 issues "$P" leg auto; issues "$P" imp auto
 SEMJQ="$SB/semjq"; mkdir -p "$SEMJQ"
@@ -233,9 +233,9 @@ ln -sf "$SB/bin/curl" "$SEMJQ/curl"
 ( PATH="$SEMJQ"; "$BASH" "$GATE" --project "$P" --branch main >"$SB/semjq.out" 2>&1 )
 rc=$?
 if [ "$rc" = 3 ] && grep -q "jq ausente" "$SB/semjq.out"; then
-  PASS=$((PASS+1)); printf '%-6s %-58s exit=%s (esperado 3)\n' "OK  " "jq ausente = nao-executado" "$rc"
+  PASS=$((PASS+1)); printf '%-6s %-58s exit=%s (esperado 3)\n' "OK  " "jq ausente = not-executed" "$rc"
 else
-  FAIL=$((FAIL+1)); printf '%-6s %-58s exit=%s (esperado 3)\n' "FALHOU" "jq ausente = nao-executado" "$rc"
+  FAIL=$((FAIL+1)); printf '%-6s %-58s exit=%s (esperado 3)\n' "FALHOU" "jq ausente = not-executed" "$rc"
 fi
 
 # ── 11. N-6(a): rejected SEM catraca — o caminho mais básico do gate ───────
@@ -243,21 +243,21 @@ fi
 novo_cenario reprovado; analises "$P" "$HEAD_SHA"
 issues "$P" leg auto "ts:S1,src/a.ts,h1,k1" "ts:S2,src/b.ts,h2,k2"
 issues "$P" imp auto "ts:S2,src/b.ts,h2,k2" "ts:S3,src/c.ts,h3,k3"
-caso "Critical/High sem catraca = reprovado" 2 "MOTIVO=3 issue(s) Critical/High abertas (legacy=2, impacto=2)" \
+caso "Critical/High sem catraca = reprovado" 2 "REASON=3 issue(s) Critical/High abertas (legacy=2, impacto=2)" \
      --project "$P" --branch main
 
 # ── 12. N-6(b) + N-2: modo legado/trunk ─────────────────────────────────────
-# Uso antigo (`sonar-gate.sh <branch>`): MODO=branch, `&branch=` nas consultas e
+# Uso antigo (`sonar-gate.sh <branch>`): MODE=branch, `&branch=` nas consultas e
 # revisão conferida contra ref de branch. O repo-sandbox tem SÓ
 # refs/remotes/origin/Develop (sem refs/heads/Develop), que é o estado de um
-# worktree de demanda — antes do N-2 isto era nao-executado.
+# worktree de demanda — antes do N-2 isto era not-executed.
 novo_cenario trunk; analises "$B" "$HEAD_SHA"
 issues "$B" leg auto; issues "$B" imp auto
 out="$(bash "$GATE" Develop 2>&1)"; rc=$?
 ok=1
 [ "$rc" = 0 ] || ok=0
-echo "$out" | grep -qF "MODO=branch" || ok=0
-echo "$out" | grep -qF "REVISAO_CONFERIDA=refs/remotes/origin/Develop=$HEAD_SHA" || ok=0
+echo "$out" | grep -qF "MODE=branch" || ok=0
+echo "$out" | grep -qF "REVISION_CHECKED=refs/remotes/origin/Develop=$HEAD_SHA" || ok=0
 grep -q 'issues/search.*branch=Develop' "$FIXDIR/urls.log" || ok=0   # `&branch=` só existe no modo legado
 if [ $ok -eq 1 ]; then
   PASS=$((PASS+1)); printf '%-6s %-58s exit=%s (esperado 0)\n' "OK  " "modo trunk: branch= na query + ref origin (N-2)" "$rc"

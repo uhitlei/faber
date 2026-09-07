@@ -64,13 +64,13 @@ run para o HEAD → "não executado" explícito.
    `faber/scripts/evidence.sh TASK-XXX sonar-analise -- faber/scripts/sonar-task.sh TASK-XXX`
 2. **Rode o gate sobre o espelho, com a catraca contra o trunk:**
    `faber/scripts/evidence.sh TASK-XXX sonar -- faber/scripts/sonar-gate.sh --project "${FABER_SONAR_PROJECT_KEY}-TASK-XXX" --branch feature/TASK-XXX --baseline "$FABER_SONAR_PROJECT_KEY"`
-3. Leia o `VEREDITO` (chaves: `CRITICAL_LEGACY`, `HIGH_IMPACTO`, `CRITICAL_HIGH`
-   = a união dos dois modelos de severidade; `NOVAS_VS_BASELINE`; `QUALITY_GATE`
+3. Leia o `VERDICT` (chaves: `CRITICAL_LEGACY`, `HIGH_IMPACT`, `CRITICAL_HIGH`
+   = a união dos dois modelos de severidade; `NEW_VS_BASELINE`; `QUALITY_GATE`
    é **informativo**, não bloqueia):
    - **aprovado** (exit 0) = zero `CRITICAL_HIGH`, ou nenhuma issue **nova** em
      relação ao baseline (catraca) → siga com o resto da validação.
    - **reprovado** (exit 2) = Critical/High novo em relação ao baseline (linhas
-     `NOVA=` listam regra|arquivo|hash) ou, sem catraca, qualquer Critical/High
+     `NEW=` listam regra|arquivo|hash) ou, sem catraca, qualquer Critical/High
      → **NÃO prossiga**. Por padrão, a **correção vem antes**: liste cada issue
      como tarefa de correção e sinalize `suggested_state: in-development`
      (regressão §6.2) para o `senior-developer` corrigir — você **não** edita
@@ -79,7 +79,7 @@ run para o HEAD → "não executado" explícito.
      o passo 1 — o gate recusa análise de outro commit).
    - Medium/Low (`MAJOR/MINOR/INFO`) → registrados; exceção só com **decisão do
      CTO** em `decisions.md`.
-   - **nao-executado** (exit 3; o `MOTIVO` diz qual: token inválido/ausente,
+   - **not-executed** (exit 3; o `MOTIVO` diz qual: token inválido/ausente,
      host off, projeto sem análise, **revisão analisada ≠ HEAD**, dado
      inconsistente) → registre "não executado" explícito, **nunca** "passou"
      inferido (§15). Ausência de dado nunca é aprovação.
@@ -87,7 +87,7 @@ run para o HEAD → "não executado" explícito.
 ## Evidência obrigatória (antes do handoff — §4, §17)
 
 Handoff sem evidência referenciada é inválido (`gate-check.sh` rejeita). No
-**papel 2**, as evidências são os logs do `sonar-demanda` **e** do `sonar-gate`
+**papel 2**, as evidências são os logs do `sonar-task` **e** do `sonar-gate`
 (o gate sozinho não prova nada se a análise for de outro commit) — ou, com o
 módulo desligado, os logs do `gh run`. No **papel 1**, é o comando que você
 executar (ex.: baseline do `sonar-gate` contra `@@FABER_TRUNK@@`, ou um check
@@ -102,8 +102,8 @@ arquivos de produto, relativos à raiz do repo):
 
 ```yaml
 task: TASK-XXX
-de: devsecops
-para: cto
+from_agent: devsecops
+to_agent: cto
 suggested_state: <refinement | validation | in-development | blocked>
 # Papel 1 (refinement): refinement (tarefas técnicas adicionadas à spec).
 # Papel 2 (validação): validation (Sonar/CI aprovado) | in-development (reprovou) | blocked.

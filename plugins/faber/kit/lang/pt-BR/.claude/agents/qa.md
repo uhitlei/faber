@@ -76,8 +76,8 @@ arquivos de produto, relativos à raiz do repo):
 
 ```yaml
 task: TASK-XXX
-de: qa
-para: cto
+from_agent: qa
+to_agent: cto
 suggested_state: <specifying | clarification | validation | in-development | blocked>
 # sugestão; o CTO decide o gate. Modo 1 (spec): specifying (testabilidade OK, fico na fase) | clarification (AC vago).
 # Modo 2 (validação): validation (verde; sigo p/ os outros validadores + G5) | in-development (reprovou, c/ motivo) | blocked.

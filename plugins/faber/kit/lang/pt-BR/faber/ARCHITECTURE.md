@@ -361,8 +361,8 @@ Todo subagente encerra escrevendo `handoffs/NN-<de>-para-cto.md` (H5 valida):
 
 ```yaml
 task: TASK-052
-de: senior-developer
-para: cto
+from_agent: senior-developer
+to_agent: cto
 suggested_state: developed
 inputs_consumed: [spec.md, refinamento.md]          # paths, nunca conteúdo
 outputs_produced: [src/..., migrations/...]

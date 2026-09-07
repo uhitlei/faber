@@ -35,11 +35,11 @@ uso() { echo "uso: gate-check.sh <TASK-XXX | path> <estado-destino> [--reason \"
 
 [ $# -ge 2 ] || uso
 ALVO="$1"; DESTINO="$2"; shift 2
-MOTIVO=""
+REASON=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --reason)
-      MOTIVO="${2:-}"
+      REASON="${2:-}"
       shift
       [ $# -gt 0 ] && shift   # --reason sem valor não trava o parser
       ;;
@@ -88,7 +88,7 @@ if [ "$DESTINO" = "code-review" ]; then
 fi
 
 export FABER_E2E FABER_E2E_CMD_REGEX FABER_E2E_SUMMARY_REGEX FABER_E2E_FAIL_REGEX FABER_CMD_E2E FABER_OWNER
-python3 - "$TMP_INST" "$TMP_SCHEMA" "$DEMANDA_DIR" "$DESTINO" "$MOTIVO" "$PUSH" "$SCRIPT_DIR" <<'PYEOF'
+python3 - "$TMP_INST" "$TMP_SCHEMA" "$DEMANDA_DIR" "$DESTINO" "$REASON" "$PUSH" "$SCRIPT_DIR" <<'PYEOF'
 import glob, json, os, re, sys
 
 inst = json.load(open(sys.argv[1]))

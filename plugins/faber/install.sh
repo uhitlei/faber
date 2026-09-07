@@ -38,7 +38,7 @@ KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 KIT_SRC="$KIT_DIR/kit"
 VERSAO="$(cat "$KIT_DIR/VERSION" 2>/dev/null || echo dev)"
 
-ALVO=""; MODO=""; INTERACAO=""; LANG_PACK=""; PROJETO=""; OWNER=""; OWNER_NOME=""; TRUNK=""; MAIN=""
+ALVO=""; MODE=""; INTERACAO=""; LANG_PACK=""; PROJETO=""; OWNER=""; OWNER_NOME=""; TRUNK=""; MAIN=""
 SPECS_DIR=""; GH=""; BOARD=""; DASHBOARD=""; PERFIL=""; GUIA_PRD=""; LABELS=0; SIM=0; DRY=0; FORCAR=0
 
 uso() { sed -n '2,32p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
@@ -48,7 +48,7 @@ ok()   { echo "✔ $*"; }
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --mode)       MODO="${2:?}"; shift 2 ;;
+    --mode)       MODE="${2:?}"; shift 2 ;;
     --interaction)  INTERACAO="${2:?}"; shift 2 ;;
     --lang)       LANG_PACK="${2:?}"; shift 2 ;;
     --project)    PROJETO="${2:?}"; shift 2 ;;
@@ -123,14 +123,14 @@ acha_docs() {  # acha_docs <padrões find -iname separados por |>
 PRD_DOCS=$(acha_docs 'PRD*.md|BRD*.md|prd.md|brd.md|requisitos*.md|requirements*.md')
 BRAIN_DOCS=$(acha_docs '*brainstorm*.md|ideias.md|ideas.md|braindump.md|brain-dump.md|notas.md|notes.md')
 
-if [ -z "$MODO" ]; then
-  if [ "$N_CODIGO" -ge 10 ] && { [ -n "$MANIFESTOS" ] || [ "$N_COMMITS" -ge 3 ]; }; then MODO="existing-repo"
-  elif [ -n "$SK_SINAIS" ]; then MODO="spec-kit"
-  elif [ -n "$(echo "$PRD_DOCS" | tr -d ' ')" ]; then MODO="prd"
-  elif [ -n "$(echo "$BRAIN_DOCS" | tr -d ' ')" ]; then MODO="brainstorm"
-  else MODO="empty"; fi
+if [ -z "$MODE" ]; then
+  if [ "$N_CODIGO" -ge 10 ] && { [ -n "$MANIFESTOS" ] || [ "$N_COMMITS" -ge 3 ]; }; then MODE="existing-repo"
+  elif [ -n "$SK_SINAIS" ]; then MODE="spec-kit"
+  elif [ -n "$(echo "$PRD_DOCS" | tr -d ' ')" ]; then MODE="prd"
+  elif [ -n "$(echo "$BRAIN_DOCS" | tr -d ' ')" ]; then MODE="brainstorm"
+  else MODE="empty"; fi
 fi
-case "$MODO" in existing-repo|spec-kit|prd|brainstorm|discovery|empty) ;; *) erro "--mode inválido: $MODO" ;; esac
+case "$MODE" in existing-repo|spec-kit|prd|brainstorm|discovery|empty) ;; *) erro "--mode inválido: $MODE" ;; esac
 
 echo
 echo "── Contexto detectado ──────────────────────────────────────────────"
@@ -139,7 +139,7 @@ echo "   arquivos de código: $N_CODIGO · manifestos: ${MANIFESTOS:-nenhum}"
 echo "   spec-kit: ${SK_SINAIS:-não}"
 echo "   PRD/BRD: $( [ -n "$(echo "$PRD_DOCS" | tr -d ' ')" ] && echo "$PRD_DOCS" || echo "não")"
 echo "   brainstorm: $( [ -n "$(echo "$BRAIN_DOCS" | tr -d ' ')" ] && echo "$BRAIN_DOCS" || echo "não")"
-echo "   ⇒ modo de bootstrap: $MODO"
+echo "   ⇒ modo de bootstrap: $MODE"
 [ "$JA_INSTALADA" -eq 1 ] && echo "   AVISO: faber/config/faber.env já existe — a fábrica já foi instalada aqui (use --force para sobrescrever os arquivos do kit; o faber.env atual é preservado)"
 echo
 
@@ -240,7 +240,7 @@ echo "── Plano ────────────────────�
 echo "   projeto=$PROJETO · owner=$OWNER_NOME ($OWNER) · trunk=$TRUNK · main=$MAIN"
 echo "   idioma=$LANG_PACK · interação=$INTERACAO · gh=$GH${GH_REPO:+ ($GH_REPO)} · board=$BOARD · dashboard=$DASHBOARD · specs=$SPECS_DIR/"
 echo "   lint='$D_LINT' · build='$D_BUILD' · test='$D_TEST' · e2e=$D_E2E · migrations='${D_MIG:-—}' · perfil=${PERFIL:-—}"
-echo "   modo de bootstrap=$MODO → depois: claude → /faber-init"
+echo "   modo de bootstrap=$MODE → depois: claude → /faber-init"
 [ "$DRY" -eq 1 ] && { echo "(dry-run: nada foi escrito)"; exit 0; }
 echo
 
@@ -403,13 +403,13 @@ grep -qxF "*.log" "$GI" && add_gi "!faber/tasks/**/evidence/*.log"
 grep -qxF "*.log" "$GI" && add_gi "!faber/bootstrap/evidence/*.log"
 
 # ── 10. CONTEXT.md do bootstrap ───────────────────────────────────────────
-info "gravando faber/bootstrap/CONTEXT.md (modo: $MODO)"
+info "gravando faber/bootstrap/CONTEXT.md (modo: $MODE)"
 cat > "$ALVO/faber/bootstrap/CONTEXT.md" <<EOF
 # Contexto do bootstrap — escrito por install.sh em $(date +%Y-%m-%dT%H:%M:%S%z)
 
 \`\`\`yaml
 status: pending             # /faber-init muda para 'done'
-modo: $MODO
+modo: $MODE
 interacao: $INTERACAO
 kit_versao: $VERSAO
 projeto: "$PROJETO"
@@ -430,7 +430,7 @@ guia_prd_brd: faber/templates/prd-brd-guide.md$( [ -n "$GUIA_PRD" ] && echo "   
 \`\`\`
 
 Próximo passo: abrir o Claude Code neste repositório e rodar **\`/faber-init\`**.
-O playbook do modo está em \`faber/bootstrap/modes/$MODO.md\`.
+O playbook do modo está em \`faber/bootstrap/modes/$MODE.md\`.
 EOF
 
 # ── 11. git: branch faber/bootstrap ──────────────────────────────────────
@@ -480,10 +480,10 @@ echo "── Pronto ────────────────────
 echo "   Fábrica instalada em $ALVO (branch $(git symbolic-ref --short HEAD 2>/dev/null || echo '?'))."
 echo "   Próximos passos:"
 echo "     1. cd \"$ALVO\" && claude"
-echo "     2. /faber-init            ← bootstrap no modo '$MODO' (gera specs, config e backlog)"
+echo "     2. /faber-init            ← bootstrap no modo '$MODE' (gera specs, config e backlog)"
 echo "     3. merge da PR faber/bootstrap → $TRUNK (gate de fundação, seu)"
 echo "     4. /faber-task <sua primeira demanda>"
-[ "$MODO" = "brainstorm" ] && echo "   Modo brainstorm: o PRD/BRD seguirá faber/templates/prd-brd-guide.md — substitua pelo seu guia antes do /faber-init (ou reinstale com --prd-guide)."
+[ "$MODE" = "brainstorm" ] && echo "   Modo brainstorm: o PRD/BRD seguirá faber/templates/prd-brd-guide.md — substitua pelo seu guia antes do /faber-init (ou reinstale com --prd-guide)."
 [ "$PYYAML" -eq 1 ] || echo "   Antes de tudo: pip3 install pyyaml"
 echo "   Testes do kit (evidência de que os guarda-vidas funcionam nesta máquina):"
 echo "     bash .claude/hooks/test-h1-h2.sh && bash faber/scripts/test-gate-check.sh"

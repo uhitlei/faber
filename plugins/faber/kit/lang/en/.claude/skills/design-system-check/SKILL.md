@@ -11,7 +11,7 @@ System declarados em `02-DESIGN-SYSTEM.md`, ex.: classes utilitárias
 `bg-primary`, `text-foreground`, `border-border`). Mecânica determinística:
 `faber/scripts/design-system-check.sh` (zero LLM). Módulo opcional:
 `FABER_DESIGN_SYSTEM=on` em `faber/config/faber.env`; desligado → a Parte 1
-sai como `nao-executado` e o parecer se apoia na Parte 2. PT-BR (P6).
+sai como `not-executed` e o parecer se apoia na Parte 2. PT-BR (P6).
 
 ## Parte 1 — automática (grep → evidência)
 
@@ -27,14 +27,14 @@ Pega: cor **hex em classe arbitrária** `[#...]`, **utilitárias absolutas**
 (`text-[hsl(0_0%_100%)]` é o mesmo branco que `text-white`, só noutra sintaxe).
 `hsl(var(--token))` **não** é violação — uso legítimo de token continua liberado.
 
-Saída: `VIOLACOES_HARDCODE` + `EXCECOES_DECLARADAS` + `VEREDITO`, exit 0/2/3:
+Saída: `VIOLACOES_HARDCODE` + `EXCECOES_DECLARADAS` + `VERDICT`, exit 0/2/3:
 
 | Veredito | Significado | Ação |
 |---|---|---|
 | `conforme` | zero violação, zero exceção | segue |
-| `conforme-com-excecoes` | zero violação, mas há exceção **declarada e listada** | **leia as exceções**; cada uma precisa estar justificada em `02-DESIGN-SYSTEM.md` (seção de exceções; ex.: cor de marca de terceiro). Exceção não justificada = reprova |
-| `nao-conforme` | há violação | troque por token semântico **antes do G5** |
-| `nao-executado` | ferramenta indisponível ou módulo desligado | registre explícito (§15), jamais infira |
+| `compliant-with-exceptions` | zero violação, mas há exceção **declarada e listada** | **leia as exceções**; cada uma precisa estar justificada em `02-DESIGN-SYSTEM.md` (seção de exceções; ex.: cor de marca de terceiro). Exceção não justificada = reprova |
+| `non-compliant` | há violação | troque por token semântico **antes do G5** |
+| `not-executed` | ferramenta indisponível ou módulo desligado | registre explícito (§15), jamais infira |
 
 **Exceção declarada** (`// ds-exception: <motivo>`) abre uma faixa até o fim do
 bloco. Ela nunca é escondida: o script **lista** as linhas cobertas, para o

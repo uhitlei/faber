@@ -44,7 +44,7 @@ Estrutura obrigatória:
 
 1. **Cabeçalho:** demanda, diff revisado (path da evidência), arquivos
    consultados fora do diff (se houver — exceção cirúrgica), data.
-2. **Veredicto:** `approved` | `aprovado-com-ressalvas` | `bloqueado`
+2. **Veredicto:** `approved` | `approved-with-caveats` | `blocked`
    (bloqueado = existe achado crítico ou alto sem mitigação).
 3. **Aderência à spec:** AC por AC — atendido / não atendido / não
    verificável no diff (diga por quê).
@@ -78,8 +78,8 @@ produto, relativos à raiz):
 
 ```yaml
 task: TASK-XXX
-de: code-reviewer
-para: cto
+from_agent: code-reviewer
+to_agent: cto
 suggested_state: <validation | in-development | blocked>  # sugestão; o CTO decide o G4
 inputs_consumed: [spec.md, evidence/NN-diff.log]
 outputs_produced: [review.md]
