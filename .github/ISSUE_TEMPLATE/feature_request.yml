@@ -1,0 +1,22 @@
+name: Feature request
+description: Propose a change to the factory
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What goes wrong today, concretely. Not the solution yet.
+    validations: { required: true }
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations: { required: true }
+  - type: checkboxes
+    id: guardrail
+    attributes:
+      label: Does this touch a guardrail or a gate?
+      options:
+        - label: "Yes — and I understand it needs a test case that fails without the change"
+        - label: "No"

@@ -1,0 +1,93 @@
+# Template inicial vazio: não constitui pacote validado. Contrato na skill requirements-discovery.
+# problem: 7.5 pontos — Problema, contexto atual e impacto identificados
+# objectives: 7.5 pontos — Objetivos e resultados de negócio verificáveis
+# users: 5 pontos — Usuários e stakeholders identificados
+# permissions: 5 pontos — Responsabilidades e acesso esclarecidos
+# scope: 7.5 pontos — Escopo da entrega delimitado
+# out_of_scope: 7.5 pontos — Exclusões e limites explícitos
+# workflows: 7.5 pontos — Fluxos principais e exceções descritos
+# rules: 7.5 pontos — Regras de negócio e condições esclarecidas
+# functional: 7.5 pontos — Requisitos necessários, atômicos e consistentes
+# dependencies: 7.5 pontos — Dependências e prioridades justificadas
+# acceptance: 7.5 pontos — Critérios de aceite verificáveis em cada requisito
+# edge_cases: 7.5 pontos — Cenários negativos e de borda verificáveis
+# data: 2.5 pontos — Dados, origem, retenção e transição avaliados
+# integrations: 2.5 pontos — Integrações e falhas avaliadas
+# quality: 2.5 pontos — Qualidades relevantes possuem limites verificáveis
+# risks: 2.5 pontos — Riscos, restrições e viabilidade avaliados
+# traceability: 2.5 pontos — Requisitos e decisões rastreiam a fontes
+# source_coverage: 2.5 pontos — Cobertura das fontes e versões revisada
+schema_version: 1
+checks:
+  problem:
+    status: missing
+    reason: ''
+    evidence: []
+  objectives:
+    status: missing
+    reason: ''
+    evidence: []
+  users:
+    status: missing
+    reason: ''
+    evidence: []
+  permissions:
+    status: missing
+    reason: ''
+    evidence: []
+  scope:
+    status: missing
+    reason: ''
+    evidence: []
+  out_of_scope:
+    status: missing
+    reason: ''
+    evidence: []
+  workflows:
+    status: missing
+    reason: ''
+    evidence: []
+  rules:
+    status: missing
+    reason: ''
+    evidence: []
+  functional:
+    status: missing
+    reason: ''
+    evidence: []
+  dependencies:
+    status: missing
+    reason: ''
+    evidence: []
+  acceptance:
+    status: missing
+    reason: ''
+    evidence: []
+  edge_cases:
+    status: missing
+    reason: ''
+    evidence: []
+  data:
+    status: missing
+    reason: ''
+    evidence: []
+  integrations:
+    status: missing
+    reason: ''
+    evidence: []
+  quality:
+    status: missing
+    reason: ''
+    evidence: []
+  risks:
+    status: missing
+    reason: ''
+    evidence: []
+  traceability:
+    status: missing
+    reason: ''
+    evidence: []
+  source_coverage:
+    status: missing
+    reason: ''
+    evidence: []

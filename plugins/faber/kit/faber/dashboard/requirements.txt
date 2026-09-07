@@ -1,0 +1,20 @@
+# Dependências do dashboard da fábrica.
+# Isoladas em faber/dashboard/.venv — NUNCA no Python global da máquina e
+# NUNCA no manifesto de dependências do produto. Nada aqui entra em artefato
+# de build (ver faber/dashboard/trava_deploy.py).
+#
+# Instalar:  python3 -m venv faber/dashboard/.venv
+#            faber/dashboard/.venv/bin/pip install -r faber/dashboard/requirements.txt
+#
+# Por que só isto: SQLAlchemy/Alembic/Pydantic não têm dado passando por aqui;
+# HTMX/Alpine/Tailwind são desnecessários numa tela de 2 rotas GET sem
+# JavaScript. Jinja2 é o único item inegociável — o `titulo` vem do GitHub e o
+# autoescape é o controle de XSS.
+Flask==3.1.3
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+Werkzeug==3.1.8
+blinker==1.9.0
+click==8.4.2
+itsdangerous==2.2.0
+PyYAML==6.0.3

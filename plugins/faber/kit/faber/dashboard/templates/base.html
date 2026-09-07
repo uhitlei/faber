@@ -1,0 +1,72 @@
+<!doctype html>
+<!-- CANÁRIO-TRAVA-DEPLOY: FABER-DASHBOARD-INTERNAL-DO-NOT-PUBLISH -->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  {# Recarrega sozinho SÓ quando há execução ao vivo — tela parada não
+     recarrega. Zero JavaScript; `?vivo=0` desliga. Não é push (meta-refresh):
+     SSE está fora do escopo. #}
+  {% if auto_refresh %}<meta http-equiv="refresh" content="{{ auto_refresh }}">{% endif %}
+  <title>{% block titulo %}Fábrica{% endblock %} · Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+  <header class="topo">
+    <div class="topo-titulo">
+      <a href="{{ url_for('kanban') }}">Fábrica de Software</a>
+      <span class="selo">somente leitura</span>
+    </div>
+    <form class="busca" method="get" action="{{ url_for('kanban') }}">
+      <label for="q" class="oculto">Buscar por ID ou título</label>
+      <input type="search" id="q" name="q" value="{{ termo|default('') }}"
+             placeholder="buscar por ID ou título (ex.: TASK-42, dashboard)">
+      <button type="submit">Buscar</button>
+      {% if termo %}<a class="limpar" href="{{ url_for('kanban') }}">limpar</a>{% endif %}
+    </form>
+  </header>
+
+  {# Quadro incompleto tem que se anunciar: fonte que falhou aparece, sempre,
+     nas duas telas. Silêncio aqui vira "nada a fazer" com cara de verdade. #}
+  {% if projecao is defined and projecao.degradada %}
+  <section class="degradada" data-degradada="sim" role="alert">
+    <strong>Quadro possivelmente INCOMPLETO:</strong>
+    {{ projecao.falhas|length }} fonte(s) não puderam ser lidas — o que está na tela
+    pode não ser tudo. Isto não é "nada a fazer": é "não consegui ler".
+    <ul>
+      {% for f in projecao.falhas[:5] %}
+      <li><code>{{ f.comando }}</code> — {{ f.motivo }}{% if f.vezes > 1 %} (×{{ f.vezes }}){% endif %}</li>
+      {% endfor %}
+      {% if projecao.falhas|length > 5 %}<li>… e mais {{ projecao.falhas|length - 5 }}</li>{% endif %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {# Telemetria que não pôde ser lida também se anuncia: o Kanban continua
+     inteiro, mas ninguém deve ler "sem tokens" como "custou zero". #}
+  {% if tel is defined and tel.indisponivel %}
+  <section class="degradada" data-telemetria="indisponivel" role="alert">
+    <strong>Telemetria indisponível:</strong> {{ tel.indisponivel }} —
+    o quadro abaixo (projeção do <code>state.yaml</code>) continua válido;
+    tokens, agente ao vivo e output é que não puderam ser lidos.
+  </section>
+  {% endif %}
+
+  {% block conteudo %}{% endblock %}
+
+  <footer class="rodape">
+    {% if projecao is defined %}
+    <span>{{ projecao.total_copias }} cópias de <code>state.yaml</code> em
+      {{ projecao.fontes|length }} fontes lidas com sucesso
+      {%- if projecao.degradada %} (<strong>+{{ projecao.falhas|length }} falharam</strong>){% endif %}</span>
+    <span>leitura completa em {{ projecao.custo_ms }} ms · quadro sem cache</span>
+    <span>lido em {{ projecao.lido_em }}</span>
+    {% endif %}
+    {% if tel is defined and tel.varredura %}
+    <span>telemetria: {{ tel.varredura.arquivos }} transcript(s),
+      {{ tel.varredura.eventos }} evento(s) novo(s) em {{ tel.varredura.ms }} ms</span>
+    {% endif %}
+  </footer>
+</body>
+</html>

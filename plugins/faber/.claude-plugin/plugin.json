@@ -1,0 +1,24 @@
+{
+  "name": "faber",
+  "displayName": "Faber",
+  "version": "2.0.0",
+  "description": "Gated software factory for Claude Code. Installs a CTO orchestrator, 9 subagents, 10 skills, 12 commands and 7 deterministic hooks that enforce the rules in code, not in prompts.",
+  "author": {
+    "name": "uhitlei",
+    "url": "https://github.com/uhitlei"
+  },
+  "homepage": "https://github.com/uhitlei/faber",
+  "repository": "https://github.com/uhitlei/faber",
+  "license": "MIT",
+  "keywords": [
+    "software-factory",
+    "agents",
+    "gates",
+    "governance",
+    "spec-driven",
+    "workflow",
+    "orchestration",
+    "code-review",
+    "qa"
+  ]
+}

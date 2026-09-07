@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block titulo %}Kanban{% endblock %}
+
+{% macro card(d, t) %}
+  {# data-* são o contrato assertado pelos testes: layout pode mudar, estes não #}
+  <article class="card{% if d.destaque %} destaque-{{ d.destaque }}{% endif %}{% if not d.valido %} invalida{% endif %}{% if t and t.ao_vivo %} ao-vivo{% endif %}"
+           data-demanda="{{ d.nome }}" data-estado="{{ d.estado }}"
+           data-coluna="{{ d.coluna or '' }}" data-valido="{{ 'sim' if d.valido else 'nao' }}"
+           data-ao-vivo="{{ 'sim' if t and t.ao_vivo else 'nao' }}"
+           data-tokens-saida="{{ t.tokens.saida if t else '' }}"
+           data-agente-vivo="{{ t.agente if t and t.ao_vivo else '' }}"
+           data-outros-agentes="{{ t.outros if t and t.ao_vivo else '' }}"
+           data-mensagens="{{ t.mensagens|length if t else 0 }}">
+    <div class="card-topo">
+      <a class="id" href="{{ url_for('demanda', nome=d.nome) }}">{{ d.nome }}</a>
+      {% if t and t.ao_vivo %}
+        {# Indicador de atividade REAL (AC-10), distinto do destaque de
+           clarification/blocked. Ao lado dele vai o dado cru — uma
+           ferramenta longa deixa o transcript mudo e o LIVE apaga; "há Xs"
+           explica isso sozinho, sem inventar estado. #}
+        <span class="ao-vivo" title="atividade nos últimos {{ limiar }} s">AO VIVO</span>
+      {% endif %}
+      <span class="estado estado-{{ d.estado }}">{{ d.estado if d.valido else 'leitura inválida' }}</span>
+    </div>
+    <p class="titulo">{{ d.titulo or '(sem título)' }}</p>
+    {% if d.destaque == 'clarification' %}
+      <p class="aviso">Aguardando decisão do Owner (clarification)</p>
+    {% elif d.destaque == 'blocked' %}
+      <p class="aviso">Bloqueada: {{ d.motivo_bloqueio }}</p>
+    {% endif %}
+    {% if not d.valido %}<p class="aviso">{{ d.erro }} — fonte: {{ d.fonte }}</p>{% endif %}
+
+    {% if t and t.mensagens %}
+    {# RN-1/AC-1: as últimas 4–5 mensagens de output, relidas do JSONL a cada
+       request e nunca gravadas em banco (RN-2).
+       Autoescape do Jinja2 é o controle de XSS: isto aqui é conteúdo de fora,
+       e nenhum template usa |safe.
+
+       Sem atividade ao vivo o bloco CONTINUA aparecendo — o AC-11 exige que o
+       output recente sobreviva ao restart, sem sessão viva —, mas rotulado.
+       Sem o rótulo, output de uma execução encerrada há semanas se parecia
+       com trabalho acontecendo agora: a tela estaria enganando, mesmo
+       exibindo dado verdadeiro. #}
+    {% if not t.ao_vivo %}
+    <p class="rotulo-historico" data-output="historico">última execução{% if t.idade is not none %}
+      · há {{ t.idade }}s{% endif %}</p>
+    {% endif %}
+    <ul class="saida{% if not t.ao_vivo %} saida-historica{% endif %}"
+        data-saida="{{ t.mensagens|length }}"
+        data-saida-tipo="{{ 'ao-vivo' if t.ao_vivo else 'historico' }}">
+      {% for m in t.mensagens %}
+      <li class="msg msg-{{ m.tipo }}"><span class="quem">{{ m.agente }}</span>{{ m.texto }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="card-rodape">
+      {% if t and t.ao_vivo and t.agente %}
+        <span class="agente agente-vivo">{{ t.agente }}{% if t.outros %} +{{ t.outros }}{% endif %}</span>
+        {% if t.idade is not none %}<span class="idade">há {{ t.idade }}s</span>{% endif %}
+      {% elif d.agente %}
+        {# RN-13: sem atividade ao vivo, cai de volta para o state.yaml #}
+        <span class="agente">{{ d.agente }}</span>
+        {# A idade também aparece com o LIVE apagado — é justamente quando ela
+           explica alguma coisa (ferramenta longa deixa o transcript mudo e o
+           indicador pisca). #}
+        {% if t and t.idade is not none %}<span class="idade">há {{ t.idade }}s</span>{% endif %}
+      {% endif %}
+      {% if t %}
+        <span class="tokens" title="tokens de output, deduplicados por requestId (MAX)">
+          {{ '{:,}'.format(t.tokens.saida).replace(',', '.') }} output</span>
+      {% endif %}
+      {% if d.gate_corrente %}<span class="gate">{{ d.gate_corrente }} pendente</span>{% endif %}
+      {% if d.aguarda_owner %}<span class="owner">precisa de você</span>{% endif %}
+      {% if not d.tipo_valido and d.valido %}<span class="alerta">tipo inválido</span>{% endif %}
+      {% if d.estados_divergentes %}
+        <span class="divergente" title="cópias divergentes: {{ d.estados_divergentes|join(', ') }}">
+          {{ d.total_copias }} cópias ⚠</span>
+      {% endif %}
+    </div>
+  </article>
+{% endmacro %}
+
+{% block conteudo %}
+<section class="kpis">
+  {# rótulo colado no cálculo: 'ativas' exclui done/cancelled/inválidas #}
+  <div class="kpi"><strong>{{ projecao.kpis.ativas }}</strong><span>em andamento</span></div>
+  <div class="kpi"><strong>{{ projecao.kpis.aguardando_owner }}</strong><span>aguardando Owner</span></div>
+  <div class="kpi"><strong>{{ projecao.kpis.concluidas }}</strong><span>concluídas (done)</span></div>
+  <div class="kpi"><strong>{{ projecao.kpis.total }}</strong><span>demandas conhecidas</span></div>
+  <div class="kpi"><strong>{{ projecao.kpis.canceladas }}</strong><span>canceladas (fora do quadro)</span></div>
+  <div class="kpi{% if projecao.kpis.invalidas %} kpi-alerta{% endif %}">
+    <strong>{{ projecao.kpis.invalidas }}</strong><span>leituras inválidas</span></div>
+  {% if tel is defined and not tel.indisponivel %}
+  <div class="kpi" data-kpi="ao-vivo"><strong>{{ tel.ao_vivo }}</strong><span>ao vivo agora</span></div>
+  {# Consumo cuja branch não mapeia para demanda (develop, release/…).
+     Aparece como observação — ratear entre as demandas seria número
+     inferido; omitir seria buraco silencioso. #}
+  <div class="kpi" data-kpi="fora-de-demanda">
+    <strong>{{ '{:,}'.format(tel.fora.saida).replace(',', '.') }}</strong>
+    <span>output fora de demanda</span></div>
+  {% endif %}
+</section>
+
+{% if termo %}
+<p class="filtro">Filtro <code>{{ termo }}</code>: {{ quadro.exibidas }} demanda(s) encontrada(s).</p>
+{% endif %}
+
+{% if termo and quadro.exibidas == 0 %}
+  <p class="vazio-geral">Nenhuma demanda encontrada para <code>{{ termo }}</code>.</p>
+{% endif %}
+
+<section class="quadro">
+  {% for coluna in quadro.colunas %}
+  <div class="coluna" data-coluna="{{ coluna.nome }}">
+    <h2>{{ coluna.nome }} <span class="contagem">{{ coluna.demandas|length }}</span></h2>
+    {% for d in coluna.demandas %}{{ card(d, tel.por_demanda.get(d.nome) if tel is defined else None) }}{% else %}
+      <p class="vazio">—</p>
+    {% endfor %}
+  </div>
+  {% endfor %}
+</section>
+
+{% if quadro.invalidas %}
+<section class="bloco-invalidas">
+  <h2>Leitura inválida <span class="contagem">{{ quadro.invalidas|length }}</span></h2>
+  <p class="nota">Sem coluna de propósito: estado fora da lista dos 15 oficiais não é estado
+    — seria inventar realidade em silêncio.</p>
+  <div class="lista">{% for d in quadro.invalidas %}{{ card(d, tel.por_demanda.get(d.nome) if tel is defined else None) }}{% endfor %}</div>
+</section>
+{% endif %}
+
+{% if quadro.canceladas %}
+<section class="bloco-canceladas">
+  <h2>Canceladas <span class="contagem">{{ quadro.canceladas|length }}</span></h2>
+  <p class="nota">Fora do quadro ativo (RN-4); só aparecem em busca explícita.</p>
+  <div class="lista">{% for d in quadro.canceladas %}{{ card(d, tel.por_demanda.get(d.nome) if tel is defined else None) }}{% endfor %}</div>
+</section>
+{% endif %}
+{% endblock %}

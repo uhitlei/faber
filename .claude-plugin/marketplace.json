@@ -1,0 +1,16 @@
+{
+  "name": "faber",
+  "description": "Faber - a gated software factory for Claude Code. Installs an orchestrator, 9 subagents, 10 skills, 12 commands and 7 deterministic hooks into your repository.",
+  "owner": {
+    "name": "uhitlei",
+    "url": "https://github.com/uhitlei"
+  },
+  "plugins": [
+    {
+      "name": "faber",
+      "source": "./plugins/faber",
+      "description": "Gated software factory for Claude Code. Installs a CTO orchestrator, 9 subagents, 10 skills, 12 commands and 7 deterministic hooks into your repository.",
+      "version": "2.0.0"
+    }
+  ]
+}

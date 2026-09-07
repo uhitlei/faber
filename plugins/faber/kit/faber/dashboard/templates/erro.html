@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block titulo %}{{ titulo|default('Não encontrada') }}{% endblock %}
+{% block conteudo %}
+<section class="erro">
+  <h1>{{ codigo|default(404) }}</h1>
+  <p>{{ mensagem }}</p>
+  <p><a href="{{ url_for('kanban') }}">← voltar ao quadro</a></p>
+</section>
+{% endblock %}

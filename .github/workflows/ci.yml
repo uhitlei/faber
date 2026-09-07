@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  suites:
+    name: test suites (${{ matrix.os }})
+    # macOS is not redundant: it ships bash 3.2, and the kit targets it.
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml
+      - name: bash version in use
+        run: bash --version | head -1
+      - name: hooks (46 cases)
+        working-directory: plugins/faber/kit
+        run: bash .claude/hooks/test-h1-h2.sh
+      - name: gate-check (43 cases)
+        working-directory: plugins/faber/kit
+        run: bash faber/scripts/test-gate-check.sh
+      - name: sonar gate (20 cases)
+        working-directory: plugins/faber/kit
+        run: bash faber/scripts/test-sonar-gate.sh
+      - name: state monitor (40 cases)
+        working-directory: plugins/faber/kit
+        run: python3 faber/scripts/test-monitor.py
+      - name: requirements readiness (21 cases)
+        working-directory: plugins/faber/kit
+        run: python3 faber/scripts/test-requirements.py
+
+  install:
+    name: end-to-end install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install pyyaml
+      - name: build a synthetic target repository
+        run: |
+          mkdir -p /tmp/target/src && cd /tmp/target
+          git init -q -b main
+          git config user.email ci@example.com && git config user.name CI
+          echo '{"name":"app","scripts":{"lint":"eslint .","build":"vite build","test":"vitest run"}}' > package.json
+          for i in $(seq 1 12); do echo "export const x$i = $i;" > "src/m$i.ts"; done
+          git add -A && git commit -qm init
+      - name: install
+        run: |
+          ./install.sh /tmp/target --yes --interaction gates --gh off \
+            --owner-name "CI Bot" --project "Target" 2>&1 | tee /tmp/install.log
+          # The installer must not emit shell errors. It printed a stray
+          # "valores: command not found" for two releases; this keeps it fixed.
+          ! grep -qE 'command not found|Traceback' /tmp/install.log
+      - name: the installed factory must be complete
+        working-directory: /tmp/target
+        run: |
+          test "$(ls .claude/commands/faber-*.md | wc -l)" -eq 12
+          test "$(ls .claude/agents/*.md      | wc -l)" -eq 9
+          test "$(ls -d .claude/skills/*/     | wc -l)" -eq 10
+          test "$(ls .claude/hooks/h?-*.sh    | wc -l)" -eq 7
+          test -f faber/config/faber.env
+          # placeholders must be rendered everywhere except the templates and
+          # the test script, which carries one inside a sed expression
+          ! grep -rl '@@FABER_' CLAUDE.md .claude faber | grep -v templates | grep -v test-gate-check
+      - name: the guardrails must fire in the installed repository
+        working-directory: /tmp/target
+        run: |
+          bash .claude/hooks/test-h1-h2.sh      | tail -1 | grep -q '0 falha'
+          bash faber/scripts/test-gate-check.sh | tail -1 | grep -q '0 falha'
+          echo "{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"git push origin main\"},\"cwd\":\"$PWD\"}" \
+            | bash .claude/hooks/h1-bash-guard.sh | grep -q '"permissionDecision": *"deny"'
+      - name: the strict guard must block an uninstalled tree
+        run: |
+          rm -f /tmp/target/faber/config/faber.env
+          cd /tmp/target
+          ! bash faber/scripts/gate-set.sh TASK-1 G1 aprovado 2>/dev/null
+
+  lint:
+    name: shell + manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          # SC1090/SC1091: sourced paths are resolved at runtime by design.
+          find . -name '*.sh' -not -path './.git/*' -print0 \
+            | xargs -0 shellcheck -S warning -e SC1090,SC1091
+      - name: bash -n on every script
+        run: find . -name '*.sh' -not -path './.git/*' -exec bash -n {} \;
+      - name: claude plugin validate
+        run: |
+          npm install -g @anthropic-ai/claude-code
+          claude plugin validate . --strict
+          claude plugin validate ./plugins/faber --strict
+      - name: plugin manifests
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          mk = json.load(open(".claude-plugin/marketplace.json"))
+          pl = json.load(open("plugins/faber/.claude-plugin/plugin.json"))
+          assert mk["name"] and mk["owner"]["name"] and mk["plugins"], "marketplace fields"
+          entry = mk["plugins"][0]
+          assert entry["source"].startswith("./"), "relative source must start with ./"
+          assert os.path.isdir(entry["source"]), f"missing {entry['source']}"
+          assert pl["name"] == entry["name"] == "faber", "plugin name must match the marketplace entry"
+          assert pl["version"] == entry["version"] == open("plugins/faber/VERSION").read().strip(), \
+              "plugin.json, marketplace.json and VERSION must agree"
+          for s in ("install", "update", "doctor"):
+              p = f"plugins/faber/skills/{s}/SKILL.md"
+              assert os.path.isfile(p), f"missing {p}"
+              assert open(p).read().startswith("---"), f"{p} needs frontmatter"
+          print("manifests ok")
+          PY

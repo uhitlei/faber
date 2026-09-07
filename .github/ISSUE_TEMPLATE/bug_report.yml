@@ -1,0 +1,34 @@
+name: Bug report
+description: Something in Faber does not behave as documented
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, what you got. Paste the output.
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes:
+      label: Faber version
+      description: "`cat plugins/faber/VERSION`, or the `kit_versao` line in `faber/bootstrap/CONTEXT.md`"
+    validations: { required: true }
+  - type: dropdown
+    id: entry
+    attributes:
+      label: How was it installed
+      options: [plugin (/faber:install), bootstrap.sh, cloned repo + ./install.sh, other]
+    validations: { required: true }
+  - type: textarea
+    id: suites
+    attributes:
+      label: Test suites
+      description: Output of `bash .claude/hooks/test-h1-h2.sh | tail -1` and `bash faber/scripts/test-gate-check.sh | tail -1`
+      render: shell
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "macOS 15 · bash 3.2 · python 3.12 · PyYAML 6 · gh 2.62"
+    validations: { required: true }

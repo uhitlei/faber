@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: the tag must match VERSION
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          FILE="$(cat plugins/faber/VERSION)"
+          [ "$TAG" = "$FILE" ] || { echo "tag $TAG != VERSION $FILE"; exit 1; }
+      - name: build the offline bundle
+        run: |
+          V="$(cat plugins/faber/VERSION)"
+          mkdir -p "dist/faber-$V"
+          cp -R plugins/faber/kit plugins/faber/install.sh plugins/faber/VERSION \
+                plugins/faber/profiles "dist/faber-$V/"
+          cp LICENSE README.md README.pt-BR.md INSTALL.md INSTALL.pt-BR.md "dist/faber-$V/"
+          cp -R docs "dist/faber-$V/docs"
+          find "dist/faber-$V" -name '.DS_Store' -delete
+          (cd dist && zip -qr "faber-$V.zip" "faber-$V" && shasum -a 256 "faber-$V.zip" > "faber-$V.zip.sha256")
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.zip
+            dist/*.sha256
+          generate_release_notes: true
+          body: |
+            Install with the Claude Code plugin:
+
+            ```
+            /plugin marketplace add uhitlei/faber
+            /plugin install faber@faber
+            /faber:install
+            ```
+
+            Or straight from the shell:
+
+            ```
+            curl -fsSL https://raw.githubusercontent.com/uhitlei/faber/main/bootstrap.sh | bash
+            ```
+
+            The attached zip is for offline installs: unzip it and run `./install.sh /path/to/repo`.

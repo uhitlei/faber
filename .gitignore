@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Faber dashboard (optional module)
+plugins/faber/kit/faber/dashboard/.venv/
+plugins/faber/kit/faber/dashboard/dados/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Release artifacts
+dist/
+*.tar.gz
+faber-*.zip
+
+# Editors
+.idea/
+*.swp

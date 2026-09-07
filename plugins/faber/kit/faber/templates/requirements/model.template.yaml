@@ -1,0 +1,18 @@
+# Template inicial vazio: não constitui pacote validado. Contrato na skill requirements-discovery.
+schema_version: 1
+revision: 1
+context: []
+objectives: []
+users: []
+scope: []
+out_of_scope: []
+workflows: []
+business_rules: []
+data_integrations: []
+quality: []
+risks: []
+decisions: []
+requirements: []
+questions: []
+conflicts: []
+assumptions: []
