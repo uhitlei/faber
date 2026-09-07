@@ -3,10 +3,10 @@
 # gate-set.sh — registra o resultado de um gate no state.yaml (zero LLM).
 # ARQUITETURA §18. A validade fina (aprovador por gate, evidência de G3/G5)
 # é imposta pelo gate-check.sh na transição; aqui vai a defesa de primeira
-# linha: gates humanos (G1/G6/G8) só aceitam --por <owner> (_schema.owner).
+# linha: gates humanos (G1/G6/G8) só aceitam --by <owner> (_schema.owner).
 #
 # Uso: gate-set.sh <TASK-XXX> <G1..G9> <aprovado|reprovado|nao-aplicavel|pendente>
-#                  --por <aprovador> [--evidencia <path|url>] [--obs "..."]
+#                  --by <aprovador> [--evidence <path|url>] [--note "..."]
 # Exit: 0 ok · 1 uso/validação · 2 falha git.
 # =============================================================================
 set -u
@@ -23,19 +23,19 @@ TEMPLATE="$DIR/../templates/state.template.yaml"
 BOARD="$DIR/board.sh"
 TASKS="$DIR/../tasks"
 
-uso() { echo "uso: gate-set.sh <TASK-XXX> <G1..G9> <status> --por <aprovador> [--evidencia x] [--obs \"...\"]"; exit 1; }
+uso() { echo "uso: gate-set.sh <TASK-XXX> <G1..G9> <status> --by <aprovador> [--evidence x] [--note \"...\"]"; exit 1; }
 [ $# -ge 3 ] || uso
 TASK="$1"; GATE="$2"; STATUS="$3"; shift 3
 POR=""; EVIDENCIA=""; OBS=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --por)       POR="${2:?}"; shift 2 ;;
-    --evidencia) EVIDENCIA="${2:?}"; shift 2 ;;
-    --obs)       OBS="${2:?}"; shift 2 ;;
+    --by)       POR="${2:?}"; shift 2 ;;
+    --evidence) EVIDENCIA="${2:?}"; shift 2 ;;
+    --note)       OBS="${2:?}"; shift 2 ;;
     *) uso ;;
   esac
 done
-[ -n "$POR" ] || { echo "ERRO: --por <aprovador> é obrigatório"; exit 1; }
+[ -n "$POR" ] || { echo "ERRO: --by <aprovador> é obrigatório"; exit 1; }
 
 STATE="$TASKS/$TASK/state.yaml"
 [ -f "$STATE" ] || { echo "ERRO: $STATE não existe"; exit 1; }

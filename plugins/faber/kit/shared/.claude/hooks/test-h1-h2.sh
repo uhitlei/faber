@@ -84,10 +84,10 @@ caso "docker compose up (local)"                 pass h1 "$(jbash 'docker compos
 caso "grep em workflow (leitura, sem redir)"     pass h1 "$(jbash 'grep -n on: .github/workflows/ci.yml')"
 
 echo "== H1 — gates humanos via gate-set =="
-caso "gate-set G1 approved -> ask (aprovacao=Owner)"  ask  h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G1 approved --por owner')"
-caso "gate-set G6 approved (com bash na frente)"      ask  h1 "$(jbash 'bash faber/scripts/gate-set.sh TASK-74 G6 approved --por owner')"
-caso "gate-set G2 approved por cto (gate do CTO)"     pass h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G2 approved --por cto')"
-caso "gate-set G1 pending (nao e aprovacao)"         pass h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G1 pending --por cto')"
+caso "gate-set G1 approved -> ask (aprovacao=Owner)"  ask  h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G1 approved --by owner')"
+caso "gate-set G6 approved (com bash na frente)"      ask  h1 "$(jbash 'bash faber/scripts/gate-set.sh TASK-74 G6 approved --by owner')"
+caso "gate-set G2 approved por cto (gate do CTO)"     pass h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G2 approved --by cto')"
+caso "gate-set G1 pending (nao e aprovacao)"         pass h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G1 pending --by cto')"
 
 echo "== H2 =="
 caso "Edit em path protegido (prefixo src/generated/)" deny h2 "$(jedit 'src/generated/types.ts')"

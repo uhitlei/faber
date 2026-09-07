@@ -19,7 +19,7 @@
 #     evidência de E2E REALMENTE executado (5 condições no MESMO log do
 #     evidence.sh — ver qualifica_e2e).
 #
-# Uso: gate-check.sh <TASK-XXX | path-da-pasta> <estado-destino> [--motivo "..."]
+# Uso: gate-check.sh <TASK-XXX | path-da-pasta> <estado-destino> [--reason "..."]
 # Saída: lista TODAS as pendências (não só a primeira).
 # Exit:  0 = transição liberada · 1 = bloqueada ou uso incorreto.
 # =============================================================================
@@ -31,17 +31,17 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE="$SCRIPT_DIR/../templates/state.template.yaml"
 TASKS_DIR="$SCRIPT_DIR/../tasks"
 
-uso() { echo "uso: gate-check.sh <TASK-XXX | path> <estado-destino> [--motivo \"...\"]"; exit 1; }
+uso() { echo "uso: gate-check.sh <TASK-XXX | path> <estado-destino> [--reason \"...\"]"; exit 1; }
 
 [ $# -ge 2 ] || uso
 ALVO="$1"; DESTINO="$2"; shift 2
 MOTIVO=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --motivo)
+    --reason)
       MOTIVO="${2:-}"
       shift
-      [ $# -gt 0 ] && shift   # --motivo sem valor não trava o parser
+      [ $# -gt 0 ] && shift   # --reason sem valor não trava o parser
       ;;
     *) uso ;;
   esac
@@ -199,7 +199,7 @@ if atual == "blocked":
 LINEARES = estados[:estados.index("done") + 1]
 if atual in LINEARES and destino in LINEARES:
     if LINEARES.index(destino) < LINEARES.index(atual) and not motivo:
-        b(f"regressão {atual} -> {destino} sem --motivo (§6.2: só com motivo registrado)")
+        b(f"regressão {atual} -> {destino} sem --reason (§6.2: só com motivo registrado)")
 
 # ── artefatos por estado-destino (§6.2/§18) ────────────────────────────────
 def arquivo_ok(nome):
@@ -351,7 +351,7 @@ elif destino == "blocked":
         b(f"blocked: bloqueio.estado_origem '{blq.get('previous_state')}' inválido")
 elif destino == "cancelled":
     if not motivo:
-        b(f"cancelled: exige --motivo (decisão explícita de {OWNER} registrada; §6.2)")
+        b(f"cancelled: exige --reason (decisão explícita de {OWNER} registrada; §6.2)")
 
 # ── resultado ──────────────────────────────────────────────────────────────
 # Discovery é opt-in nas demandas históricas, mas pacote presente sempre ativa.

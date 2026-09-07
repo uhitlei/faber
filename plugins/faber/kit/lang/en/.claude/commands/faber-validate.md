@@ -1,48 +1,52 @@
 ---
-description: Prepara o gate G6 (Minha Avaliação) — sobe o ambiente local (se configurado) e o build, e entrega ao Owner instruções passo a passo de teste na issue
+description: Prepares gate G6 (My Review) — brings up the local environment (if configured) and the build, and hands the Owner a step-by-step test script on the issue
 argument-hint: TASK-XXX
 ---
 
 # /faber-validate
 
-Demanda: **$ARGUMENTS**
+Demand: **$ARGUMENTS**
 
-Prepara o G6 (§12/§18): ambiente pronto + roteiro de teste. Pré-condição:
-estado `validation` com G5 aprovado (confira no `state.yaml`; se G5 pendente,
-pare e reporte o que falta — nunca pule validação técnica).
+Prepares G6 (§12/§18): a ready environment plus a test script. Precondition:
+state `validation` with G5 approved (check `state.yaml`; if G5 is pending, stop
+and report what is missing — never skip technical validation).
 
-1. **Transicione para `my-review`:**
-   `faber/scripts/transition.sh TASK-XXX minha-avaliacao`
-   (o gate-check exige G5 aprovado e, com `ui_impact: true` e `FABER_E2E=on`,
-   evidência de E2E executado; bloqueou → resolva as pendências antes).
-2. **Ambiente com evidência real:**
-   - Se `FABER_LOCAL_ENV=on` (Skill `local-env`; dependência parada → peça ao
-     Owner para iniciá-la):
+1. **Transition to `my-review`:**
+   `faber/scripts/transition.sh TASK-XXX my-review`
+   (gate-check requires G5 approved and, with `ui_impact: true` and
+   `FABER_E2E=on`, evidence of an executed E2E run; if it blocks → resolve the
+   pending items first).
+2. **Environment, with real evidence:**
+   - If `FABER_LOCAL_ENV=on` (skill `local-env`; a stopped dependency → ask the
+     Owner to start it):
      `faber/scripts/evidence.sh TASK-XXX reset-local -- faber/scripts/local-env.sh reset`
      `faber/scripts/evidence.sh TASK-XXX seed-local -- faber/scripts/local-env.sh seed`
-   - Sempre: `faber/scripts/evidence.sh TASK-XXX build-validacao -- @@FABER_CMD_BUILD@@`
-   - Suba o que o Owner precisar para testar (ex.: servidor de dev — informe a
-     URL; processos longos em background, nunca bloqueie a sessão).
-3. **Roteiro de teste** a partir dos ACs da `spec.md`: passo a passo clicável
-   (tela/comando, ação, resultado esperado), com os dados/usuários de teste
-   documentados em `@@FABER_SPECS_DIR@@/global/05-TESTING.md`, e qual AC cada
-   passo cobre. Inclua os casos de exceção relevantes da spec.
-4. **Resumo no chamado (issue) — OBRIGATÓRIO (§20).** O Owner valida a partir
-   da **issue**, não do chat. Antes de pedir a aprovação, grave o resumo em
-   `faber/tasks/TASK-XXX/validacao-g6.md` e **poste-o na issue**:
-   - **(i)** breve resumo do **que foi feito**;
-   - **(ii)** as **ressalvas** do review (de `review.md`: o que foi corrigido /
-     o que virou follow-up ou demanda filha);
-   - **(iii)** **exatamente o que validar** — roteiro clicável + a frase de aprovação.
+   - Always: `faber/scripts/evidence.sh TASK-XXX build-validation -- @@FABER_CMD_BUILD@@`
+   - Bring up whatever the Owner needs in order to test (e.g. a dev server —
+     give them the URL; long-running processes go to the background, never block
+     the session).
+3. **Test script** derived from the acceptance criteria in `spec.md`: a
+   clickable step-by-step (screen or command, action, expected result), with the
+   test data and users documented in
+   `@@FABER_SPECS_DIR@@/global/05-TESTING.md`, and which AC each step covers.
+   Include the relevant exception cases from the spec.
+4. **Summary on the issue — MANDATORY (§20).** The Owner validates from the
+   **issue**, not from the chat. Before asking for approval, write the summary
+   to `faber/tasks/TASK-XXX/validation-g6.md` and **post it on the issue**:
+   - **(i)** a brief summary of **what was done**;
+   - **(ii)** the review's **caveats** (from `review.md`: what was fixed, and
+     what became a follow-up or a child demand);
+   - **(iii)** **exactly what to validate** — the clickable script plus the
+     approval phrase.
 
-   Postar: `faber/scripts/board.sh comment-file <issue#> faber/tasks/TASK-XXX/validacao-g6.md`
-   (com `FABER_GH=off`, o arquivo em disco é a fonte — aponte o path no chat).
-5. **Batch no chat:** aponte para o comentário da issue (fonte única) + a frase
-   de aprovação esperada: responda **"TASK-XXX validada"** (G6 aprovado — siga
-   com `/faber-approve TASK-XXX G6`) ou **reprove com o motivo**.
-6. **Se reprovar:** registre o motivo e regrida:
-   `faber/scripts/transition.sh TASK-XXX in-development --motivo "<motivo do Owner>"`
-   (as correções seguem o fluxo normal: dev → G3 → review → validação → G6).
+   Post it with: `faber/scripts/board.sh comment-file <issue#> faber/tasks/TASK-XXX/validation-g6.md`
+   (with `FABER_GH=off`, the file on disk is the source — point at the path in
+   the chat).
+5. **Batch in the chat:** point at the issue comment (the single source) plus
+   the expected approval phrase: reply **"TASK-XXX validated"** (G6 approved —
+   follow with `/faber-approve TASK-XXX G6`) or **reject with the reason**.
+6. **If rejected:** record the reason and regress:
+   `faber/scripts/transition.sh TASK-XXX in-development --reason "<the Owner's reason>"`
+   (the fixes follow the normal flow: dev → G3 → review → validation → G6).
 
-Este comando **sempre para** no passo 5 — o G6 é humano, em qualquer modo de
-interação.
+This command **always stops** at step 5 — G6 is human, in either interaction mode.

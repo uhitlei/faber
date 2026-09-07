@@ -137,7 +137,7 @@ gates:
 # Quando 'autorizado: true' por _schema.owner, o H2 LIBERA a edição de
 # .github/workflows/* nesta demanda (sem prompt); null/false → H2 pede
 # confirmação manual por execução (§2/§19). Escrito SÓ por
-# faber/scripts/workflow-unlock.sh --por <owner>.
+# faber/scripts/workflow-unlock.sh --by <owner>.
 workflow_unlock: null
 # workflow_unlock:
 #   authorized: false

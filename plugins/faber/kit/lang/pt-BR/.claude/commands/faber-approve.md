@@ -14,7 +14,7 @@ iniciativa própria; se este comando foi digitado, foi o Owner quem aprovou.
 1. Confirme na resposta qual gate está sendo aprovado e para qual demanda;
    se o argumento estiver ambíguo (sem gate ou sem TASK), pergunte.
 2. Registre (mecânica por script, com autor `@@FABER_OWNER@@`):
-   `faber/scripts/gate-set.sh TASK-XXX <gate> approved --por @@FABER_OWNER@@ --evidencia "aprovação de @@FABER_OWNER_NAME@@ via /faber-approve em <data>"`
+   `faber/scripts/gate-set.sh TASK-XXX <gate> approved --by @@FABER_OWNER@@ --evidence "aprovação de @@FABER_OWNER_NAME@@ via /faber-approve em <data>"`
    (o H1 pede confirmação neste comando: confirmar o diálogo É a aprovação.)
 3. Destrave a transição do fluxo (§5/§6.2):
    - **G1** → `faber/scripts/transition.sh TASK-XXX in-development`
@@ -24,13 +24,13 @@ iniciativa própria; se este comando foi digitado, foi o Owner quem aprovou.
      `@@FABER_SPECS_DIR@@/` a partir do trunk já mergeado — as mudanças de
      documentação vão numa branch `docs/TASK-XXX-specs` e viram uma PR de
      fechamento, porque `@@FABER_TRUNK@@` não recebe push direto (H1). Depois
-     registre `gate-set.sh TASK-XXX G9 approved --por cto` e
+     registre `gate-set.sh TASK-XXX G9 approved --by cto` e
      `transition.sh TASK-XXX done`.
      **Faxina obrigatória ao entrar em `done`:**
      `faber/scripts/worktree.sh clean TASK-XXX` — fecha o worktree e
      **apaga a branch da demanda**, local e remota. Fail-closed: recusa se a
      branch não estiver mergeada no trunk (exit 2). Se `FABER_SONAR=on`,
-     apague também o espelho: `faber/scripts/sonar-task.sh apagar TASK-XXX`.
+     apague também o espelho: `faber/scripts/sonar-task.sh delete TASK-XXX`.
 4. Se o `gate-check` bloquear a transição, **não force**: reporte as
    pendências listadas e resolva-as primeiro.
 5. Reporte o novo estado e a próxima ação do fluxo.
@@ -43,4 +43,4 @@ iniciativa própria; se este comando foi digitado, foi o Owner quem aprovou.
 - **`step-by-step`**: pare no passo 5 e aguarde o Owner chamar o próximo comando.
 
 Gates do CTO (G2/G4/G5/G7/G9) **não** passam por `/faber-approve` — são registrados
-no próprio fluxo com `gate-set.sh ... --por cto` e evidência.
+no próprio fluxo com `gate-set.sh ... --by cto` e evidência.

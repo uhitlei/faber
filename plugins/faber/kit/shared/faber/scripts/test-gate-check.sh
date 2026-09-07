@@ -178,18 +178,18 @@ caso "anti-loop: 3ª invocação idêntica"               BLQ d14 ready-for-dev
 
 mk d15 '{"state":"validation"}'
 caso "regressão validation -> specifying sem motivo"  BLQ d15 specifying
-caso "regressão com --motivo registrado"              LIB d15 specifying --motivo "qa reprovou cenário 3"
+caso "regressão com --reason registrado"              LIB d15 specifying --reason "qa reprovou cenário 3"
 
 mk d16 "{\"state\":\"done\",\"gates\":$G18}"
-caso "sair de done é proibido"                        BLQ d16 in-development --motivo "x"
+caso "sair de done é proibido"                        BLQ d16 in-development --reason "x"
 
 mk d17 '{"state":"blocked","blocking":{"reason":"aguardando token","since":"t","previous_state":"refinement"}}'
 echo spec > faber/tasks/d17/spec.md
-caso "blocked -> estado diferente da origem"          BLQ d17 specifying --motivo "x"
+caso "blocked -> estado diferente da origem"          BLQ d17 specifying --reason "x"
 caso "blocked -> retorna à origem (refinement)"       LIB d17 refinement
 
 mk d18 '{"state":"intake"}'
-caso "--motivo sem valor não trava"         BLQ d18 cancelled --motivo
+caso "--reason sem valor não trava"         BLQ d18 cancelled --reason
 
 # impacto_ui já declarado em d19/d20: estes casos testam o placeholder,
 # não o campo novo — cada caso com uma causa só.
@@ -291,12 +291,12 @@ caso "impacto_ui com valor não-booleano ('sim')"      BLQ d29 ready-for-dev
 # o histórico prova que ela já entrou em ready-for-dev sob o regime antigo.
 mk d30 '{"state":"validation","history":[{"from_state":"refinement","to_state":"ready-for-dev","at":"2026-08-01T10:00:00-03:00","by":"cto","reason":null}]}'
 spec_ok d30
-caso "volta a ready-for-dev: antiga com histórico"    LIB d30 ready-for-dev --motivo "DoR reaberto"
+caso "volta a ready-for-dev: antiga com histórico"    LIB d30 ready-for-dev --reason "DoR reaberto"
 
 # Mesma compatibilidade pelo outro fato estrutural: estado atual já é posterior
 # a ready-for-dev (histórico vazio, como em demandas migradas na mão).
 mk d31 '{"state":"in-development"}'; spec_ok d31
-caso "volta a ready-for-dev: antiga sem histórico"    LIB d31 ready-for-dev --motivo "DoR reaberto"
+caso "volta a ready-for-dev: antiga sem histórico"    LIB d31 ready-for-dev --reason "DoR reaberto"
 
 echo
 echo "RESULTADO: $PASS ok, $FAIL falha(s)."

@@ -19,7 +19,7 @@ configuration would approve gates it has no business approving.
 
 | Key | Effect |
 |---|---|
-| `FABER_OWNER` / `FABER_OWNER_NAME` | who approves G1/G6/G8 (`gate-set --por <slug>`); also lands in `_schema.owner` of `state.template.yaml` |
+| `FABER_OWNER` / `FABER_OWNER_NAME` | who approves G1/G6/G8 (`gate-set --by <slug>`); also lands in `_schema.owner` of `state.template.yaml` |
 | `FABER_TRUNK` / `FABER_MAIN` | the branches H1 protects; the base of every task; the target of every PR |
 | `FABER_INTERACTION` | `gates` (stops only at G1/G6/G8 and critical doubts) or `step-by-step` |
 | `FABER_WORKTREES` | `on` puts each task in `.claude/worktrees/TASK-XXX` |

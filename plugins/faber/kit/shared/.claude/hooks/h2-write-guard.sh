@@ -129,7 +129,7 @@ if rel.startswith(".github/workflows/") or "/.github/workflows/" in path:
               f"'{OWNER}' no state.yaml da demanda ativa (auto-unlock).")
     ask(f"H2: editar .github/workflows/ exige confirmação de {OWNER_NOME}, por execução "
         "(§2/§19). Autorize de vez na demanda com "
-        f"'faber/scripts/workflow-unlock.sh TASK-XXX --por {OWNER}' (auto-unlock).")
+        f"'faber/scripts/workflow-unlock.sh TASK-XXX --by {OWNER}' (auto-unlock).")
 
 # 4. Guarda-vidas da própria fábrica
 if rel == ".claude/settings.json" or rel.startswith(".claude/hooks/") \

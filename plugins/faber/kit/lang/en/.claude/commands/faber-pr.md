@@ -1,44 +1,44 @@
 ---
-description: Pós-G6 — confere todos os gates, atualiza a branch com o trunk, consolida a descrição (o quê/por quê/como testar/risco/rollback) e cria a PR
+description: Post-G6 — checks every gate, updates the branch with the trunk, consolidates the description (what/why/how to test/risk/rollback) and opens the PR
 argument-hint: TASK-XXX
 ---
 
 # /faber-pr
 
-Demanda: **$ARGUMENTS**
+Demand: **$ARGUMENTS**
 
-Executa o G7 e abre a PR (§12/§18-G7). Pré-condição: G6 aprovado por
-@@FABER_OWNER_NAME@@ (via `/faber-approve`) e estado `ready-for-pr`. Merge da PR
-(G8) é **sempre do Owner, no GitHub** — você nunca faz merge.
+Runs G7 and opens the PR (§12/§18-G7). Precondition: G6 approved by
+@@FABER_OWNER_NAME@@ (through `/faber-approve`) and state `ready-for-pr`.
+Merging the PR (G8) is **always the Owner's, on GitHub** — you never merge.
 
-1. **Confira os gates** no `state.yaml`: G1–G6 `approved`/`not-applicable`
-   (autoaprovação em gate humano é impossível — mas confira). Pendência →
-   pare e reporte.
-2. **Atualize a branch com o trunk** (na branch da demanda):
+1. **Check the gates** in `state.yaml`: G1–G6 `approved`/`not-applicable`
+   (self-approval of a human gate is impossible — but check anyway). Anything
+   pending → stop and report.
+2. **Update the branch with the trunk** (on the demand's branch):
    `faber/scripts/evidence.sh TASK-XXX merge-trunk -- bash -c "git fetch origin @@FABER_TRUNK@@ && git merge --no-edit origin/@@FABER_TRUNK@@"`
-   Conflitos: resolva respeitando o escopo da demanda; conflito que exige
-   decisão de produto → `clarification` com o Owner.
-3. **Sanidade pós-merge** (evidência real):
-   `faber/scripts/evidence.sh TASK-XXX lint-pos-merge -- @@FABER_CMD_LINT@@`
-   `faber/scripts/evidence.sh TASK-XXX build-pos-merge -- @@FABER_CMD_BUILD@@`
-   `faber/scripts/evidence.sh TASK-XXX test-pos-merge -- @@FABER_CMD_TEST@@`
-   Vermelho → corrija antes de prosseguir (ou regrida com motivo).
-4. **Registre o G7:**
-   `faber/scripts/gate-set.sh TASK-XXX G7 approved --por cto --evidencia "evidence/NN-merge-trunk.log"`
-5. **Push da branch** (autônomo — feature branch): `git push -u origin feature/TASK-XXX`
-6. **Consolide a descrição da PR** lendo `spec.md`, `review.md`, `decisions.md`
-   e `evidence/` — estrutura obrigatória (§18-G7):
-   - **O quê** (escopo entregue, ACs) · **Por quê** (problema/valor)
-   - **Como testar** (roteiro curto do G6)
-   - **Risco & rollback** (do refinamento/migration-safe; migrations citadas)
-   - **Evidências** (paths dos logs de lint/build/test/e2e/análise estática na
-     pasta da demanda) · **Spec:** `faber/tasks/TASK-XXX/spec.md`
-7. **Crie a PR:** `gh pr create --base @@FABER_TRUNK@@ --title "tipo(escopo): resumo (TASK-XXX)" --body "<descrição consolidada>"`
-   (com `FABER_GH=off`: registre a descrição em `faber/tasks/TASK-XXX/pr.md`
-   e use `--pr pr.md` na transição.)
-8. **Transicione:** `faber/scripts/transition.sh TASK-XXX pr-open --pr "<url da PR>"`
-9. **Reporte ao Owner:** link da PR + resumo de 3 linhas + lembrete de que o
-   merge (G8) é dele; após o merge, siga o pós-G8 do `/faber-approve` (G9 → done).
+   Conflicts: resolve them within the demand's scope; a conflict that needs a
+   product decision → `clarification` with the Owner.
+3. **Post-merge sanity** (real evidence):
+   `faber/scripts/evidence.sh TASK-XXX lint-post-merge -- @@FABER_CMD_LINT@@`
+   `faber/scripts/evidence.sh TASK-XXX build-post-merge -- @@FABER_CMD_BUILD@@`
+   `faber/scripts/evidence.sh TASK-XXX test-post-merge -- @@FABER_CMD_TEST@@`
+   Red → fix it before going on (or regress with a reason).
+4. **Record G7:**
+   `faber/scripts/gate-set.sh TASK-XXX G7 approved --by cto --evidence "evidence/NN-merge-trunk.log"`
+5. **Push the branch** (autonomous — it is a feature branch): `git push -u origin feature/TASK-XXX`
+6. **Consolidate the PR description** by reading `spec.md`, `review.md`,
+   `decisions.md` and `evidence/` — the structure is mandatory (§18-G7):
+   - **What** (the scope delivered, the ACs) · **Why** (problem / value)
+   - **How to test** (the short script from G6)
+   - **Risk & rollback** (from the refinement / migration-safe; cite the migrations)
+   - **Evidence** (paths to the lint/build/test/e2e/static-analysis logs in the
+     demand's folder) · **Spec:** `faber/tasks/TASK-XXX/spec.md`
+7. **Open the PR:** `gh pr create --base @@FABER_TRUNK@@ --title "type(scope): summary (TASK-XXX)" --body "<consolidated description>"`
+   (with `FABER_GH=off`: write the description to `faber/tasks/TASK-XXX/pr.md`
+   and pass `--pr pr.md` on the transition.)
+8. **Transition:** `faber/scripts/transition.sh TASK-XXX pr-open --pr "<the PR url>"`
+9. **Report to the Owner:** the PR link + a 3-line summary + a reminder that the
+   merge (G8) is theirs; after the merge, follow the post-G8 steps in
+   `/faber-approve` (G9 → done).
 
-Este comando **sempre para** no passo 9 — o G8 é humano, em qualquer modo de
-interação.
+This command **always stops** at step 9 — G8 is human, in either interaction mode.

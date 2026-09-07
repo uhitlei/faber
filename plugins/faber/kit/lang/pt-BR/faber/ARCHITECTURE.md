@@ -171,7 +171,7 @@ Em todos os pontos: transições gravadas em `state.yaml` + comentário na issue
 | 12 | `pr-open` | PR Aberta | **Owner** (G8) | G7 + campo `pr` | Merge feito pelo Owner no GitHub |
 | 13 | `done` | Done | doc-writer (G9) | G1–G8 aprovados/n.a. | specs consolidadas; CHANGELOG; issue fechada; **branch apagada** (`worktree.sh clean`) |
 | 14 | `blocked` | Bloqueada | quem bloqueou | Motivo obrigatório | Retorna ao estado de origem |
-| 15 | `cancelled` | — (issue fechada) | **Owner** | Decisão explícita (`--motivo`) | Motivo registrado |
+| 15 | `cancelled` | — (issue fechada) | **Owner** | Decisão explícita (`--reason`) | Motivo registrado |
 
 **Regras gerais:** nenhuma transição sem `gate-check.sh`; regressão só com motivo; reabertura de `done` gera **nova demanda** vinculada (`related_to`); `blocked` guarda o estado de origem; toda transição = commit em `state.yaml` + comentário na issue + board.
 

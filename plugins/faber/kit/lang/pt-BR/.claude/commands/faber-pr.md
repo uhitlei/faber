@@ -24,7 +24,7 @@ Executa o G7 e abre a PR (§12/§18-G7). Pré-condição: G6 aprovado por
    `faber/scripts/evidence.sh TASK-XXX test-pos-merge -- @@FABER_CMD_TEST@@`
    Vermelho → corrija antes de prosseguir (ou regrida com motivo).
 4. **Registre o G7:**
-   `faber/scripts/gate-set.sh TASK-XXX G7 approved --por cto --evidencia "evidence/NN-merge-trunk.log"`
+   `faber/scripts/gate-set.sh TASK-XXX G7 approved --by cto --evidence "evidence/NN-merge-trunk.log"`
 5. **Push da branch** (autônomo — feature branch): `git push -u origin feature/TASK-XXX`
 6. **Consolide a descrição da PR** lendo `spec.md`, `review.md`, `decisions.md`
    e `evidence/` — estrutura obrigatória (§18-G7):

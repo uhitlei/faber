@@ -1,46 +1,47 @@
 ---
-description: Registra aprovação de gate humano pelo Owner (G1/G6/G8) e destrava a transição correspondente
+description: Records the Owner's approval of a human gate (G1/G6/G8) and unlocks the matching transition
 argument-hint: TASK-XXX <G1|G6|G8>
 ---
 
 # /faber-approve
 
-Argumentos: **$ARGUMENTS**
+Arguments: **$ARGUMENTS**
 
-Este comando registra a decisão de **@@FABER_OWNER_NAME@@** — G1, G6 e G8 são
-exclusivamente dele (CLAUDE.md §1). O CTO **jamais** executa `/faber-approve` por
-iniciativa própria; se este comando foi digitado, foi o Owner quem aprovou.
+This command records **@@FABER_OWNER_NAME@@**'s decision — G1, G6 and G8 belong
+to them alone (CLAUDE.md §1). The CTO **never** runs `/faber-approve` on its own
+initiative; if this command was typed, the Owner is the one who approved.
 
-1. Confirme na resposta qual gate está sendo aprovado e para qual demanda;
-   se o argumento estiver ambíguo (sem gate ou sem TASK), pergunte.
-2. Registre (mecânica por script, com autor `@@FABER_OWNER@@`):
-   `faber/scripts/gate-set.sh TASK-XXX <gate> approved --por @@FABER_OWNER@@ --evidencia "aprovação de @@FABER_OWNER_NAME@@ via /faber-approve em <data>"`
-   (o H1 pede confirmação neste comando: confirmar o diálogo É a aprovação.)
-3. Destrave a transição do fluxo (§5/§6.2):
+1. Confirm in your reply which gate is being approved and for which demand;
+   if the argument is ambiguous (no gate, or no TASK), ask.
+2. Record it (mechanics by script, with `@@FABER_OWNER@@` as the author):
+   `faber/scripts/gate-set.sh TASK-XXX <gate> approved --by @@FABER_OWNER@@ --evidence "approved by @@FABER_OWNER_NAME@@ via /faber-approve on <date>"`
+   (H1 asks for confirmation on this command: confirming the dialog **is** the approval.)
+3. Unlock the flow's transition (§5/§6.2):
    - **G1** → `faber/scripts/transition.sh TASK-XXX in-development`
    - **G6** → `faber/scripts/transition.sh TASK-XXX ready-for-pr`
-   - **G8** (merge já feito pelo Owner no GitHub) → consolidação final:
-     invoque o `doc-writer` (Skill `spec-sync`) para consolidar
-     `@@FABER_SPECS_DIR@@/` a partir do trunk já mergeado — as mudanças de
-     documentação vão numa branch `docs/TASK-XXX-specs` e viram uma PR de
-     fechamento, porque `@@FABER_TRUNK@@` não recebe push direto (H1). Depois
-     registre `gate-set.sh TASK-XXX G9 approved --por cto` e
+   - **G8** (the Owner has already merged on GitHub) → final consolidation:
+     invoke `doc-writer` (skill `spec-sync`) to consolidate
+     `@@FABER_SPECS_DIR@@/` from the already-merged trunk — the documentation
+     changes go on a `docs/TASK-XXX-specs` branch and become a closing PR,
+     because `@@FABER_TRUNK@@` never receives a direct push (H1). Then record
+     `gate-set.sh TASK-XXX G9 approved --by cto` and
      `transition.sh TASK-XXX done`.
-     **Faxina obrigatória ao entrar em `done`:**
-     `faber/scripts/worktree.sh clean TASK-XXX` — fecha o worktree e
-     **apaga a branch da demanda**, local e remota. Fail-closed: recusa se a
-     branch não estiver mergeada no trunk (exit 2). Se `FABER_SONAR=on`,
-     apague também o espelho: `faber/scripts/sonar-task.sh apagar TASK-XXX`.
-4. Se o `gate-check` bloquear a transição, **não force**: reporte as
-   pendências listadas e resolva-as primeiro.
-5. Reporte o novo estado e a próxima ação do fluxo.
+     **Mandatory cleanup on entering `done`:**
+     `faber/scripts/worktree.sh clean TASK-XXX` — closes the worktree and
+     **deletes the demand's branch**, local and remote. Fail-closed: it refuses
+     if the branch is not merged into the trunk (exit 2). With `FABER_SONAR=on`,
+     delete the mirror too: `faber/scripts/sonar-task.sh delete TASK-XXX`.
+4. If `gate-check` blocks the transition, **do not force it**: report the
+   pending items it listed and resolve them first.
+5. Report the new state and the flow's next action.
 
-## Encadeamento (FABER_INTERACTION)
+## Chaining (FABER_INTERACTION)
 
-- **`gates`**: após **G1**, execute `/faber-develop TASK-XXX` e em seguida
-  `/faber-validate TASK-XXX` sem parar (pare só no G6). Após **G6**, execute
-  `/faber-pr TASK-XXX` (pare no G8). Após **G8**, conclua G9 → `done` → faxina.
-- **`step-by-step`**: pare no passo 5 e aguarde o Owner chamar o próximo comando.
+- **`gates`**: after **G1**, run `/faber-develop TASK-XXX` and then
+  `/faber-validate TASK-XXX` without stopping (stop only at G6). After **G6**,
+  run `/faber-pr TASK-XXX` (stop at G8). After **G8**, finish G9 → `done` →
+  cleanup.
+- **`step-by-step`**: stop at step 5 and wait for the Owner to call the next command.
 
-Gates do CTO (G2/G4/G5/G7/G9) **não** passam por `/faber-approve` — são registrados
-no próprio fluxo com `gate-set.sh ... --por cto` e evidência.
+The CTO's own gates (G2/G4/G5/G7/G9) do **not** go through `/faber-approve` —
+they are recorded inside the flow itself with `gate-set.sh ... --by cto` plus evidence.

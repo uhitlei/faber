@@ -12,7 +12,7 @@ estado `validation` com G5 aprovado (confira no `state.yaml`; se G5 pendente,
 pare e reporte o que falta — nunca pule validação técnica).
 
 1. **Transicione para `my-review`:**
-   `faber/scripts/transition.sh TASK-XXX minha-avaliacao`
+   `faber/scripts/transition.sh TASK-XXX my-review`
    (o gate-check exige G5 aprovado e, com `ui_impact: true` e `FABER_E2E=on`,
    evidência de E2E executado; bloqueou → resolva as pendências antes).
 2. **Ambiente com evidência real:**
@@ -41,7 +41,7 @@ pare e reporte o que falta — nunca pule validação técnica).
    de aprovação esperada: responda **"TASK-XXX validada"** (G6 aprovado — siga
    com `/faber-approve TASK-XXX G6`) ou **reprove com o motivo**.
 6. **Se reprovar:** registre o motivo e regrida:
-   `faber/scripts/transition.sh TASK-XXX in-development --motivo "<motivo do Owner>"`
+   `faber/scripts/transition.sh TASK-XXX in-development --reason "<motivo do Owner>"`
    (as correções seguem o fluxo normal: dev → G3 → review → validação → G6).
 
 Este comando **sempre para** no passo 5 — o G6 é humano, em qualquer modo de

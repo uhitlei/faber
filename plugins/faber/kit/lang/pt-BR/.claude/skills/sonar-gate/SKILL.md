@@ -32,7 +32,7 @@ faber/scripts/evidence.sh TASK-XXX sonar -- \
     --branch feature/TASK-XXX --baseline "$FABER_SONAR_PROJECT_KEY"
 
 # 3. no G9, apague o espelho (faxina)
-faber/scripts/sonar-task.sh apagar TASK-XXX
+faber/scripts/sonar-task.sh delete TASK-XXX
 ```
 
 O passo 1 é obrigatório antes do passo 2: o gate **recusa** (exit 3) uma análise

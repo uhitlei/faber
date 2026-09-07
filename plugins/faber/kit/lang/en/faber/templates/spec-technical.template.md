@@ -1,22 +1,22 @@
 # Spec — {{TASK-XXX}}: {{título}}
 
-<!-- Template: TÉCNICA (tipos: debito-tecnico, infra, seguranca, banco,
-     documentacao — ARQUITETURA §14). PO é pulado: CTO ou senior-developer
+<!-- Template: TÉCNICA (tipos: tech-debt, infra, security, database,
+     docs — ARQUITETURA §14). PO é pulado: CTO ou senior-developer
      especifica. Proporcionalidade (§11): preencher no nível do risco real —
      documentação simples pode ter seções curtas; banco/segurança, nunca.
      Notas por tipo:
-     · seguranca — tratamento discreto: NÃO detalhar exploit em issue pública;
+     · security — tratamento discreto: NÃO detalhar exploit em issue pública;
        devsecops lidera; db-guardian se houver dados.
      · banco — db-guardian participa DESDE o refinamento; migration-safe
        obrigatória; migrations imutáveis (H2).
      · infra — TODO diff em .github/workflows/ exige revisão explícita de
        @@FABER_OWNER_NAME@@ (H2/§19).
-     · documentacao — direto ao doc-writer; gate único = review do CTO. -->
+     · docs — direto ao doc-writer; gate único = review do CTO. -->
 
 | Campo | Valor |
 |---|---|
 | Demanda | {{TASK-XXX}} |
-| Tipo | {{debito-tecnico \| infra \| seguranca \| banco \| documentacao}} |
+| Tipo | {{tech-debt \| infra \| security \| database \| docs}} |
 | Autor | {{cto \| senior-developer \| devsecops}} |
 | Data | {{AAAA-MM-DD}} |
 

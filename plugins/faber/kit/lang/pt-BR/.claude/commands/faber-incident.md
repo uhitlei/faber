@@ -14,7 +14,7 @@ seguem o pipeline. Execute nesta ordem (a mecânica é dos scripts, nunca manual
 
 1. **Severidade** (SEV1 total · SEV2 degradado · SEV3 pontual) + **título curto**
    (≤ 70 chars). SEV1/SEV2 → alinhe com @@FABER_OWNER_NAME@@ **agora**.
-2. Crie a demanda: `faber/scripts/new-task.sh incidente "<título>"`
+2. Crie a demanda: `faber/scripts/new-task.sh incident "<título>"`
 3. **Contenção imediata** — estancar o impacto. A ação operacional que toque
    **produção** (rollback, feature flag, revert) **é do Owner** — o H1 impede o
    agente; você **registra a evidência**:
@@ -25,7 +25,7 @@ seguem o pipeline. Execute nesta ordem (a mecânica é dos scripts, nunca manual
    (+`devsecops` se pipeline/infra, +`db-guardian` se dados). Gates do CTO
    **comprimidos** (G3/G4/G5 enxutos), mas **G1/G6/G8 continuam do Owner**
    (síncrono, não pulados). Produção só via CI/merge.
-6. **Post-mortem = a spec:** invoque a Skill `spec-task` (template `spec-incidente`):
+6. **Post-mortem = a spec:** invoque a Skill `spec-task` (template `spec-incident`):
    linha do tempo, contenção, diagnóstico, fix, **post-mortem**, demandas filhas.
    Preencha conforme avança — o post-mortem é o coração da spec.
 7. **Demandas filhas** de prevenção (o que evita o próximo) via `/faber-task`, com

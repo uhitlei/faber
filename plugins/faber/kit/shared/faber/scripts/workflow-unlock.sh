@@ -5,7 +5,7 @@
 # O H2 LIBERA a edição de workflow quando workflow_unlock.autorizado=true pelo
 # owner (_schema.owner); senão pede confirmação manual (ask, §2/§19).
 #
-# Uso: workflow-unlock.sh <TASK-XXX> --por <owner> [--motivo "..."] [--revogar]
+# Uso: workflow-unlock.sh <TASK-XXX> --by <owner> [--reason "..."] [--revoke]
 # Exit: 0 ok · 1 uso/validação · 2 falha git.
 # =============================================================================
 set -u
@@ -22,19 +22,19 @@ TEMPLATE="$DIR/../templates/state.template.yaml"
 BOARD="$DIR/board.sh"
 TASKS="$DIR/../tasks"
 
-uso() { echo "uso: workflow-unlock.sh <TASK-XXX> --por <owner> [--motivo \"...\"] [--revogar]"; exit 1; }
+uso() { echo "uso: workflow-unlock.sh <TASK-XXX> --by <owner> [--reason \"...\"] [--revoke]"; exit 1; }
 [ $# -ge 1 ] || uso
 TASK="$1"; shift
 POR=""; MOTIVO=""; ACAO="autorizar"
 while [ $# -gt 0 ]; do
   case "$1" in
-    --por)     POR="${2:?}"; shift 2 ;;
-    --motivo)  MOTIVO="${2:?}"; shift 2 ;;
-    --revogar) ACAO="revogar"; shift ;;
+    --by)     POR="${2:?}"; shift 2 ;;
+    --reason)  MOTIVO="${2:?}"; shift 2 ;;
+    --revoke) ACAO="revogar"; shift ;;
     *) uso ;;
   esac
 done
-[ -n "$POR" ] || { echo "ERRO: --por <aprovador> é obrigatório"; exit 1; }
+[ -n "$POR" ] || { echo "ERRO: --by <aprovador> é obrigatório"; exit 1; }
 
 STATE="$TASKS/$TASK/state.yaml"
 [ -f "$STATE" ] || { echo "ERRO: $STATE não existe"; exit 1; }

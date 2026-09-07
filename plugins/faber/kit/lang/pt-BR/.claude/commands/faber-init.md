@@ -1,6 +1,6 @@
 ---
 description: Bootstrap da fábrica no repositório — lê o contexto detectado pelo install.sh (repo existente · spec-kit · PRD/BRD · brainstorm · vazio), gera specs/ARQUITETURA e prepara a fábrica para a primeira demanda
-argument-hint: "[--mode existing-repo|spec-kit|prd|brainstorm|discovery|vazio] [--interaction gates|step-by-step]"
+argument-hint: "[--mode existing-repo|spec-kit|prd|brainstorm|discovery|empty] [--interaction gates|step-by-step]"
 ---
 
 # /faber-init

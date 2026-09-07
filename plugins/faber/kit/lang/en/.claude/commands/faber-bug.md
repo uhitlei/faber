@@ -1,38 +1,39 @@
 ---
-description: Atalho de bug — tipo já classificado; exige reprodução com evidência ANTES da spec, depois spec reduzida (repro + causa raiz + fix + teste de regressão) e o fluxo dev → qa → reviewer (PO pulado)
-argument-hint: <descrição do bug / como reproduzir>
+description: Bug shortcut — the type is already classified; requires a reproduction with evidence BEFORE the spec, then a reduced spec (repro + root cause + fix + regression test) and the dev → qa → reviewer flow (the PO is skipped)
+argument-hint: <what the bug is / how to reproduce it>
 ---
 
 # /faber-bug
 
-Você é o CTO (CLAUDE.md). Bug reportado por @@FABER_OWNER_NAME@@: **$ARGUMENTS**
+You are the CTO (CLAUDE.md). Bug reported by @@FABER_OWNER_NAME@@: **$ARGUMENTS**
 
-Tipo já classificado como `bug` (§14) — não reclassifique. Execute nesta ordem
-(a mecânica é dos scripts, nunca manual):
+The type is already classified as `bug` (§14) — do not reclassify it. Do this in
+order (the mechanics belong to the scripts, never to hand):
 
-1. Derive um **título curto** (≤ 70 chars) do sintoma.
-2. Crie a demanda: `faber/scripts/new-task.sh bug "<título>"`
-   (cria issue + branch `feature/TASK-XXX` em worktree próprio + pasta + board;
-   trabalhe a partir do `WORKTREE=…` impresso).
-3. **Reprodução obrigatória ANTES da spec** (§14 — regra de ouro do bug):
-   reproduza o defeito e **grave a evidência** que falha:
-   `faber/scripts/evidence.sh TASK-XXX repro -- <comando que reproduz o bug>`
-   Sem reprodução registrada com evidência, a spec **não avança** (o template
-   `spec-bug` bloqueia). Não reproduziu? Estado `clarification` com o Owner —
-   não avance no escuro (§6.2).
-4. **Spec reduzida:** invoque a Skill `spec-task` (template `spec-bug`): §1
-   reprodução (com o path da evidência), §2 esperado×observado, §3 causa raiz,
-   §4 fix, §5 **teste de regressão que falha antes e passa depois**. Não inchar.
-   Commit do rascunho na branch da demanda.
-5. Avance o estado: `faber/scripts/transition.sh TASK-XXX specifying`
-6. **Fluxo do bug** (§14): PO **pulado** — o CTO/dev especifica; segue
-   `senior-developer` → `qa` → `code-reviewer`. QA proporcional ao impacto.
-7. **Reporte** a @@FABER_OWNER_NAME@@: TASK-XXX, link da issue, branch, a
-   evidência de reprodução e as dúvidas abertas (um único bloco — §20).
+1. Derive a **short title** (≤ 70 chars) from the symptom.
+2. Create the demand: `faber/scripts/new-task.sh bug "<title>"`
+   (it creates the issue + the `feature/TASK-XXX` branch in its own worktree +
+   the folder + the board entry; work from the printed `WORKTREE=…`).
+3. **Reproduction is mandatory BEFORE the spec** (§14 — the golden rule for bugs):
+   reproduce the defect and **record the evidence** that fails:
+   `faber/scripts/evidence.sh TASK-XXX repro -- <the command that reproduces the bug>`
+   Without a reproduction recorded with evidence, the spec does **not** advance
+   (the `spec-bug` template blocks it). Could not reproduce it? Go to
+   `clarification` with the Owner — do not advance in the dark (§6.2).
+4. **Reduced spec:** invoke the `spec-task` skill (template `spec-bug`): §1 the
+   reproduction (with the path to the evidence), §2 expected × observed, §3 root
+   cause, §4 the fix, §5 **a regression test that fails before and passes after**.
+   Do not pad it. Commit the draft on the demand's branch.
+5. Advance the state: `faber/scripts/transition.sh TASK-XXX specifying`
+6. **The bug flow** (§14): the PO is **skipped** — the CTO or the developer
+   specifies; then `senior-developer` → `qa` → `code-reviewer`. QA is
+   proportional to the impact.
+7. **Report** to @@FABER_OWNER_NAME@@: TASK-XXX, the issue link, the branch, the
+   reproduction evidence and the open questions (a single block — §20).
 
-## Encadeamento (FABER_INTERACTION)
+## Chaining (FABER_INTERACTION)
 
-- **`gates`**: após o passo 7 siga sozinho — refinamento enxuto (causa raiz +
-  fix + arquivos prováveis; `ui_impact` declarado) → G2 → `ready-for-dev` —
-  e pare pedindo o **G1** num único batch.
-- **`step-by-step`**: pare no passo 7 e aguarde o ok para cada fase.
+- **`gates`**: after step 7, carry on alone — a lean refinement (root cause +
+  fix + the likely files; `ui_impact` declared) → G2 → `ready-for-dev` — and stop
+  asking for **G1** in a single batch.
+- **`step-by-step`**: stop at step 7 and wait for an ok before each phase.

@@ -11,7 +11,7 @@ owner/branches depois, ajuste o `.env` e faça um `grep` pelos textos antigos em
 
 | Chave | Efeito |
 |---|---|
-| `FABER_OWNER` / `FABER_OWNER_NAME` | quem aprova G1/G6/G8 (`gate-set --por <slug>`); também em `_schema.owner` do `state.template.yaml` (renderizado) |
+| `FABER_OWNER` / `FABER_OWNER_NAME` | quem aprova G1/G6/G8 (`gate-set --by <slug>`); também em `_schema.owner` do `state.template.yaml` (renderizado) |
 | `FABER_TRUNK` / `FABER_MAIN` | branches protegidas pelo H1; base das demandas; alvo das PRs |
 | `FABER_INTERACTION` | `gates` (para só em G1/G6/G8 e dúvidas críticas) ou `step-by-step` |
 | `FABER_WORKTREES` | `on` = cada demanda em `.claude/worktrees/TASK-XXX` |

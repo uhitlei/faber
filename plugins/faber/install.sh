@@ -188,7 +188,7 @@ pergunta() {  # pergunta <var> <texto> <default>
 }
 [ -n "$PROJETO" ]    || pergunta PROJETO "Nome do projeto" "$D_PROJETO"
 [ -n "$OWNER_NOME" ] || pergunta OWNER_NOME "Nome do aprovador humano (gates G1/G6/G8)" "$D_OWNER_NOME"
-[ -n "$OWNER" ]      || pergunta OWNER "Slug do aprovador (minúsculas, sem espaço — usado em --por <slug>)" "$(slug "$OWNER_NOME")"
+[ -n "$OWNER" ]      || pergunta OWNER "Slug do aprovador (minúsculas, sem espaço — usado em --by <slug>)" "$(slug "$OWNER_NOME")"
 OWNER="$(slug "$OWNER")"
 [ -n "$MAIN" ]       || pergunta MAIN "Branch de produção" "$D_MAIN"
 [ -n "$TRUNK" ]      || pergunta TRUNK "Branch de integração (PRs das demandas apontam para ela; pode ser igual à de produção)" "$D_TRUNK"

@@ -1,34 +1,35 @@
 ---
-description: Estado consolidado de uma demanda (ou de todas) lido do disco e do GitHub — nunca da memória da sessão
+description: The consolidated state of one demand (or all of them), read from disk and from GitHub — never from the session's memory
 argument-hint: "[TASK-XXX]"
 ---
 
 # /faber-status
 
-Argumento (opcional): **$ARGUMENTS**
+Argument (optional): **$ARGUMENTS**
 
-Tudo é lido **agora, do disco e do `gh`** — o que não está lá não aconteceu.
-Atalho sem LLM: `python3 faber/scripts/monitor.py --once` (snapshot) ou sem
-`--once` (monitor vivo no terminal).
+Everything is read **now, from disk and from `gh`** — what is not there did not
+happen. Shortcut with no LLM: `python3 faber/scripts/monitor.py --once` (a
+snapshot) or without `--once` (a live monitor in the terminal).
 
-**Sem argumento (visão geral):**
-1. Liste `faber/tasks/TASK-*/state.yaml`; para cada uma: demanda,
-   tipo, estado, última entrada do `history`, bloqueio (se houver).
-2. Destaque a **fila de @@FABER_OWNER_NAME@@** (batching, §20): demandas
-   paradas em gate humano — `ready-for-dev` aguardando G1, `my-review`
-   aguardando G6, `pr-open` aguardando G8 — com o link de cada issue.
-3. Se `faber/bootstrap/CONTEXT.md` tiver `status: pending`, diga que o
-   bootstrap da fábrica ainda não foi concluído (`/faber-init`).
+**With no argument (overview):**
+1. List `faber/tasks/TASK-*/state.yaml`; for each one: the task, its type, its
+   state, the last entry in `history`, and the block (if any).
+2. Highlight **@@FABER_OWNER_NAME@@'s queue** (batching, §20): demands stopped
+   at a human gate — `ready-for-dev` awaiting G1, `my-review` awaiting G6,
+   `pr-open` awaiting G8 — with each issue's link.
+3. If `faber/bootstrap/CONTEXT.md` says `status: pending`, say that the
+   factory's bootstrap has not been completed yet (`/faber-init`).
 
-**Com TASK-XXX:**
-1. `state.yaml`: estado, bloqueio, últimas 3 transições do `history`,
-   tabela dos 9 gates (status/aprovador/evidência), `ui_impact`.
-2. `faber/scripts/board.sh status <issue#>` (coluna real + labels; no-op se
-   `FABER_GH=off`).
-3. `gh issue view <issue#> --comments` (últimos 3 comentários) — se `FABER_GH=on`.
-4. Handoff de maior prefixo numérico em `handoffs/` (se existir):
-   `suggested_next_action` e `open_issues`.
-5. Divergência entre as projeções (state × board × issue)? Aponte e sugira
-   reconciliar via `board.sh` — `state.yaml` é a fonte de verdade (§6.1).
+**With TASK-XXX:**
+1. `state.yaml`: state, block, the last 3 transitions in `history`, the table of
+   the 9 gates (status/approver/evidence), and `ui_impact`.
+2. `faber/scripts/board.sh status <issue#>` (the real column plus labels; a
+   no-op when `FABER_GH=off`).
+3. `gh issue view <issue#> --comments` (the last 3 comments) — when `FABER_GH=on`.
+4. The handoff with the highest numeric prefix in `handoffs/` (if there is one):
+   its `suggested_next_action` and `open_issues`.
+5. Any divergence between the projections (state × board × issue)? Point it out
+   and suggest reconciling through `board.sh` — `state.yaml` is the source of
+   truth (§6.1).
 
-Formato: tabela curta + no máximo 5 linhas de prosa com a próxima ação.
+Format: a short table plus at most 5 lines of prose stating the next action.

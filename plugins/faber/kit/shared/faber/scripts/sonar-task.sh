@@ -9,20 +9,20 @@
 # trunk com código não mergeado. O contorno aprovado é um projeto por demanda,
 # medido em *overall* (num projeto novo todo o código é "new code", então as
 # condições `new_*` são estruturalmente inúteis), provisionado no primeiro scan
-# e apagado no G9 (subcomando `apagar`).
+# e apagado no G9 (subcomando `delete`).
 #
 # D-8 também tirou isto do CI: quem escaneia a demanda é a fábrica, na máquina
 # local, com o token local (que tem `provisioning`). O CI continua analisando
 # só o trunk, em push ao trunk/produção.
 #
 # Uso:
-#   sonar-task.sh <TASK-XXX> [--branch <nome>] [--sem-cobertura]
-#   sonar-task.sh apagar <TASK-XXX>
+#   sonar-task.sh <TASK-XXX> [--branch <nome>] [--no-coverage]
+#   sonar-task.sh delete <TASK-XXX>
 #
 #   --branch        rótulo gravado no veredito (default: branch git atual).
 #                   NÃO vira `sonar.branch.name` (indisponível no Community);
 #                   entra como metadado da análise.
-#   --sem-cobertura pula `npm run test:coverage` e EXIGE coverage/lcov.info já
+#   --no-coverage pula `npm run test:coverage` e EXIGE coverage/lcov.info já
 #                   presente E mais novo que o último commit (falha se não
 #                   houver ou se estiver velho — nunca escaneia sem cobertura em
 #                   silêncio, senão `coverage` volta a 0.0 por omissão, nem
@@ -55,15 +55,15 @@ RAIZ="$(cd "$DIR/../.." && pwd)"          # raiz do worktree em uso
 
 falha() { echo "RESULTADO=falha"; echo "MOTIVO=$1"; exit "$2"; }
 uso() {
-  echo "uso: sonar-task.sh <TASK-XXX> [--branch <nome>] [--sem-cobertura]"
-  echo "     sonar-task.sh apagar <TASK-XXX>"
+  echo "uso: sonar-task.sh <TASK-XXX> [--branch <nome>] [--no-coverage]"
+  echo "     sonar-task.sh delete <TASK-XXX>"
   exit 1
 }
 
 # --- 0. Argumentos -----------------------------------------------------------
 [ $# -ge 1 ] || uso
 ACAO="analisar"
-if [ "$1" = "apagar" ]; then ACAO="apagar"; shift; [ $# -ge 1 ] || uso; fi
+if [ "$1" = "delete" ]; then ACAO="delete"; shift; [ $# -ge 1 ] || uso; fi
 
 TASK="$1"; shift
 # `[[ =~ ]]` e não `grep -qE`: o grep casa POR LINHA, então
@@ -76,14 +76,14 @@ BRANCH=""; COBERTURA="sim"
 while [ $# -gt 0 ]; do
   case "$1" in
     --branch)        [ $# -ge 2 ] || uso; BRANCH="$2"; shift 2 ;;
-    --sem-cobertura) COBERTURA="nao"; shift ;;
+    --no-coverage) COBERTURA="nao"; shift ;;
     *) uso ;;
   esac
 done
 [ -n "$BRANCH" ] || BRANCH="$(git -C "$RAIZ" rev-parse --abbrev-ref HEAD 2>/dev/null)"
 
 # PROTEÇÃO: a chave do espelho é derivada da demanda e casada com um padrão
-# estrito. É o que impede `apagar` de encostar no projeto real do trunk — a chave
+# estrito. É o que impede `delete` de encostar no projeto real do trunk — a chave
 # nunca pode ser a do trunk porque sempre carrega o sufixo -TASK-<numero>.
 [ -n "${FABER_SONAR_PROJECT_KEY:-}" ] || falha "FABER_SONAR_PROJECT_KEY vazio em faber/config/faber.env" 3
 PROJ="${FABER_SONAR_PROJECT_KEY}-$TASK"
@@ -148,8 +148,8 @@ api GET "authentication/validate"
 [ "$(echo "$BODY" | jq -r '.valid // false')" = "true" ] \
   || falha "SONAR_TOKEN inválido (authentication/validate=false) — regenere o token (P2)" 3
 
-# --- 3. Subcomando `apagar` (faxina do G9) -----------------------------------
-if [ "$ACAO" = "apagar" ]; then
+# --- 3. Subcomando `delete` (faxina do G9) -----------------------------------
+if [ "$ACAO" = "delete" ]; then
   # Idempotente: projeto inexistente não é erro (o G9 pode rodar duas vezes).
   raw="$(curl -sS -m 60 -X POST -u "$SONAR_TOKEN:" -w $'\n%{http_code}' \
          "$HOST/api/projects/delete?project=$PROJ" 2>/dev/null)" \
@@ -170,19 +170,19 @@ if [ "$COBERTURA" = "sim" ]; then
   ( cd "$RAIZ" && npm run test:coverage ) \
     || falha "npm run test:coverage falhou — sem cobertura confiável, a análise mediria 0.0 e o veredito seria falso" 4
 fi
-[ -s "$LCOV" ] || falha "coverage/lcov.info ausente ou vazio em $RAIZ (rode sem --sem-cobertura)" 4
+[ -s "$LCOV" ] || falha "coverage/lcov.info ausente ou vazio em $RAIZ (rode sem --no-coverage)" 4
 
 # B-9 (review): "existe e não está vazio" aceitava um lcov gerado noutra branch,
 # dias antes, e o publicava como cobertura DESTA análise — mesma família do A-1
-# (dado aceito sem prova de que corresponde ao código). Com --sem-cobertura, o
+# (dado aceito sem prova de que corresponde ao código). Com --no-coverage, o
 # relatório precisa ser MAIS NOVO que o último commit.
 if [ "$COBERTURA" = "nao" ]; then
   MT="$(stat -f %m "$LCOV" 2>/dev/null)" || MT="$(stat -c %Y "$LCOV" 2>/dev/null)" || MT=""
   CT="$(git -C "$RAIZ" log -1 --format=%ct 2>/dev/null)" || CT=""
   { [ -n "$MT" ] && [ -n "$CT" ]; } \
-    || falha "não consegui datar coverage/lcov.info ou o último commit (stat/git) — sem isso não dá para provar que a cobertura é deste código; rode sem --sem-cobertura" 4
+    || falha "não consegui datar coverage/lcov.info ou o último commit (stat/git) — sem isso não dá para provar que a cobertura é deste código; rode sem --no-coverage" 4
   [ "$MT" -ge "$CT" ] \
-    || falha "coverage/lcov.info é ANTERIOR ao último commit (lcov=$MT, commit=$CT, epoch) — publicaria cobertura de outro código; rode sem --sem-cobertura" 4
+    || falha "coverage/lcov.info é ANTERIOR ao último commit (lcov=$MT, commit=$CT, epoch) — publicaria cobertura de outro código; rode sem --no-coverage" 4
 fi
 
 # --- 5. Scanner --------------------------------------------------------------

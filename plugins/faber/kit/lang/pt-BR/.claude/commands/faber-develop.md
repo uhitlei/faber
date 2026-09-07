@@ -23,7 +23,7 @@ pelos scripts — nunca manual. Trabalhe no worktree da demanda.
 2. **Developed + G3:**
    - `faber/scripts/transition.sh TASK-XXX developed`
      (o gate-check exige os logs de lint/build/test em `evidence/`);
-   - `faber/scripts/gate-set.sh TASK-XXX G3 approved --por gate-check --evidencia "evidence/<NN>-test-run.log"`
+   - `faber/scripts/gate-set.sh TASK-XXX G3 approved --by gate-check --evidence "evidence/<NN>-test-run.log"`
      — G3 é do `gate-check` (§18); o registro **espelha** a liberação da
      transição, com o NN real do log de teste.
 
@@ -39,9 +39,9 @@ pelos scripts — nunca manual. Trabalhe no worktree da demanda.
      handoffs do dev ou narrativa da implementação (contamina).
 
 5. **G4:** se o veredicto for `bloqueado` → espelhe as tarefas de correção na
-   issue e regrida: `faber/scripts/transition.sh TASK-XXX in-development --motivo "review: <resumo>"`
+   issue e regrida: `faber/scripts/transition.sh TASK-XXX in-development --reason "review: <resumo>"`
    (correções voltam por este mesmo fluxo). Senão:
-   - `faber/scripts/gate-set.sh TASK-XXX G4 approved --por cto --evidencia "review.md"`
+   - `faber/scripts/gate-set.sh TASK-XXX G4 approved --by cto --evidence "review.md"`
    - `faber/scripts/transition.sh TASK-XXX validation`
 
 6. **G5 — validações paralelas** (§5): dispare numa mesma rodada
@@ -53,7 +53,7 @@ pelos scripts — nunca manual. Trabalhe no worktree da demanda.
      e `... ci-run -- gh run view <run-id>`.
    Critério: tudo verde **ou exceção formal documentada** (Medium/Low, coverage —
    Critical/High jamais). "Não executado" jamais vira aprovado (CLAUDE.md §4).
-   - Verde → `faber/scripts/gate-set.sh TASK-XXX G5 approved --por cto --evidencia "evidence/<NN>-<slug>.log"`
+   - Verde → `faber/scripts/gate-set.sh TASK-XXX G5 approved --by cto --evidence "evidence/<NN>-<slug>.log"`
    - Vermelho → regrida com motivo (`in-development`) e volte ao passo 1.
 
 7. **Siga para `/faber-validate TASK-XXX`** — o G6 é de @@FABER_OWNER_NAME@@.

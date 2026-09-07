@@ -4,10 +4,10 @@
 # ARQUITETURA §6.2: toda transição = gate-check OK + state.yaml atualizado e
 # COMMITADO + comentário-padrão na issue + board movido — tudo num só script.
 #
-# Uso: transition.sh <TASK-XXX> <estado-destino> [--motivo "..."] [--por <quem>]
+# Uso: transition.sh <TASK-XXX> <estado-destino> [--reason "..."] [--by <quem>]
 #                   [--pr <numero|url>]
-#   --motivo  obrigatório p/ regressão, blocked e cancelled (gate-check exige)
-#   --por     quem executa a transição (default: cto)
+#   --reason  obrigatório p/ regressão, blocked e cancelled (gate-check exige)
+#   --by     quem executa a transição (default: cto)
 #   --pr      número/URL da PR — usado na transição para pr-open (gate-check
 #             exige campo `pr` preenchido; se já estiver no state, é opcional)
 #
@@ -28,14 +28,14 @@ GC="$DIR/gate-check.sh"
 BOARD="$DIR/board.sh"
 TASKS="$DIR/../tasks"
 
-uso() { echo "uso: transition.sh <TASK-XXX> <estado-destino> [--motivo \"...\"] [--por <quem>] [--pr <url>]"; exit 1; }
+uso() { echo "uso: transition.sh <TASK-XXX> <estado-destino> [--reason \"...\"] [--by <quem>] [--pr <url>]"; exit 1; }
 [ $# -ge 2 ] || uso
 TASK="$1"; DESTINO="$2"; shift 2
 MOTIVO=""; POR="cto"; PR=""
 while [ $# -gt 0 ]; do
   case "$1" in
-    --motivo) MOTIVO="${2:?--motivo exige texto}"; shift 2 ;;
-    --por)    POR="${2:?--por exige valor}"; shift 2 ;;
+    --reason) MOTIVO="${2:?--reason exige texto}"; shift 2 ;;
+    --by)    POR="${2:?--by exige valor}"; shift 2 ;;
     --pr)     PR="${2:?--pr exige numero/url}"; shift 2 ;;
     *) uso ;;
   esac
@@ -49,7 +49,7 @@ ATUAL=$(python3 -c "import yaml,sys;print(yaml.safe_load(open(sys.argv[1]))['sta
 
 # blocked: bloqueio precisa estar gravado ANTES do gate-check (que o valida)
 if [ "$DESTINO" = "blocked" ]; then
-  [ -n "$MOTIVO" ] || { echo "ERRO: blocked exige --motivo (§6.2)"; exit 1; }
+  [ -n "$MOTIVO" ] || { echo "ERRO: blocked exige --reason (§6.2)"; exit 1; }
   python3 - "$STATE" "$MOTIVO" "$ATUAL" <<'PY'
 import sys, yaml
 from datetime import datetime
@@ -73,7 +73,7 @@ PY
 fi
 
 # gate-check: nenhuma transição sem ele (§6.2). Bloqueou → desfaz o rascunho.
-if ! "$GC" "$TASK" "$DESTINO" ${MOTIVO:+--motivo "$MOTIVO"}; then
+if ! "$GC" "$TASK" "$DESTINO" ${MOTIVO:+--reason "$MOTIVO"}; then
   git checkout -q -- "$STATE" 2>/dev/null || true
   exit 1
 fi

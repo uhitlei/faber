@@ -193,7 +193,7 @@ class RequirementsGateTests(unittest.TestCase):
                 subprocess.run(cmd, cwd=runtime, check=True, capture_output=True)
             seal(target)
             expected = delivery_hash(target)
-            command = ["bash", str(runtime / "faber/scripts/gate-set.sh"), "TASK-000", "G1", "approved", "--por", owner]
+            command = ["bash", str(runtime / "faber/scripts/gate-set.sh"), "TASK-000", "G1", "approved", "--by", owner]
             result = subprocess.run(command, cwd=runtime, capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             state_path = target / "state.yaml"

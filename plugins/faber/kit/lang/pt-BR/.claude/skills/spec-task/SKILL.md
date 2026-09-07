@@ -16,11 +16,11 @@ Templates em `faber/templates/`. Idioma: PT-BR (P6).
 | design | `spec-feature.template.md` |
 | bug | `spec-bug.template.md` |
 | incidente | `spec-incident.template.md` |
-| debito-tecnico | `spec-technical.template.md` |
+| tech-debt | `spec-technical.template.md` |
 | infra | `spec-technical.template.md` |
-| seguranca | `spec-technical.template.md` |
-| banco | `spec-technical.template.md` |
-| documentacao | `spec-technical.template.md` |
+| security | `spec-technical.template.md` |
+| database | `spec-technical.template.md` |
+| docs | `spec-technical.template.md` |
 | spike | `spec-spike.template.md` |
 
 Nuances por tipo estão comentadas dentro de cada template (ex.: `security`

@@ -12,7 +12,7 @@ dois delimitadores nunca se misturam.
 | Antes (projeto de origem) | Depois (kit) |
 |---|---|
 | `Uhitlei` (nome de exibição) | `@@FABER_OWNER_NAME@@` |
-| `uhitlei` (slug em `--por uhitlei`, `aprovador: uhitlei`) | `@@FABER_OWNER@@` |
+| `uhitlei` (slug em `--by uhitlei`, `aprovador: uhitlei`) | `@@FABER_OWNER@@` |
 | `Jurisprudência em Questões`, `do Jurisprudência em Questões` | `@@FABER_PROJECT@@` |
 | `Develop` (branch de integração), `origin/Develop` | `@@FABER_TRUNK@@`, `origin/@@FABER_TRUNK@@` |
 | `main` (quando significa branch de produção) | `@@FABER_MAIN@@` |

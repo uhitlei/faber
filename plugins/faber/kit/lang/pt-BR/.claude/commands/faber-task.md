@@ -55,7 +55,7 @@ Execute nesta ordem — a mecânica é dos scripts, nunca manual:
   refinement` → refinamento duplo (análise A sua + `senior-developer` Modo 1 →
   compare, máx. 2 rodadas; `devsecops` Papel 1; `db-guardian` Modo 1 se banco)
   → declare `ui_impact` no `state.yaml` → se discovery ativo, revise as projeções e execute `requirements-gate.py seal` com a pasta da demanda (skill requirements-readiness) → `gate-set.sh TASK-XXX G2 approved
-  --por cto` → `transition.sh TASK-XXX ready-for-dev`. Só então pare e peça o
+  --by cto` → `transition.sh TASK-XXX ready-for-dev`. Só então pare e peça o
   **G1** num único batch (DoR, riscos, trade-offs, o que decidir). Dúvida
   crítica no caminho → `clarification` e pare (é a exceção que sempre para).
 - **`step-by-step`**: pare no passo 7 e aguarde o ok de @@FABER_OWNER_NAME@@
