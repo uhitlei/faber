@@ -5,7 +5,7 @@ description: Checklist executável do Design System (módulo opcional FABER_DESI
 
 # design-system-check — conformidade com o Design System
 
-Fonte: `faber/ARQUITETURA.md` §11; spec `@@FABER_SPECS_DIR@@/global/02-DESIGN-SYSTEM.md`
+Fonte: `faber/ARCHITECTURE.md` §11; spec `@@FABER_SPECS_DIR@@/global/02-DESIGN-SYSTEM.md`
 (regra de ouro: **zero cor hardcoded** — só os tokens semânticos do Design
 System declarados em `02-DESIGN-SYSTEM.md`, ex.: classes utilitárias
 `bg-primary`, `text-foreground`, `border-border`). Mecânica determinística:

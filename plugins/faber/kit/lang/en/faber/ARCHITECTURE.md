@@ -138,7 +138,7 @@ OWNER ──/faber-task──▶ CTO (sessão principal, Opus)
    ══ GATE G8 · MERGE ══ (SEMPRE o OWNER, no GitHub)
                     ▼
      doc-writer (Sonnet): consolida specs/ + CHANGELOG + diagramas
-     → limpa rascunhos → GATE G9 · DONE → worktree.sh limpar
+     → limpa rascunhos → GATE G9 · DONE → worktree.sh clean
 ```
 
 Em todos os pontos: transições gravadas em `state.yaml` + comentário na issue + coluna do board movida por script (`transition.sh`), sem consumo de LLM. Com `FABER_INTERACTION=gates`, o CTO encadeia os trechos entre gates humanos sem parar; com `step-by-step`, para ao fim de cada comando.
@@ -150,7 +150,7 @@ Em todos os pontos: transições gravadas em `state.yaml` + comentário na issue
 ### 6.1 Três projeções do mesmo estado
 
 1. **`state.yaml`** — fonte de verdade máquina: estado, timestamps, gates com aprovador e evidência.
-2. **Issue** — espelho humano: label `estado:<fino>` + comentários de gate.
+2. **Issue** — espelho humano: label `state:<fino>` + comentários de gate.
 3. **Board Projects v2** (opcional) — campo Status com **9 colunas macro**: `Backlog · Especificação · Ready for Dev · Em Desenvolvimento · Review & Validação · Minha Avaliação · PR Aberta · Done · Bloqueada`.
 
 ### 6.2 Estados finos e transições
@@ -160,24 +160,24 @@ Em todos os pontos: transições gravadas em `state.yaml` + comentário na issue
 | 1 | `intake` | Backlog | CTO | Solicitação recebida | Tipo classificado; ID emitido; issue + branch + pasta |
 | 2 | `clarification` | Backlog | CTO → Owner | Ambiguidade crítica | Respostas registradas na spec |
 | 3 | `specifying` | Especificação | PO (ou CTO/dev se técnica) | Fluxo selecionado | `spec.md` no nível do template; ACs claros; dúvidas zeradas ou escaladas |
-| 4 | `refinement` | Especificação | CTO + senior-developer (+ devsecops, db-guardian) | Spec pronta | `refinamento.md` (A e B, divergências resolvidas/trade-offs); tarefas DevSecOps; `impacto_ui` |
+| 4 | `refinement` | Especificação | CTO + senior-developer (+ devsecops, db-guardian) | Spec pronta | `refinamento.md` (A e B, divergências resolvidas/trade-offs); tarefas DevSecOps; `ui_impact` |
 | 5 | `ready-for-dev` | Ready for Dev | **Owner** (G1) | DoR 100% (§18) | Aprovação registrada (`/faber-approve`) |
 | 6 | `in-development` | Em Desenvolvimento | senior-developer | G1 aprovado | Escopo implementado; testes; lint+build+test verdes (logs) |
 | 7 | `developed` | Em Desenvolvimento | gate-check.sh | Evidências G3 | Push da branch |
 | 8 | `code-review` | Review & Validação | code-reviewer + CTO | `developed` + branch no remoto | Parecer sem bloqueio crítico |
 | 9 | `validation` | Review & Validação | qa ∥ db-guardian ∥ devsecops | G4 aprovado + `review.md` | E2E (se UI) + ACs + banco + análise estática verdes |
-| 10 | `minha-avaliacao` | Minha Avaliação | **Owner** (G6) | G5 verde; ambiente pronto; roteiro na issue | "TASK-XXX validada" |
+| 10 | `my-review` | Minha Avaliação | **Owner** (G6) | G5 verde; ambiente pronto; roteiro na issue | "TASK-XXX validada" |
 | 11 | `ready-for-pr` | Minha Avaliação | CTO (G7) | G6 aprovado | Branch atualizada com o trunk; descrição de PR |
 | 12 | `pr-open` | PR Aberta | **Owner** (G8) | G7 + campo `pr` | Merge feito pelo Owner no GitHub |
-| 13 | `done` | Done | doc-writer (G9) | G1–G8 aprovados/n.a. | specs consolidadas; CHANGELOG; issue fechada; **branch apagada** (`worktree.sh limpar`) |
+| 13 | `done` | Done | doc-writer (G9) | G1–G8 aprovados/n.a. | specs consolidadas; CHANGELOG; issue fechada; **branch apagada** (`worktree.sh clean`) |
 | 14 | `blocked` | Bloqueada | quem bloqueou | Motivo obrigatório | Retorna ao estado de origem |
 | 15 | `cancelled` | — (issue fechada) | **Owner** | Decisão explícita (`--motivo`) | Motivo registrado |
 
-**Regras gerais:** nenhuma transição sem `gate-check.sh`; regressão só com motivo; reabertura de `done` gera **nova demanda** vinculada (`relacionada_a`); `blocked` guarda o estado de origem; toda transição = commit em `state.yaml` + comentário na issue + board.
+**Regras gerais:** nenhuma transição sem `gate-check.sh`; regressão só com motivo; reabertura de `done` gera **nova demanda** vinculada (`related_to`); `blocked` guarda o estado de origem; toda transição = commit em `state.yaml` + comentário na issue + board.
 
 ### 6.3 Cópia autoritativa entre fontes divergentes
 
-Uma demanda pode existir em várias cópias de `state.yaml` (worktrees ativos e refs do git). **A cópia autoritativa é a de maior `atualizada_em`**, varrendo todas as fontes conhecidas. Um `estado` fora da lista fechada dos 15 é **leitura inválida**, nunca estado, e nunca vence de uma cópia válida. Todo leitor agregado (ex.: `faber/dashboard/`) implementa esta regra.
+Uma demanda pode existir em várias cópias de `state.yaml` (worktrees ativos e refs do git). **A cópia autoritativa é a de maior `updated_at`**, varrendo todas as fontes conhecidas. Um `state` fora da lista fechada dos 15 é **leitura inválida**, nunca estado, e nunca vence de uma cópia válida. Todo leitor agregado (ex.: `faber/dashboard/`) implementa esta regra.
 
 ---
 
@@ -277,7 +277,7 @@ Board-sync é um script (`board.sh`), não uma Skill: zero LLM.
 
 | # | Evento | Regra imposta |
 |---|---|---|
-| H1 | `PreToolUse` (Bash) | **Deny**: push/merge/commit envolvendo trunk/produção · `gh pr merge` · `gh api` de escrita em merge/refs protegidas/workflows · tokens de `FABER_REFS_DENY` · regex de `FABER_CMDS_DENY`. **Ask**: tokens de `FABER_REFS_CONFIRM` · regex de `FABER_CMDS_CONFIRM` · escrita via shell em paths do H2 · `gate-set` de G1/G6/G8 como `aprovado` (a confirmação É a aprovação do Owner) |
+| H1 | `PreToolUse` (Bash) | **Deny**: push/merge/commit envolvendo trunk/produção · `gh pr merge` · `gh api` de escrita em merge/refs protegidas/workflows · tokens de `FABER_REFS_DENY` · regex de `FABER_CMDS_DENY`. **Ask**: tokens de `FABER_REFS_CONFIRM` · regex de `FABER_CMDS_CONFIRM` · escrita via shell em paths do H2 · `gate-set` de G1/G6/G8 como `approved` (a confirmação É a aprovação do Owner) |
 | H2 | `PreToolUse` (Write/Edit) | **Deny**: `FABER_SECRET_FILES` · `FABER_PROTECTED_PATHS` · migration com timestamp já no histórico. **Allow/Ask**: `.github/workflows/*` (allow com `workflow_unlock` do Owner; senão ask). **Ask**: `.claude/settings.json`, `.claude/hooks/*`, `faber/config/faber.env` |
 | H3 | `PostToolUse` (Write em migrations) | Valida placeholders e os termos de `FABER_MIGRATION_CHECKS`; avisa e anota pendência no log da demanda |
 | H4 | `PostToolUse` (git commit) | `tipo(escopo): descrição` + referência `TASK-XXX` na branch de demanda |
@@ -303,12 +303,12 @@ Board-sync é um script (`board.sh`), não uma Skill: zero LLM.
 |---|---|---|
 | `feature` (nova funcionalidade / evolução) | Fluxo completo | Todos (condicionais conforme impacto) |
 | `bug` | **Reprodução obrigatória antes da spec**; spec reduzida (repro + causa raiz + fix + regressão) | CTO, dev, qa, reviewer |
-| `incidente` | Contenção → diagnóstico → fix → **post-mortem vira a spec**; gates comprimidos com Owner síncrono; nada de produção direto | CTO, dev, devsecops (+db-guardian) |
-| `debito-tecnico` | PO pulado — CTO ou dev especifica; QA proporcional | CTO, dev, reviewer, qa |
-| `seguranca` | DevSecOps lidera a spec; db-guardian se dados; tratamento discreto (sem exploit em issue pública) | devsecops, dev, db-guardian, reviewer |
+| `incident` | Contenção → diagnóstico → fix → **post-mortem vira a spec**; gates comprimidos com Owner síncrono; nada de produção direto | CTO, dev, devsecops (+db-guardian) |
+| `tech-debt` | PO pulado — CTO ou dev especifica; QA proporcional | CTO, dev, reviewer, qa |
+| `security` | DevSecOps lidera a spec; db-guardian se dados; tratamento discreto (sem exploit em issue pública) | devsecops, dev, db-guardian, reviewer |
 | `infra` | DevSecOps lidera; **todo diff em workflows exige revisão do Owner** | devsecops, CTO |
-| `banco` | db-guardian **desde o refinamento**; `migration-safe` obrigatória | db-guardian, dev, reviewer |
-| `documentacao` | Direto ao doc-writer; gate único = review do CTO | doc-writer, CTO |
+| `database` | db-guardian **desde o refinamento**; `migration-safe` obrigatória | db-guardian, dev, reviewer |
+| `docs` | Direto ao doc-writer; gate único = review do CTO | doc-writer, CTO |
 | `spike` | Timebox no intake; **saída = mini-ADR**, sem implementação; pode gerar filhas | CTO, dev |
 | `design` | Designer lidera; dev só na implementação | designer, dev, reviewer |
 
@@ -340,7 +340,7 @@ CLAUDE.md                      # Constituição do CTO (enxuta)
 ├── commands/                  # 12 comandos
 └── hooks/                     # H1–H7 + faber_config.py + test-h1-h2.sh
 faber/
-├── ARQUITETURA.md             # este documento
+├── ARCHITECTURE.md             # este documento
 ├── config/faber.env         # configuração (fonte única, lida por scripts e hooks)
 ├── bootstrap/                 # CONTEXT.md, modes/*.md, PERGUNTAS.md, BACKLOG.md
 ├── templates/                 # state.template.yaml · spec-*.template.md · SPEC-feature · migration · handoff · PRD/BRD · specs-global/
@@ -360,16 +360,16 @@ faber/
 Todo subagente encerra escrevendo `handoffs/NN-<de>-para-cto.md` (H5 valida):
 
 ```yaml
-demanda: TASK-052
+task: TASK-052
 de: senior-developer
 para: cto
-estado_sugerido: developed
-entradas_consumidas: [spec.md, refinamento.md]          # paths, nunca conteúdo
-saidas_produzidas: [src/..., migrations/...]
+suggested_state: developed
+inputs_consumed: [spec.md, refinamento.md]          # paths, nunca conteúdo
+outputs_produced: [src/..., migrations/...]
 evidence: [evidence/03-test-run.log, evidence/04-lint.log]
-pendencias: []
-riscos_novos: []
-proxima_acao_sugerida: "code-review"
+open_issues: []
+new_risks: []
+suggested_next_action: "code-review"
 ```
 
 **Handoff sem evidência referenciada = inválido** (gate-check rejeita a transição). Template: `faber/templates/handoff.template.md`.
@@ -382,13 +382,13 @@ proxima_acao_sugerida: "code-review"
 | G2 | Consenso técnico | CTO | Sem divergência crítica; riscos tratados; ACs atendíveis; trade-offs registrados — ou escalado |
 | G3 | Developed | gate-check | Lint + build + test verdes (logs em `evidence/`); commits no padrão; diff × escopo |
 | G4 | Code Review | CTO | Parecer sem bloqueio crítico; correções fechadas |
-| G5 | Validação técnica | CTO | E2E verde **quando `impacto_ui: true`** (5 condições no log) + ACs + banco (se aplicável) + análise estática sem Critical/High **novo** (Medium/Low registrados; exceção só documentada) |
+| G5 | Validação técnica | CTO | E2E verde **quando `ui_impact: true`** (5 condições no log) + ACs + banco (se aplicável) + análise estática sem Critical/High **novo** (Medium/Low registrados; exceção só documentada) |
 | G6 | Minha Avaliação | **Owner** | Ambiente validado pelo Owner ("TASK-XXX validada") |
 | G7 | Ready for PR | CTO | Gates anteriores OK; branch atualizada com o trunk; descrição consolidada |
 | G8 | Merge | **Owner** | Manual, no GitHub |
 | G9 | Done | CTO | specs consolidadas + CHANGELOG + issue fechada + branch apagada |
 
-**DoR (G1):** spec no nível do template do tipo · ACs testáveis · cenários definidos · decisões de design (se aplicável) · refinamento com consenso ou trade-offs · riscos/dependências · tarefas DevSecOps · `impacto_ui` declarado · zero dúvida crítica aberta.
+**DoR (G1):** spec no nível do template do tipo · ACs testáveis · cenários definidos · decisões de design (se aplicável) · refinamento com consenso ou trade-offs · riscos/dependências · tarefas DevSecOps · `ui_impact` declarado · zero dúvida crítica aberta.
 
 **DoD:** checklist pré-merge (`04-DEPLOYMENT §10`) + G1–G9 registrados em `state.yaml` com evidências.
 
@@ -438,7 +438,7 @@ Secrets: agentes nunca leem/registram valores; referem-se por **nome**, via vari
 ## 22. Roadmap de adoção
 
 1. **Fundação:** `install.sh` → `/faber-init` → PR de fundação mergeada (base de conhecimento).
-2. **Piloto:** 1 demanda técnica pequena (`debito-tecnico`) ponta a ponta para calibrar comandos e gates.
+2. **Piloto:** 1 demanda técnica pequena (`tech-debt`) ponta a ponta para calibrar comandos e gates.
 3. **Módulos:** ligar `FABER_E2E`, `FABER_MIGRATIONS_DIR`, `FABER_LOCAL_ENV`, `FABER_SONAR`, `FABER_DESIGN_SYSTEM`, `FABER_BOARD`, `FABER_DASHBOARD` conforme a stack.
 4. **Endurecimento:** cobertura bloqueante progressiva; métricas de consumo/tempo por demanda (dashboard); refino de limites com dados reais.
 

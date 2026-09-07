@@ -21,7 +21,7 @@ dois delimitadores nunca se misturam.
 | `npm run lint` · `npm run build` · `npm run test:run` | `@@FABER_CMD_LINT@@` · `@@FABER_CMD_BUILD@@` · `@@FABER_CMD_TEST@@` |
 | `npx playwright test …` | `@@FABER_CMD_E2E@@` |
 | `supabase/migrations/` | `@@FABER_MIGRATIONS_DIR@@/` |
-| `Jurisprudencia-Em-Questoes/jurisprudencia-boost-git` | nunca literal — use `faber/scripts/board.sh comentar-arquivo <issue#> <path>` ou `$(faber/scripts/board.sh repo)` |
+| `Jurisprudencia-Em-Questoes/jurisprudencia-boost-git` | nunca literal — use `faber/scripts/board.sh comment-file <issue#> <path>` ou `$(faber/scripts/board.sh repo)` |
 
 ## Conceitos que viram texto genérico (sem placeholder)
 
@@ -40,7 +40,7 @@ dois delimitadores nunca se misturam.
 | Comentários HTML de histórico no fim dos arquivos (`<!-- Rev … -->`) | remover |
 | Sonar: projeto `JQ`, espelho `JQ-TASK-XXX`, `.env.admin` | `$FABER_SONAR_PROJECT_KEY`, espelho `<PROJECT_KEY>-TASK-XXX`, `SONAR_ENV_FILE` (módulo opcional `FABER_SONAR`) |
 | Modelos por agente (Opus/Sonnet) | manter — decisão de risco genérica |
-| `faber/ARQUITETURA.md §N` | manter a numeração (o ARQUITETURA genérico preserva as seções) |
+| `faber/ARCHITECTURE.md §N` | manter a numeração (o ARQUITETURA genérico preserva as seções) |
 
 ## Invariantes que NÃO mudam
 

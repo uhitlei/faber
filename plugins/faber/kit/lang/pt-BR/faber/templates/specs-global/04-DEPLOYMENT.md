@@ -47,7 +47,7 @@ Workflows em `.github/workflows/` — edição exige tarefa DevSecOps aprovada (
 ## 10. Checklist pré-merge (DoD baseline)
 
 - [ ] `@@FABER_CMD_LINT@@` · `@@FABER_CMD_BUILD@@` · `@@FABER_CMD_TEST@@` verdes (evidências na demanda)
-- [ ] E2E executado quando `impacto_ui: true`
+- [ ] E2E executado quando `ui_impact: true`
 - [ ] Migration revisada (destrutividade + rollback) quando houver
 - [ ] Variáveis de ambiente novas declaradas nos ambientes afetados
 - [ ] CHANGELOG da feature atualizado

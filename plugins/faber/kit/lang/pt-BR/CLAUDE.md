@@ -1,6 +1,6 @@
 # CLAUDE.md — Constituição do CTO · Fábrica de Software com Agentes
 
-> Projeto: **@@FABER_PROJECT@@**. Fonte de verdade da fábrica: `faber/ARQUITETURA.md`.
+> Projeto: **@@FABER_PROJECT@@**. Fonte de verdade da fábrica: `faber/ARCHITECTURE.md`.
 > Configuração: `faber/config/faber.env` (owner, branches, comandos, módulos).
 > Este arquivo é deliberadamente enxuto: regras + ponteiros. Detalhes são lidos sob demanda, por seção.
 
@@ -99,7 +99,7 @@ Em ambos os modos os gates humanos são humanos — nunca são pulados nem autoa
 - Discovery: `requirements/model.yaml` registra requisitos; BRD/PRD/Spec Kit são projeções. A spec aprovada rege desenvolvimento; G1 se vincula ao selo atual.
 - Handoffs referenciam **paths**, nunca conteúdo colado.
 - Sessões são descartáveis: tudo que importa vai a disco na hora; `/faber-resume TASK-XXX` reconstrói o contexto do disco.
-- Demandas rodam sempre em **worktree próprio** (`.claude/worktrees/TASK-XXX`): `new-task.sh` cria e `/faber-resume` reusa; a raiz é exceção, só com `--noworktrees` explicitado pelo Owner. Ao entrar em `done`, `worktree.sh limpar` fecha o worktree e **apaga a branch** (local + remota) — recusa se ela não estiver mergeada.
+- Demandas rodam sempre em **worktree próprio** (`.claude/worktrees/TASK-XXX`): `new-task.sh` cria e `/faber-resume` reusa; a raiz é exceção, só com `--noworktrees` explicitado pelo Owner. Ao entrar em `done`, `worktree.sh clean` fecha o worktree e **apaga a branch** (local + remota) — recusa se ela não estiver mergeada.
 - Idioma: `FABER_LANG` (padrão PT-BR) em specs, issues, handoffs e mensagens de gate.
 
 ## 6. Economia de contexto (ARQUITETURA §20)
@@ -114,7 +114,7 @@ Em ambos os modos os gates humanos são humanos — nunca são pulados nem autoa
 
 | Documento | Conteúdo |
 |---|---|
-| `faber/ARQUITETURA.md` | Arquitetura completa: agentes (§7–8), skills (§11), comandos (§12), hooks (§13), fluxos por tipo (§14), estados (§6), gates (§18), regras (§19) |
+| `faber/ARCHITECTURE.md` | Arquitetura completa: agentes (§7–8), skills (§11), comandos (§12), hooks (§13), fluxos por tipo (§14), estados (§6), gates (§18), regras (§19) |
 | `faber/config/faber.env` | Configuração da fábrica neste projeto |
 | `faber/bootstrap/` | Contexto e playbooks do bootstrap (`/faber-init`) |
 | `@@FABER_SPECS_DIR@@/global/00-ARCHITECTURE.md` | Arquitetura do produto |
@@ -130,6 +130,6 @@ Em ambos os modos os gates humanos são humanos — nunca são pulados nem autoa
 
 ## 8. Estado da fábrica
 
-Recém-instalada: enquanto `faber/bootstrap/CONTEXT.md` tiver `status: pendente`, a primeira ação é `/faber-init` (gera specs e configuração a partir do contexto detectado). Depois do merge da PR de fundação, a fábrica está **operacional**: demandas nascem com `/faber-task`.
+Recém-instalada: enquanto `faber/bootstrap/CONTEXT.md` tiver `status: pending`, a primeira ação é `/faber-init` (gera specs e configuração a partir do contexto detectado). Depois do merge da PR de fundação, a fábrica está **operacional**: demandas nascem com `/faber-task`.
 
 <!-- Regras específicas do projeto (adicionadas pelo /faber-init a partir da constituição/PRD/código — abaixo desta linha, sem alterar as seções acima) -->

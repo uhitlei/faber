@@ -33,6 +33,6 @@ Tipo já classificado como `bug` (§14) — não reclassifique. Execute nesta or
 ## Encadeamento (FABER_INTERACTION)
 
 - **`gates`**: após o passo 7 siga sozinho — refinamento enxuto (causa raiz +
-  fix + arquivos prováveis; `impacto_ui` declarado) → G2 → `ready-for-dev` —
+  fix + arquivos prováveis; `ui_impact` declarado) → G2 → `ready-for-dev` —
   e pare pedindo o **G1** num único batch.
 - **`step-by-step`**: pare no passo 7 e aguarde o ok para cada fase.

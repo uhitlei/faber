@@ -99,7 +99,7 @@ git add "$STATE" && git commit -q -m "chore($TASK): transição $ATUAL -> $DESTI
 echo "state: $ATUAL -> $DESTINO (commit $(git log --oneline -1 | cut -d' ' -f1))"
 
 # projeções issue/board (falha = aviso; reconciliáveis depois — R4)
-"$BOARD" mover "$N" "$DESTINO" || echo "AVISO: board não movido (board.sh mover $N $DESTINO)"
+"$BOARD" mover "$N" "$DESTINO" || echo "AVISO: board não movido (board.sh move $N $DESTINO)"
 "$BOARD" comentar "$N" "🏭 **$TASK**: \`$ATUAL\` → \`$DESTINO\`${MOTIVO:+ — motivo: $MOTIVO} (gate-check: liberada; por: $POR)" \
   || echo "AVISO: comentário não postado"
 

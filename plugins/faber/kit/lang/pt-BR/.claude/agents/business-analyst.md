@@ -30,21 +30,21 @@ integralmente analisada sem uma fonte textual que cubra esse conteúdo.
 Registre `handoffs/NN-ba-para-cto.md` no contrato existente, com:
 
 ```yaml
-demanda: TASK-XXX
+task: TASK-XXX
 de: business-analyst
 para: cto
-estado_sugerido: clarification
-entradas_consumidas: [requirements/sources.yaml]
-saidas_produzidas: [requirements/model.yaml, requirements/BRD.md, requirements/PRD.md, requirements/readiness.json]
+suggested_state: clarification
+inputs_consumed: [requirements/sources.yaml]
+outputs_produced: [requirements/model.yaml, requirements/BRD.md, requirements/PRD.md, requirements/readiness.json]
 evidence: [evidence/NN-requirements-readiness.log]
-pendencias: []
-riscos_novos: []
-proxima_acao_sugerida: esclarecer lacunas identificadas no relatório
+open_issues: []
+new_risks: []
+suggested_next_action: esclarecer lacunas identificadas no relatório
 ```
 
 Use `specifying` se a análise estiver pronta para PO/QA; caso contrário,
 `clarification`, com perguntas priorizadas e IDs das lacunas. No bootstrap,
-use `demanda: bootstrap` e descreva a próxima etapa no mesmo contrato sem
+use `task: bootstrap` e descreva a próxima etapa no mesmo contrato sem
 inventar `state.yaml`. O CTO opera as transições. Evidência de relatório
 reprovado demonstra a lacuna, nunca aprovação. A resposta final aponta para
 os arquivos e informa próximo passo e cobertura, sem despejar todo o modelo.

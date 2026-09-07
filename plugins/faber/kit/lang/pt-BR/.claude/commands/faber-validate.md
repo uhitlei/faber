@@ -11,9 +11,9 @@ Prepara o G6 (§12/§18): ambiente pronto + roteiro de teste. Pré-condição:
 estado `validation` com G5 aprovado (confira no `state.yaml`; se G5 pendente,
 pare e reporte o que falta — nunca pule validação técnica).
 
-1. **Transicione para `minha-avaliacao`:**
+1. **Transicione para `my-review`:**
    `faber/scripts/transition.sh TASK-XXX minha-avaliacao`
-   (o gate-check exige G5 aprovado e, com `impacto_ui: true` e `FABER_E2E=on`,
+   (o gate-check exige G5 aprovado e, com `ui_impact: true` e `FABER_E2E=on`,
    evidência de E2E executado; bloqueou → resolva as pendências antes).
 2. **Ambiente com evidência real:**
    - Se `FABER_LOCAL_ENV=on` (Skill `local-env`; dependência parada → peça ao
@@ -35,7 +35,7 @@ pare e reporte o que falta — nunca pule validação técnica).
      o que virou follow-up ou demanda filha);
    - **(iii)** **exatamente o que validar** — roteiro clicável + a frase de aprovação.
 
-   Postar: `faber/scripts/board.sh comentar-arquivo <issue#> faber/tasks/TASK-XXX/validacao-g6.md`
+   Postar: `faber/scripts/board.sh comment-file <issue#> faber/tasks/TASK-XXX/validacao-g6.md`
    (com `FABER_GH=off`, o arquivo em disco é a fonte — aponte o path no chat).
 5. **Batch no chat:** aponte para o comentário da issue (fonte única) + a frase
    de aprovação esperada: responda **"TASK-XXX validada"** (G6 aprovado — siga

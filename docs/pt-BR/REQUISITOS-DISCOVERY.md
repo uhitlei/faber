@@ -60,7 +60,7 @@ O contrato detalhado vive na referência da skill, evitando schemas duplicados.
 
 | Arquivo | Mudança |
 |---|---|
-| `CLAUDE.md`, `faber/ARQUITETURA.md` | Papel do BA, responsabilidades e fonte de verdade |
+| `CLAUDE.md`, `faber/ARCHITECTURE.md` | Papel do BA, responsabilidades e fonte de verdade |
 | `.claude/commands/faber-task.md`, `faber-resume.md`, `faber-develop.md` | Roteamento, retomada e verificação antes de implementar |
 | `.claude/agents/product-owner.md`, `qa.md`, `doc-writer.md` | Consumo e revisão dos requisitos, preservação dos IDs |
 | `faber/templates/state.template.yaml` | Metadado opcional `discovery.required` |

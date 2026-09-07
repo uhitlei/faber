@@ -148,7 +148,7 @@ CLAUDE.md              # the CTO's constitution (a previous one is preserved as 
                        # /faber-status /faber-resume /faber-approve /faber-develop /faber-validate /faber-pr
   hooks/    (H1–H7)    # guardrails parameterised by faber/config/faber.env
 faber/
-  ARQUITETURA.md       # the architecture (stable numbering — agents cite §N)
+  ARCHITECTURE.md       # the architecture (stable numbering — agents cite §N)
   config/faber.env     # the configuration: owner, branches, commands, modules, protected refs
   bootstrap/           # CONTEXT.md (detected mode) + the playbooks for the six modes
   scripts/             # gate-check · transition · gate-set · new-task · worktree · evidence · board

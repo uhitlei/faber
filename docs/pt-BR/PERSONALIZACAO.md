@@ -54,7 +54,7 @@ owner/branches depois, ajuste o `.env` e faça um `grep` pelos textos antigos em
 ## O que NÃO personalizar
 
 - Prefixo `TASK-`, os 15 estados, os 9 gates, os 10 tipos e a numeração `§N`
-  de `faber/ARQUITETURA.md`: scripts, hooks, agentes e comandos dependem deles.
+  de `faber/ARCHITECTURE.md`: scripts, hooks, agentes e comandos dependem deles.
 - A regra "handoff sem evidência = inválido" e "gate humano só pelo owner".
 
 ## Onde cada coisa do projeto de origem foi parar

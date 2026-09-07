@@ -27,7 +27,7 @@ implementação de produção**. Execute nesta ordem:
 6. **Saída = decisão técnica:** consolide o **mini-ADR** (contexto, opções,
    decisão, autor, data) em `faber/tasks/TASK-XXX/decisions.md` (§15).
 7. **Demandas filhas:** o que o spike recomendar implementar vira nova(s)
-   demanda(s) via `/faber-task`, com `relacionada_a: TASK-XXX` — **nunca**
+   demanda(s) via `/faber-task`, com `related_to: TASK-XXX` — **nunca**
    implemente aqui.
 8. **Reporte** a @@FABER_OWNER_NAME@@: TASK-XXX, o mini-ADR (decisão) e as
    demandas filhas propostas (um único bloco — §20).

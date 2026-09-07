@@ -15,10 +15,10 @@ Grave cada comando via `faber/scripts/evidence.sh faber/bootstrap <slug> -- <cmd
    nome, versão, scripts/tarefas declaradas, dependências principais.
 3. `ci` — workflows em `.github/workflows/` (ou equivalente): jobs, gatilhos,
    branches; onde rodam lint/build/test/e2e/deploy.
-4. `banco` — pasta de migrations (se houver), SGBD, ORM; contagem de migrations;
+4. `database` — pasta de migrations (se houver), SGBD, ORM; contagem de migrations;
    presença de RLS/policies/GRANTs.
 5. `testes` — frameworks de teste unitário e E2E; pastas; comandos.
-6. `historico` — `git log --oneline -30`, branches (`git branch -a`), convenção
+6. `history` — `git log --oneline -30`, branches (`git branch -a`), convenção
    de commits observada, branch padrão real.
 7. `env` — `.env.example` (só NOMES de variáveis; nunca abra `.env`/`.env.local`).
 
@@ -59,7 +59,7 @@ Agrupe o código por domínio/funcionalidade visível ao usuário (rotas, telas,
 comandos, endpoints). Para cada feature, preencha o template de 17 seções com o
 que o código mostra (seções sem evidência: "não documentado — `[PROPOSTA]`" ou
 Open question). Comece pelas 3–8 features principais; liste as demais no
-README como "a documentar" (candidatas ao backlog, tipo `documentacao`).
+README como "a documentar" (candidatas ao backlog, tipo `docs`).
 
 ## Etapa 5 — Backlog e fechamento
 

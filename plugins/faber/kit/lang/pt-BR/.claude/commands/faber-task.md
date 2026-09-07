@@ -10,8 +10,8 @@ Você é o CTO (CLAUDE.md). Demanda recebida de @@FABER_OWNER_NAME@@: **$ARGUMEN
 Execute nesta ordem — a mecânica é dos scripts, nunca manual:
 
 1. **Classifique o tipo** (ARQUITETURA §14). Slugs válidos: `feature`, `bug`,
-   `incidente`, `debito-tecnico`, `seguranca`, `infra`, `banco`,
-   `documentacao`, `spike`, `design`. Ambiguidade **crítica** de classificação
+   `incident`, `tech-debt`, `security`, `infra`, `database`,
+   `docs`, `spike`, `design`. Ambiguidade **crítica** de classificação
    ou de intenção → pergunte a @@FABER_OWNER_NAME@@ antes de criar qualquer
    coisa (parar > avançar com dúvida, §6.2).
 2. Derive um **título curto** (≤ 70 chars) da descrição.
@@ -36,14 +36,14 @@ Execute nesta ordem — a mecânica é dos scripts, nunca manual:
      citadas em `@@FABER_SPECS_DIR@@/features/`) — para produzir a `spec.md`
      via Skill `spec-task`. Em paralelo, `qa` (Modo 1) e, se houver impacto
      de UI, `product-designer` (Modo 1).
-   - Demanda **técnica** (`debito-tecnico`/`infra`/`seguranca`/`banco`/
-     `documentacao`): o CTO ou o `senior-developer` especifica direto com a
+   - Demanda **técnica** (`tech-debt`/`infra`/`security`/`database`/
+     `docs`): o CTO ou o `senior-developer` especifica direto com a
      Skill `spec-task` (PO pulado — §14).
    O que faltar fica em **Dúvidas abertas** — nunca invente regra de negócio.
    Commit do rascunho na branch da demanda.
 5. Avance o estado: `faber/scripts/transition.sh TASK-XXX specifying`
 6. Se o tipo for `bug`: **não** avance sem reprodução registrada com evidência
-   (template). Se `incidente`: use o fluxo rápido (§14) com o Owner síncrono.
+   (template). Se `incident`: use o fluxo rápido (§14) com o Owner síncrono.
 7. **Reporte** a @@FABER_OWNER_NAME@@: TASK-XXX, link da issue, branch,
    pasta, tipo e as dúvidas abertas que precisam dele (agrupadas num único
    bloco — §20).
@@ -54,7 +54,7 @@ Execute nesta ordem — a mecânica é dos scripts, nunca manual:
   humano: consolide a spec (PO ∥ QA ∥ designer) → `transition.sh TASK-XXX
   refinement` → refinamento duplo (análise A sua + `senior-developer` Modo 1 →
   compare, máx. 2 rodadas; `devsecops` Papel 1; `db-guardian` Modo 1 se banco)
-  → declare `impacto_ui` no `state.yaml` → se discovery ativo, revise as projeções e execute `requirements-gate.py seal` com a pasta da demanda (skill requirements-readiness) → `gate-set.sh TASK-XXX G2 aprovado
+  → declare `ui_impact` no `state.yaml` → se discovery ativo, revise as projeções e execute `requirements-gate.py seal` com a pasta da demanda (skill requirements-readiness) → `gate-set.sh TASK-XXX G2 approved
   --por cto` → `transition.sh TASK-XXX ready-for-dev`. Só então pare e peça o
   **G1** num único batch (DoR, riscos, trade-offs, o que decidir). Dúvida
   crítica no caminho → `clarification` e pare (é a exceção que sempre para).

@@ -5,7 +5,7 @@ Esta pasta é o **canal entre o instalador (`install.sh`, sem LLM) e o CTO
 
 | Arquivo | Quem escreve | Conteúdo |
 |---|---|---|
-| `CONTEXT.md` | `install.sh` (cria) · `/faber-init` (conclui) | modo detectado, sinais, arquivos de entrada, interação, `status: pendente|concluido` |
+| `CONTEXT.md` | `install.sh` (cria) · `/faber-init` (conclui) | modo detectado, sinais, arquivos de entrada, interação, `status: pending|done` |
 | `modes/<modo>.md` | kit | playbook que o CTO segue em cada modo |
 | `PERGUNTAS.md` | `/faber-init` | dúvidas agrupadas para o Owner (uma rodada) |
 | `BACKLOG.md` | `/faber-init` | demandas candidatas (título · tipo · prioridade · origem) |

@@ -5,7 +5,7 @@ description: Módulo opcional (FABER_SONAR=on). Publica a análise da branch da 
 
 # sonar-gate — Critical/High do Sonar como evidência
 
-Fonte: `faber/ARQUITETURA.md` §11, §18-G5, §21-R3; `07-ENV-AND-SECRETS` §4.
+Fonte: `faber/ARCHITECTURE.md` §11, §18-G5, §21-R3; `07-ENV-AND-SECRETS` §4.
 Mecânica determinística: `faber/scripts/sonar-task.sh` +
 `faber/scripts/sonar-gate.sh` (zero LLM). **Módulo opcional:** só vale com
 `FABER_SONAR=on` e `FABER_SONAR_PROJECT_KEY` preenchido em
@@ -48,7 +48,7 @@ projeto `$FABER_SONAR_PROJECT_KEY` e exige que o ref local
 `PROJECT`, `BRANCH`, `MODO`, `ANALISE`, `REVISION`, `REVISAO_CONFERIDA`,
 `QUALITY_GATE`, `CRITICAL_LEGACY`, `HIGH_IMPACTO`, `CRITICAL_HIGH`,
 `BASELINE_*`, `NOVAS_VS_BASELINE`, `NOVA=` (uma por issue nova), `CATRACA`,
-`MOTIVO`, `VEREDITO` (`aprovado` | `reprovado` | `nao-executado`) + exit code
+`MOTIVO`, `VEREDITO` (`approved` | `rejected` | `nao-executado`) + exit code
 (`0` | `2` | `3`).
 
 - `CRITICAL_LEGACY` = modelo **legacy** (`BLOCKER,CRITICAL`);

@@ -67,7 +67,7 @@ Each is off until you turn it on.
 ## What not to change
 
 - The `TASK-` prefix, the 15 states, the 9 gates, the 10 task types, and the
-  `§N` numbering of `faber/ARQUITETURA.md`. Scripts, hooks, agents and commands
+  `§N` numbering of `faber/ARCHITECTURE.md`. Scripts, hooks, agents and commands
   all depend on them.
 - The two invariants: *a handoff without evidence is invalid*, and *a human
   gate can only be approved by the owner*.

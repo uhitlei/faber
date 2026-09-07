@@ -5,7 +5,7 @@ description: Consolida a spec de uma demanda concluída em @@FABER_SPECS_DIR@@/ 
 
 # spec-sync — consolidação canônica em @@FABER_SPECS_DIR@@/
 
-Fonte: `faber/ARQUITETURA.md` §11, §15 (merge **nunca** duplicação); estrutura
+Fonte: `faber/ARCHITECTURE.md` §11, §15 (merge **nunca** duplicação); estrutura
 canônica `@@FABER_SPECS_DIR@@/features/NN-nome/SPEC.md` (`FABER_SPECS_DIR`).
 Idioma PT-BR (P6).
 

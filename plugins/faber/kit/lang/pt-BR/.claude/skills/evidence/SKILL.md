@@ -5,7 +5,7 @@ description: Gera evidência executada real (evidence/NN-*.log) para gates e han
 
 # evidence — evidência executada, nunca narrada
 
-Fonte: `faber/ARQUITETURA.md` §11 (Skill), §15 (anti-"falsa alegação de
+Fonte: `faber/ARCHITECTURE.md` §11 (Skill), §15 (anti-"falsa alegação de
 execução"), §17 (handoff sem evidência = inválido), R6 (2 MB).
 
 ## Regra de ouro

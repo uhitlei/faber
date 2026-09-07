@@ -17,7 +17,7 @@ conhecimento, configuração e backlog.
 
 1. `faber/bootstrap/CONTEXT.md` — escrito pelo `install.sh`: `modo`
    detectado, sinais encontrados, arquivos de entrada, `interacao`, `status`.
-   Se `status: concluido` e nenhum `--mode` foi passado → informe que o
+   Se `status: done` e nenhum `--mode` foi passado → informe que o
    bootstrap já foi feito e pare.
 2. `faber/config/faber.env` — a configuração (owner, trunk, comandos,
    módulos). Se `FABER_INTERACTION` estiver vazio ou `--interaction` não foi
@@ -47,7 +47,7 @@ conhecimento, configuração e backlog.
 - Ajuste `faber/config/faber.env` ao que descobrir (comandos reais de lint/
   build/test, dir de migrations, paths protegidos, E2E) — sempre listando as
   mudanças propostas para o Owner confirmar (H2 pede confirmação).
-- Atualize `faber/ARQUITETURA.md §2` (cenário) e `CLAUDE.md §6` (ponteiros)
+- Atualize `faber/ARCHITECTURE.md §2` (cenário) e `CLAUDE.md §6` (ponteiros)
   com o que for específico do projeto — sem mudar regras nem numeração.
 - Idioma: `FABER_LANG`.
 
@@ -57,7 +57,7 @@ conhecimento, configuração e backlog.
 2. **Backlog inicial** em `faber/bootstrap/BACKLOG.md`: demandas candidatas
    (título, tipo §14, prioridade, origem no documento fonte). **Não** crie as
    issues ainda — o Owner escolhe por onde começar (`/faber-task`).
-3. `faber/bootstrap/CONTEXT.md` → `status: concluido` + resumo do que foi gerado.
+3. `faber/bootstrap/CONTEXT.md` → `status: done` + resumo do que foi gerado.
 4. Push da branch e PR `faber/bootstrap → @@FABER_TRUNK@@` com o resumo
    (o merge é o **gate de fundação**, do Owner). Com `FABER_GH=off`: deixe a
    branch pronta e diga como mesclar.

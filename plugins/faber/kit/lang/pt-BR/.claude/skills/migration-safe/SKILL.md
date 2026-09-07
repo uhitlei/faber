@@ -5,7 +5,7 @@ description: Cria migrations seguras do padrão da fábrica para bancos relacion
 
 # migration-safe — migrations seguras e imutáveis
 
-Fonte: `faber/ARQUITETURA.md` §11, §13-H2/H3, §19; specs
+Fonte: `faber/ARCHITECTURE.md` §11, §13-H2/H3, §19; specs
 `@@FABER_SPECS_DIR@@/global/01-DATABASE.md` (modelo/regras de acesso — leia
 por seção) e `03-SECURITY.md` (seção *Invariantes intocáveis*). Template:
 `faber/templates/migration.template.sql` (Postgres com RLS como exemplo —

@@ -97,7 +97,7 @@ if [ "$FABER_GH" = "on" ]; then
       --body "Demanda criada pela fábrica de software (tipo: $TIPO).
 
 Artefatos: \`faber/tasks/TASK-<este número>/\` na branch \`feature/TASK-<este número>\`.
-Fluxo e gates: \`faber/ARQUITETURA.md\` §5/§6/§18.") || { echo "ERRO: gh issue create falhou (label 'faber' existe? rode board.sh bootstrap-labels)"; exit 2; }
+Fluxo e gates: \`faber/ARCHITECTURE.md\` §5/§6/§18.") || { echo "ERRO: gh issue create falhou (label 'faber' existe? rode board.sh bootstrap-labels)"; exit 2; }
     N="${URL##*/}"
     echo "issue: #$N ($URL)"
   fi
@@ -130,7 +130,7 @@ else
   MAIN_ROOT=$(cd "$(dirname "$GIT_COMMON")" && pwd)
   WT="$MAIN_ROOT/.claude/worktrees/$TASK"
   if [ -e "$WT" ]; then
-    echo "ERRO: $WT já existe — reconcilie antes (worktree.sh listar). Issue #$N já criada — trate manualmente."; exit 2
+    echo "ERRO: $WT já existe — reconcilie antes (worktree.sh list). Issue #$N já criada — trate manualmente."; exit 2
   fi
   mkdir -p "$MAIN_ROOT/.claude/worktrees"
   git worktree add "$WT" -b "$BRANCH" "$BASE" \
@@ -161,7 +161,7 @@ echo "commit: $(git -C "$ARVORE" log --oneline -1)"
 
 # 8. board/labels (R4: falha não bloqueia — state.yaml é a fonte de verdade)
 if [ -x "$BOARD" ]; then
-  "$BOARD" mover "$N" intake || echo "AVISO: board/labels falharam (reconcilie depois com board.sh mover $N intake)"
+  "$BOARD" mover "$N" intake || echo "AVISO: board/labels falharam (reconcilie depois com board.sh move $N intake)"
 fi
 
 echo "OK: $TASK criada — branch $BRANCH, pasta $PASTA${URL:+, issue $URL}"

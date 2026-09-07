@@ -52,4 +52,4 @@ Depois (CI/ambientes): `04-DEPLOYMENT.md` e `07-ENV-AND-SECRETS.md`.
 
 ## 7. A fábrica
 
-Demandas rodam como `TASK-<issue#>` em `faber/tasks/`, com gates G1–G9 (`faber/ARQUITETURA.md`). Comandos: `/faber-task`, `/faber-bug`, `/faber-spike`, `/faber-incident`, `/faber-status`, `/faber-resume`, `/faber-approve`, `/faber-develop`, `/faber-validate`, `/faber-pr`.
+Demandas rodam como `TASK-<issue#>` em `faber/tasks/`, com gates G1–G9 (`faber/ARCHITECTURE.md`). Comandos: `/faber-task`, `/faber-bug`, `/faber-spike`, `/faber-incident`, `/faber-status`, `/faber-resume`, `/faber-approve`, `/faber-develop`, `/faber-validate`, `/faber-pr`.

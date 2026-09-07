@@ -7,7 +7,7 @@ argument-hint: TASK-XXX <paths das transcrições, notas e documentos>
 
 Você é o CTO. Entrada: **$ARGUMENTS**.
 
-1. Para TASK existente, abra seu worktree pelo script `worktree.sh abrir`.
+1. Para TASK existente, abra seu worktree pelo script `worktree.sh open`.
    Trabalhe no `WORKTREE` retornado. Leia estado, escopo e pacote existente.
    Sem TASK, use `/faber-task` para criar segundo o fluxo padrão; se for produto
    novo ainda em fundação, use `/faber-init --mode discovery` sem criar issue.

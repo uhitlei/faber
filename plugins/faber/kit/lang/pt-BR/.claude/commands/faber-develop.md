@@ -18,12 +18,12 @@ pelos scripts — nunca manual. Trabalhe no worktree da demanda.
 1. **Implementação:** invoque o subagente `senior-developer` (Modo 2) com o
    contrato mínimo — paths de `spec.md` + `refinamento.md` da demanda, nunca o
    dump do projeto. O handoff dele é validado pelo H5 (e conta em
-   `invocacoes`; anti-loop §15).
+   `invocations`; anti-loop §15).
 
 2. **Developed + G3:**
    - `faber/scripts/transition.sh TASK-XXX developed`
      (o gate-check exige os logs de lint/build/test em `evidence/`);
-   - `faber/scripts/gate-set.sh TASK-XXX G3 aprovado --por gate-check --evidencia "evidence/<NN>-test-run.log"`
+   - `faber/scripts/gate-set.sh TASK-XXX G3 approved --por gate-check --evidencia "evidence/<NN>-test-run.log"`
      — G3 é do `gate-check` (§18); o registro **espelha** a liberação da
      transição, com o NN real do log de teste.
 
@@ -41,19 +41,19 @@ pelos scripts — nunca manual. Trabalhe no worktree da demanda.
 5. **G4:** se o veredicto for `bloqueado` → espelhe as tarefas de correção na
    issue e regrida: `faber/scripts/transition.sh TASK-XXX in-development --motivo "review: <resumo>"`
    (correções voltam por este mesmo fluxo). Senão:
-   - `faber/scripts/gate-set.sh TASK-XXX G4 aprovado --por cto --evidencia "review.md"`
+   - `faber/scripts/gate-set.sh TASK-XXX G4 approved --por cto --evidencia "review.md"`
    - `faber/scripts/transition.sh TASK-XXX validation`
 
 6. **G5 — validações paralelas** (§5): dispare numa mesma rodada
    - `qa` (Modo 2): ACs + regressão; E2E via Skill `e2e-runner` quando
-     `impacto_ui: true` (evidência do comando **direto**, sem pipe);
+     `ui_impact: true` (evidência do comando **direto**, sem pipe);
    - `db-guardian` (Modo 2) se a demanda toca banco;
    - `devsecops` (Papel 2): Sonar via Skill `sonar-gate` se `FABER_SONAR=on`;
      senão CI da branch: `faber/scripts/evidence.sh TASK-XXX ci-branch -- gh run list --branch feature/TASK-XXX --limit 3`
      e `... ci-run -- gh run view <run-id>`.
    Critério: tudo verde **ou exceção formal documentada** (Medium/Low, coverage —
    Critical/High jamais). "Não executado" jamais vira aprovado (CLAUDE.md §4).
-   - Verde → `faber/scripts/gate-set.sh TASK-XXX G5 aprovado --por cto --evidencia "evidence/<NN>-<slug>.log"`
+   - Verde → `faber/scripts/gate-set.sh TASK-XXX G5 approved --por cto --evidencia "evidence/<NN>-<slug>.log"`
    - Vermelho → regrida com motivo (`in-development`) e volte ao passo 1.
 
 7. **Siga para `/faber-validate TASK-XXX`** — o G6 é de @@FABER_OWNER_NAME@@.

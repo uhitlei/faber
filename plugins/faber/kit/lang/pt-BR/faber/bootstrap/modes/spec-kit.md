@@ -43,7 +43,7 @@ verdade canônica passa a ser a SPEC RFC (CHANGELOG: "convertida do Spec Kit").
 
 Cada `tasks.md` vira demandas candidatas em `faber/bootstrap/BACKLOG.md`
 (agrupe tarefas pequenas numa demanda `feature`; infra/CI → `infra`; banco →
-`banco`). Preserve a ordem/dependências declaradas. Não crie issues ainda.
+`database`). Preserve a ordem/dependências declaradas. Não crie issues ainda.
 
 ## Etapa 6 — Configuração e fechamento
 

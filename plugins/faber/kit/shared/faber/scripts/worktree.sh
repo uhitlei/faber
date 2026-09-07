@@ -5,26 +5,26 @@
 # garante que todo resume parte do trunk atual (FABER_TRUNK).
 #
 # Uso:
-#   worktree.sh abrir  <TASK-XXX|XXX>   cria/reusa o worktree e mescla o trunk
-#   worktree.sh fechar <TASK-XXX|XXX>   remove o worktree (guarda anti-perda)
-#   worktree.sh limpar <TASK-XXX|XXX>   pós-merge: fecha o worktree E APAGA a
+#   worktree.sh open  <TASK-XXX|XXX>   cria/reusa o worktree e mescla o trunk
+#   worktree.sh close <TASK-XXX|XXX>   remove o worktree (guarda anti-perda)
+#   worktree.sh clean <TASK-XXX|XXX>   pós-merge: fecha o worktree E APAGA a
 #                                         branch (local + remota) — só se ela já
 #                                         estiver mergeada no trunk
-#   worktree.sh listar                    lista os worktrees de demanda ativos
+#   worktree.sh list                    lista os worktrees de demanda ativos
 #
-# limpar é o passo de faxina do G9/done (§6 estado 13, §18-G9): uma demanda
+# clean é o passo de faxina do G9/done (§6 estado 13, §18-G9): uma demanda
 # concluída não deixa branch para trás. A guarda é fail-closed — se a branch
 # NÃO for ancestral de <remote>/<trunk>, o comando recusa e não apaga nada; o
 # merge é sempre do Owner (G8), então "não mergeada" = "ainda tem trabalho vivo".
 # Idempotente: branch já apagada = nada a fazer.
 #
-# abrir resolve a branch nesta ordem: 1) feature/TASK-XXX local · 2)
+# open resolve a branch nesta ordem: 1) feature/TASK-XXX local · 2)
 # <remote>/feature/TASK-XXX (puxa a pasta commitada) · 3) não existe → erro
 # "abra com /faber-task". Depois mescla <remote>/<trunk> na branch. Conflito NÃO é
 # auto-resolvido: para, deixa o worktree em conflito e escala (§6.2).
 #
 # Worktrees vivem em .claude/worktrees/ (gitignored). Branch e commits
-# sobrevivem ao `fechar` — só o checkout descartável é removido.
+# sobrevivem ao `close` — só o checkout descartável é removido.
 #
 # Exit: 0 ok · 1 erro de uso/demanda inexistente/worktree sujo · 2 branch não
 #       mergeada (limpar recusa) · 3 conflito de merge.
@@ -62,7 +62,7 @@ trunk_ref() {
 cmd="${1:-}"; shift || true
 case "$cmd" in
 
-  abrir)
+  open)
     resolve_tarefa "${1:-}"
     mkdir -p "$WT_BASE"
     echo "→ fetch do trunk ($TRUNK) e da branch da demanda…"
@@ -100,7 +100,7 @@ case "$cmd" in
     echo "WORKTREE=$WT"
     ;;
 
-  fechar)
+  close)
     resolve_tarefa "${1:-}"
     if ! git worktree list --porcelain | grep -qx "worktree $WT"; then
       echo "OK: nenhum worktree ativo para $TASK (nada a fazer)"; exit 0
@@ -115,7 +115,7 @@ case "$cmd" in
     echo "OK: worktree removido — $WT (branch $BRANCH e commits preservados no git)"
     ;;
 
-  limpar)
+  clean)
     resolve_tarefa "${1:-}"
     echo "→ fetch do trunk e da branch da demanda…"
     git fetch -q -p "$REMOTE" "$TRUNK" 2>/dev/null || echo "AVISO: fetch de $REMOTE/$TRUNK falhou — usando a cópia local do trunk"
@@ -160,7 +160,7 @@ case "$cmd" in
     echo "OK: $TASK limpa — worktree e branch removidos (histórico preservado no trunk)"
     ;;
 
-  listar)
+  list)
     out=$(git worktree list | grep "/.claude/worktrees/TASK-" || true)
     if [ -n "$out" ]; then echo "$out"; else echo "(nenhum worktree de demanda ativo)"; fi
     ;;

@@ -121,7 +121,7 @@ CLAUDE.md              # a constituição do CTO (um CLAUDE.md anterior vira a s
                        # /faber-status /faber-resume /faber-approve /faber-develop /faber-validate /faber-pr
   hooks/    (H1–H7)    # guarda-vidas parametrizados por faber/config/faber.env
 faber/
-  ARQUITETURA.md       # a arquitetura (numeração estável — agentes citam §N)
+  ARCHITECTURE.md       # a arquitetura (numeração estável — agentes citam §N)
   config/faber.env     # owner, branches, comandos, módulos, refs protegidos
   bootstrap/           # CONTEXT.md (modo detectado) + playbooks dos seis modos
   scripts/             # gate-check · transition · gate-set · new-task · worktree · evidence · board
@@ -153,7 +153,7 @@ camada está hoje, sem rodeio:
 | Camada | Idioma |
 |---|---|
 | Comandos, pastas, chaves `FABER_*`, nomes de arquivo, a documentação | **inglês** |
-| Prosa dos agentes, skills e comandos · `CLAUDE.md` · `faber/ARQUITETURA.md` | **português**, tradução em andamento |
+| Prosa dos agentes, skills e comandos · `CLAUDE.md` · `faber/ARCHITECTURE.md` | **português**, tradução em andamento |
 | O que a fábrica **escreve** — specs, issues, handoffs, mensagens de gate | segue `FABER_LANG` (padrão `pt-BR`) |
 | Scripts e hooks | neutros de idioma |
 
@@ -167,7 +167,7 @@ inglês importa para você, é esse o trabalho em aberto, e PRs são bem-vindos.
 - [docs/pt-BR/MODOS-DE-BOOTSTRAP.md](docs/pt-BR/MODOS-DE-BOOTSTRAP.md) — os seis modos e o que cada um gera.
 - [docs/pt-BR/PERSONALIZACAO.md](docs/pt-BR/PERSONALIZACAO.md) — cada chave do `faber.env` e os módulos opcionais.
 - [docs/pt-BR/REQUISITOS-DISCOVERY.md](docs/pt-BR/REQUISITOS-DISCOVERY.md) — o business analyst e o gate de readiness.
-- `plugins/faber/kit/faber/ARQUITETURA.md` — a arquitetura completa.
+- `plugins/faber/kit/faber/ARCHITECTURE.md` — a arquitetura completa.
 
 ## Contribuindo
 

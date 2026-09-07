@@ -5,7 +5,7 @@ description: Opera o ambiente LOCAL descartável da fábrica — subir, resetar,
 
 # local-env — ambiente local descartável
 
-Fonte: `faber/ARQUITETURA.md` §11, P4 (autonomia total no local — e somente
+Fonte: `faber/ARCHITECTURE.md` §11, P4 (autonomia total no local — e somente
 no local). Mecânica: `faber/scripts/local-env.sh` (nunca comandos soltos) —
 cada subcomando delega ao comando configurado em `faber/config/faber.env`.
 Módulo opcional: `FABER_LOCAL_ENV=on`.

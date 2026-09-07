@@ -122,7 +122,7 @@ CLAUDE.md              # the CTO's constitution (a previous one is preserved as 
                        # /faber-status /faber-resume /faber-approve /faber-develop /faber-validate /faber-pr
   hooks/    (H1–H7)    # guardrails parameterised by faber/config/faber.env
 faber/
-  ARQUITETURA.md       # the architecture (stable numbering — agents cite §N)
+  ARCHITECTURE.md       # the architecture (stable numbering — agents cite §N)
   config/faber.env     # owner, branches, commands, modules, protected refs
   bootstrap/           # CONTEXT.md (detected mode) + playbooks for the six modes
   scripts/             # gate-check · transition · gate-set · new-task · worktree · evidence · board
@@ -154,7 +154,7 @@ each layer stands today, precisely:
 | Layer | Language |
 |---|---|
 | Commands, folders, `FABER_*` keys, file names, this documentation | **English** |
-| Agent, skill and command prose · `CLAUDE.md` · `faber/ARQUITETURA.md` | **Portuguese**, translation in progress |
+| Agent, skill and command prose · `CLAUDE.md` · `faber/ARCHITECTURE.md` | **Portuguese**, translation in progress |
 | What the factory *writes* — specs, issues, handoffs, gate messages | follows `FABER_LANG` (default `pt-BR`) |
 | Scripts and hooks | language-neutral |
 
@@ -168,7 +168,7 @@ you, that is the open work, and pull requests are welcome.
 - [docs/bootstrap-modes.md](docs/bootstrap-modes.md) — the six modes and what each produces.
 - [docs/configuration.md](docs/configuration.md) — every `faber.env` key, and the optional modules.
 - [docs/requirements-discovery.md](docs/requirements-discovery.md) — the business analyst and the readiness gate.
-- `plugins/faber/kit/faber/ARQUITETURA.md` — the full architecture.
+- `plugins/faber/kit/faber/ARCHITECTURE.md` — the full architecture.
 
 ## Contributing
 

@@ -51,6 +51,6 @@ open questions. Seções técnicas (dados, contratos, arquitetura) ficam
 ## Etapa 5 — Backlog priorizado
 
 `BACKLOG.md`: uma demanda `feature` por feature do MVP (ordem: dependências →
-valor → risco), demandas `infra`/`banco` de fundação (repo, CI, banco) antes
+valor → risco), demandas `infra`/`database` de fundação (repo, CI, banco) antes
 das features, e `spike` para cada `[PROPOSTA]` arquitetural que precisa de
 prova. Siga o "Encerramento" do `/faber-init`.

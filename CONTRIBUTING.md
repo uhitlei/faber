@@ -62,7 +62,7 @@ clean:
   dependency. Do not add a third-party import to a hook: hooks run on every
   tool call and a missing module would break the session.
 - Comments explain *why*, not *what*. Match the density of the file you are in.
-- The `faber/ARQUITETURA.md` numbering is a stable contract — agents cite `§N`.
+- The `faber/ARCHITECTURE.md` numbering is a stable contract — agents cite `§N`.
   Add sections at the end; never renumber.
 
 ## Adding a bootstrap mode

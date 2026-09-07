@@ -8,7 +8,7 @@
 #   FABER_GH=off     → tudo vira no-op silencioso (exit 0): sem GitHub, a
 #                        fonte de verdade é só o state.yaml.
 #   FABER_BOARD=off  → labels e comentários na issue continuam; o Projects v2
-#                        não é tocado (mover só troca a label estado:*).
+#                        não é tocado (move só troca a label estado:*).
 #   FABER_GH_REPO    → owner/repo (vazio = descoberto do remote).
 #   FABER_GH_PROJECT_TITLE → título exato do Project v2 (FABER_BOARD=on).
 #
@@ -17,11 +17,11 @@
 #   ids                      (re)descobre os IDs do Project e grava board-ids.env
 #   bootstrap-labels         cria/atualiza as labels 'faber' + 'estado:*'
 #   add <issue#>             adiciona a issue ao board (no-op se já está)
-#   mover <issue#> <estado>  move para a coluna do estado (§6.1, lendo
+#   move  <issue#> <estado>  move para a coluna do estado (§6.1, lendo
 #                            _schema.colunas_board) + troca a label estado:<fino>
 #   label <issue#> <estado>  só troca a label estado:<fino>
-#   comentar <issue#> <msg>  comenta na issue
-#   comentar-arquivo <issue#> <path>  comenta na issue com o corpo de um arquivo
+#   comment <issue#> <msg>  comenta na issue
+#   comment-file <issue#> <path>  comenta na issue com o corpo de um arquivo
 #   status <issue#>          mostra coluna do board + labels atuais
 #
 # Exit: 0 ok · 1 uso incorreto/estado inválido · 3 falha de board/gh (não-bloqueante).
@@ -262,10 +262,10 @@ case "$cmd" in
   ids)              cmd_ids ;;
   bootstrap-labels) cmd_bootstrap_labels ;;
   add)      [ $# -ge 2 ] || { echo "uso: board.sh add <issue#>"; exit 1; }; cmd_add "$2" ;;
-  mover)    [ $# -ge 3 ] || { echo "uso: board.sh mover <issue#> <estado>"; exit 1; }; cmd_mover "$2" "$3" ;;
+  move)     [ $# -ge 3 ] || { echo "uso: board.sh move <issue#> <estado>"; exit 1; }; cmd_mover "$2" "$3" ;;
   label)    [ $# -ge 3 ] || { echo "uso: board.sh label <issue#> <estado>"; exit 1; }; cmd_label "$2" "$3" ;;
-  comentar) [ $# -ge 3 ] || { echo "uso: board.sh comentar <issue#> <msg>"; exit 1; }; issue="$2"; shift 2; cmd_comentar "$issue" "$@" ;;
-  comentar-arquivo) [ $# -ge 3 ] || { echo "uso: board.sh comentar-arquivo <issue#> <path>"; exit 1; }; cmd_comentar_arquivo "$2" "$3" ;;
+  comment) [ $# -ge 3 ] || { echo "uso: board.sh comment <issue#> <msg>"; exit 1; }; issue="$2"; shift 2; cmd_comentar "$issue" "$@" ;;
+  comment-file) [ $# -ge 3 ] || { echo "uso: board.sh comment-file <issue#> <path>"; exit 1; }; cmd_comentar_arquivo "$2" "$3" ;;
   status)   [ $# -ge 2 ] || { echo "uso: board.sh status <issue#>"; exit 1; }; cmd_status "$2" ;;
   *) echo "uso: board.sh {repo|ids|bootstrap-labels|add|mover|label|comentar|comentar-arquivo|status} ..."; exit 1 ;;
 esac

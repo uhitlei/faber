@@ -9,5 +9,5 @@
 | — | [Guia de generalização](pt-BR/GUIA-GENERALIZACAO.md) |
 
 The full architecture — the one agents cite as `§N` — lives in the payload:
-`plugins/faber/kit/faber/ARQUITETURA.md`. It is still in Portuguese; see the
+`plugins/faber/kit/faber/ARCHITECTURE.md`. It is still in Portuguese; see the
 translation note in the repository README.

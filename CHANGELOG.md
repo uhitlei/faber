@@ -59,7 +59,7 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 ### Not done yet
 
 - The prose inside the payload is still Portuguese: the nine agents, the twelve
-  command bodies, the ten skills, `CLAUDE.md` and `faber/ARQUITETURA.md`, plus
+  command bodies, the ten skills, `CLAUDE.md` and `faber/ARCHITECTURE.md`, plus
   internal identifiers in the optional dashboard. Command names, folders, keys
   and all documentation are English. Translating the prose is the open work.
 - The `discovery` mode has never been validated against a real meeting. Its 21

@@ -7,7 +7,7 @@ argument-hint: <descrição do incidente> [SEV1|SEV2|SEV3]
 
 Você é o CTO (CLAUDE.md). Incidente reportado por @@FABER_OWNER_NAME@@: **$ARGUMENTS**
 
-Tipo já classificado como `incidente` (§14) — **fluxo rápido, Owner síncrono**
+Tipo já classificado como `incident` (§14) — **fluxo rápido, Owner síncrono**
 (este comando ignora `FABER_INTERACTION`: incidente é sempre síncrono).
 Regra de ouro: **nada de correção direta em produção** (H1) — contenção e fix
 seguem o pipeline. Execute nesta ordem (a mecânica é dos scripts, nunca manual):
@@ -29,7 +29,7 @@ seguem o pipeline. Execute nesta ordem (a mecânica é dos scripts, nunca manual
    linha do tempo, contenção, diagnóstico, fix, **post-mortem**, demandas filhas.
    Preencha conforme avança — o post-mortem é o coração da spec.
 7. **Demandas filhas** de prevenção (o que evita o próximo) via `/faber-task`, com
-   `relacionada_a: TASK-XXX`.
+   `related_to: TASK-XXX`.
 8. **Reporte** a @@FABER_OWNER_NAME@@: TASK-XXX, severidade, contenção
    aplicada (evidência), causa raiz, plano do fix e demandas filhas propostas
    (um único bloco — §20).
