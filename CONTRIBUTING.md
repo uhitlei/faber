@@ -6,9 +6,9 @@ work through a gate, so it holds itself to the same rule.
 ## The one hard rule
 
 **A change to a guardrail or a gate ships with a test case that fails without
-it.** Hooks live in `plugins/faber/kit/.claude/hooks/`, the gate logic in
-`plugins/faber/kit/faber/scripts/gate-check.sh`, and their suites next to them.
-A pull request that loosens a guardrail without a test is closed, however
+it.** Hooks live in `plugins/faber/kit/shared/.claude/hooks/`, the gate logic in
+`plugins/faber/kit/shared/faber/scripts/gate-check.sh`, and their suites next to
+them. A pull request that loosens a guardrail without a test is closed, however
 reasonable it looks.
 
 ## Layout
@@ -21,8 +21,14 @@ plugins/faber/
   install.sh                      # the real installer (no model in the loop)
   VERSION · profiles/             # version and configuration presets
   kit/                            # the payload written into the user's repo
-    CLAUDE.md · .claude/{agents,skills,commands,hooks} · faber/{scripts,templates,bootstrap,dashboard}
+    shared/                       # code + the machine contract — ONE copy
+      .claude/{settings.json,hooks} · faber/{scripts,config,dashboard}
+      faber/templates/{state.template.yaml,requirements}
+    lang/en/ · lang/pt-BR/        # the prose — one copy per language
+      CLAUDE.md · .claude/{agents,skills,commands}
+      faber/{ARCHITECTURE.md,bootstrap,templates}
 install.sh · bootstrap.sh         # thin entry points, same code path
+bin/faber.js · package.json       # the npx entry point (@uhitlei/faber)
 docs/ · INSTALL.md · README.md    # English, with pt-BR counterparts
 ```
 
@@ -31,16 +37,22 @@ and copy it back — the payload carries `@@FABER_*@@` placeholders that the
 installer renders, and a rendered file committed here breaks every future
 install.
 
+**Which half does your change belong in?** If a script, a hook, the dashboard or
+`state.yaml` reads it, it is the machine contract and lives in `shared/` — one
+copy, English, identical for every language. If a human or an agent reads it as
+prose, it lives in `lang/<lang>/` — and a change there means changing **both**
+packs, keeping the contract keys byte-identical between them.
+
 ## Running the tests
 
 ```bash
-cd plugins/faber/kit
+cd plugins/faber/kit/shared
 bash .claude/hooks/test-h1-h2.sh            # 46 cases
 bash faber/scripts/test-gate-check.sh       # 43 cases
 bash faber/scripts/test-sonar-gate.sh       # 20 cases
 python3 faber/scripts/test-monitor.py       # 40 cases
 python3 faber/scripts/test-requirements.py  # 21 cases
-python3 faber/dashboard/testes/rodar.py     # optional module, needs flask
+cd faber && python3 dashboard/testes/rodar.py   # optional module, needs flask
 ```
 
 Every suite builds throwaway sandboxes. `FABER_SKIP_INSTALL_CHECK=1` is what
@@ -67,7 +79,7 @@ clean:
 
 ## Adding a bootstrap mode
 
-1. A playbook in `plugins/faber/kit/faber/bootstrap/modes/<mode>.md`.
+1. A playbook in `plugins/faber/kit/lang/*/faber/bootstrap/modes/<mode>.md` (both packs).
 2. Detection in `install.sh`, in the precedence chain, plus the `--mode`
    allowlist.
 3. A row in `INSTALL.md`, `INSTALL.pt-BR.md` and both READMEs.

@@ -24,20 +24,25 @@ jobs:
       - name: bash version in use
         run: bash --version | head -1
       - name: hooks (46 cases)
-        working-directory: plugins/faber/kit
+        working-directory: plugins/faber/kit/shared
         run: bash .claude/hooks/test-h1-h2.sh
       - name: gate-check (43 cases)
-        working-directory: plugins/faber/kit
+        working-directory: plugins/faber/kit/shared
         run: bash faber/scripts/test-gate-check.sh
       - name: sonar gate (20 cases)
-        working-directory: plugins/faber/kit
+        working-directory: plugins/faber/kit/shared
         run: bash faber/scripts/test-sonar-gate.sh
       - name: state monitor (40 cases)
-        working-directory: plugins/faber/kit
+        working-directory: plugins/faber/kit/shared
         run: python3 faber/scripts/test-monitor.py
       - name: requirements readiness (21 cases)
-        working-directory: plugins/faber/kit
+        working-directory: plugins/faber/kit/shared
         run: python3 faber/scripts/test-requirements.py
+      - name: dashboard, the optional module (245 cases)
+        working-directory: plugins/faber/kit/shared/faber
+        run: |
+          pip install flask
+          python3 dashboard/testes/rodar.py
 
   install:
     name: end-to-end install
