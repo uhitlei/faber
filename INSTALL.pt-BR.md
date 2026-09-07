@@ -46,7 +46,7 @@ coisa que o instalador não decide por você:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/uhitlei/faber/main/bootstrap.sh \
-  | bash -s -- --yes --interaction gates --owner-name "Ana Silva" --trunk develop --main main --gh on
+  | bash -s -- --yes --interaction gates --owner-name "Ana Silva" --lang pt-BR --trunk develop --main main --gh on
 ```
 
 Ou clone e rode você mesmo, se jogar a internet dentro do bash não for seu
@@ -117,6 +117,10 @@ interação**:
   (ready-for-dev), **G6** (sua avaliação), **G8** (merge) e em dúvidas
   críticas. Recomendado.
 - `step-by-step` — o CTO para ao fim de cada comando e pede ok.
+
+E o **idioma** em que os agentes trabalham: `--lang pt-BR` ou `--lang en`. Os
+dois pacotes estão completos; o contrato de máquina (`state.yaml`, colunas do
+board, labels do GitHub) é inglês nos dois casos.
 
 ### D.5 Instalar
 

@@ -47,7 +47,7 @@ one thing the installer will not decide for you:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/uhitlei/faber/main/bootstrap.sh \
-  | bash -s -- --yes --interaction gates --owner-name "Ana Silva" --trunk develop --main main --gh on
+  | bash -s -- --yes --interaction gates --owner-name "Ana Silva" --lang en --trunk develop --main main --gh on
 ```
 
 Or clone and run it yourself, if piping the internet into bash is not your
@@ -117,6 +117,10 @@ Defaults come from the repository. The one question with no default is the
   (ready-for-dev), **G6** (your evaluation), **G8** (merge) and on critical
   doubts. Recommended.
 - `step-by-step` — the CTO stops at the end of every command and asks.
+
+And the **language** the agents work in: `--lang en` or `--lang pt-BR`. Both
+packs are complete; the machine contract (`state.yaml`, the board's columns,
+the GitHub labels) is English either way.
 
 ### D.5 Install
 

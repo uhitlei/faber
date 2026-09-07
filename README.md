@@ -148,19 +148,20 @@ python3 faber/scripts/test-requirements.py # 21 cases (requirements readiness)
 
 ## Language
 
-Faber was born in Portuguese and is being brought to English in layers. Where
-each layer stands today, precisely:
+Faber is bilingual. The installer asks which language the agents should work in,
+or you pass `--lang en` / `--lang pt-BR`:
 
 | Layer | Language |
 |---|---|
-| Commands, folders, `FABER_*` keys, file names, this documentation | **English** |
-| Agent, skill and command prose · `CLAUDE.md` · `faber/ARCHITECTURE.md` | **Portuguese**, translation in progress |
-| What the factory *writes* — specs, issues, handoffs, gate messages | follows `FABER_LANG` (default `pt-BR`) |
+| The agents', skills' and commands' prose · `CLAUDE.md` · `faber/ARCHITECTURE.md` · the templates | **the pack you chose** — `kit/lang/en` or `kit/lang/pt-BR`, both complete |
+| Command names, folders, `FABER_*` keys, `state.yaml`, the board's columns, the GitHub labels | **English in both packs** |
+| What the factory *writes* — specs, issues, handoffs, gate messages | follows `FABER_LANG` (set from `--lang`, changeable afterwards) |
 | Scripts and hooks | language-neutral |
 
-So a `/faber-task` today reads an English command name and a Portuguese prompt
-body. It works either way — Claude reads both — but if English prose matters to
-you, that is the open work, and pull requests are welcome.
+The machine contract is deliberately identical in both languages. A `state.yaml`
+per language would make the scripts, the board and the dashboard speak two
+dialects of the same data — so a Portuguese install still writes
+`state: my-review`, and a Portuguese team reads Portuguese prompts.
 
 ## Documentation
 

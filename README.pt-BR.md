@@ -147,19 +147,20 @@ repositório. O `/faber:doctor` roda essas suítes por você e reporta o que fal
 
 ## Idioma
 
-O Faber nasceu em português e está indo para o inglês em camadas. Onde cada
-camada está hoje, sem rodeio:
+O Faber é bilíngue. O instalador pergunta em que idioma os agentes devem
+trabalhar, ou você passa `--lang pt-BR` / `--lang en`:
 
 | Camada | Idioma |
 |---|---|
-| Comandos, pastas, chaves `FABER_*`, nomes de arquivo, a documentação | **inglês** |
-| Prosa dos agentes, skills e comandos · `CLAUDE.md` · `faber/ARCHITECTURE.md` | **português**, tradução em andamento |
-| O que a fábrica **escreve** — specs, issues, handoffs, mensagens de gate | segue `FABER_LANG` (padrão `pt-BR`) |
+| Prosa dos agentes, skills e comandos · `CLAUDE.md` · `faber/ARCHITECTURE.md` · os templates | **o pacote que você escolheu** — `kit/lang/pt-BR` ou `kit/lang/en`, os dois completos |
+| Nomes de comando, pastas, chaves `FABER_*`, `state.yaml`, colunas do board, labels do GitHub | **inglês nos dois pacotes** |
+| O que a fábrica **escreve** — specs, issues, handoffs, mensagens de gate | segue `FABER_LANG` (vem do `--lang`, mutável depois) |
 | Scripts e hooks | neutros de idioma |
 
-Ou seja: hoje um `/faber-task` tem nome de comando em inglês e corpo do prompt
-em português. Funciona dos dois jeitos — o Claude lê ambos — mas se a prosa em
-inglês importa para você, é esse o trabalho em aberto, e PRs são bem-vindos.
+O contrato de máquina é idêntico nos dois idiomas de propósito. Um `state.yaml`
+por idioma faria os scripts, o board e o dashboard falarem dois dialetos do
+mesmo dado — então uma instalação em português continua gravando
+`state: my-review`, e o time em português lê prompts em português.
 
 ## Documentação
 

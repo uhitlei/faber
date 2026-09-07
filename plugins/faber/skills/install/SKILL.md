@@ -64,12 +64,13 @@ them on the user's behalf:
 | Production branch | detected `main`/`master` |
 | Integration branch (task PRs target it) | detected `develop`, else the production branch |
 | **Interaction mode** — `gates` (the CTO chains the flow and stops only at G1, G6, G8 and critical doubts) or `step-by-step` (stops after every phase) | `gates` |
+| **Language** the agents work in — `en` or `pt-BR`; both packs are complete, and the machine contract (`state.yaml`, board columns, GitHub labels) is English either way | ask |
 | GitHub issues for task IDs | `on` when `gh` is authenticated |
 | Canonical specs folder | `specs` |
 | Local Kanban dashboard (Flask, optional) | `off` |
 
-The interaction mode is the one question the installer refuses to answer by
-itself. Ask it explicitly.
+The interaction mode and the language are the two questions the installer
+refuses to answer by itself. Ask them explicitly.
 
 ## 4. Install
 
@@ -78,6 +79,7 @@ Pass every answer as a flag and add `--yes` so nothing is prompted twice:
 ```bash
 bash "$ROOT/install.sh" . --yes \
   --interaction <gates|step-by-step> \
+  --lang <en|pt-BR> \
   --project "<name>" --owner-name "<Full Name>" --owner <slug> \
   --main <branch> --trunk <branch> \
   --gh <on|off> --specs-dir <dir> --dashboard <on|off> \
