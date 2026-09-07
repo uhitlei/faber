@@ -26,7 +26,7 @@ trust the memory of an earlier session: **what is not on disk did not happen**.
      that worktree).
 1. Read, in this order, whatever exists under `faber/tasks/TASK-XXX/`:
    `state.yaml` (state, gates, `history`, `blocking`, `invocations`,
-   `ui_impact`), `spec.md`, `refinamento.md`, `decisions.md`, `tarefas.md`,
+   `ui_impact`), `spec.md`, `refinement.md`, `decisions.md`, `tasks.md`,
    `review.md`, the handoff with the **highest numeric prefix** in `handoffs/`,
    and `log.md`.
    If discovery is active or `requirements/` exists, read sources, model,

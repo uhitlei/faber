@@ -13,7 +13,7 @@ vem do **contexto limpo**: você não carrega o raciocínio de quem implementou
 
 ## Contrato de entrada (o CTO fornece; não busque além dele por padrão — exceção cirúrgica abaixo)
 
-- `faber/tasks/TASK-XXX/spec.md` (+ `refinamento.md` se citado)
+- `faber/tasks/TASK-XXX/spec.md` (+ `refinement.md` se citado)
 - O **diff congelado** da demanda: `evidence/NN-diff.log` (gerado pelo CTO
   via `evidence.sh`, com fetch prévio — mesmo comando do fallback abaixo) —
   revise ESTE diff, não o working tree. Se o path não vier no contrato, gere

@@ -41,7 +41,7 @@ conta normalmente no anti-loop — §15).
 
 1. Leia a `spec.md` da demanda e as seções de `@@FABER_SPECS_DIR@@/` citadas
    no contrato.
-2. Produza `faber/tasks/TASK-XXX/refinamento-B.md`: abordagem técnica,
+2. Produza `faber/tasks/TASK-XXX/refinement-B.md`: abordagem técnica,
    arquivos/módulos prováveis (o diff final será comparado a isto — §15),
    contratos/tipos, impacto em banco/regras de acesso (se houver), riscos
    técnicos, estimativa de complexidade, dúvidas que impedem o DoR.
@@ -58,7 +58,7 @@ resolve? 4º só então escreva — **o mínimo que atende os ACs**. Nada
 especulativo: sem abstração prematura, sem parâmetro "para o futuro", sem
 generalizar com um único caso de uso. Diff menor = review melhor.
 
-1. Leia `spec.md` + `refinamento.md` da demanda; implemente **somente** o
+1. Leia `spec.md` + `refinement.md` da demanda; implemente **somente** o
    escopo aprovado, nos arquivos declarados no refinamento (desvio → registre
    justificativa em `decisions.md` ou reverta — §15).
 2. Escreva os testes exigidos pela spec (unitários; E2E é do QA).
@@ -87,7 +87,7 @@ task: TASK-XXX
 from_agent: senior-developer
 to_agent: cto
 suggested_state: <developed | refinement | blocked>
-inputs_consumed: [spec.md, refinamento.md]      # paths, nunca conteúdo
+inputs_consumed: [spec.md, refinement.md]      # paths, nunca conteúdo
 outputs_produced: [src/..., @@FABER_MIGRATIONS_DIR@@/...]
 evidence: [evidence/NN-lint.log, evidence/NN-test-run.log]
 open_issues: []            # dúvidas/desvios → o CTO decide; nunca esconda

@@ -56,12 +56,24 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
 - Nine scripts pointed at `../demandas` after the task folder moved; they now
   resolve `../tasks`.
 
+### Bilingual
+
+- The payload is split into `kit/shared` (code plus the machine contract, one
+  copy) and `kit/lang/{en,pt-BR}` (the prose). `install.sh --lang` chooses the
+  pack and wires `FABER_LANG`; the installer asks when neither is given.
+- Both packs are fully translated: `CLAUDE.md`, the 12 commands, the 9 agents,
+  the 10 skills, the 6 bootstrap playbooks, the 20 templates and
+  `faber/ARCHITECTURE.md`.
+- Artifact filenames are part of the shared contract and are English in both
+  packs: `refinement.md`, `tasks.md`, `db-analysis.md`, `validation-g6.md`,
+  `.counter`.
+
 ### Not done yet
 
-- The prose inside the payload is still Portuguese: the nine agents, the twelve
-  command bodies, the ten skills, `CLAUDE.md` and `faber/ARCHITECTURE.md`, plus
-  internal identifiers in the optional dashboard. Command names, folders, keys
-  and all documentation are English. Translating the prose is the open work.
+- Comments and log messages inside `kit/shared` (the scripts, the hooks and the
+  optional dashboard) are still Portuguese, as are the dashboard's internal
+  identifiers. None of it is the public contract, and none of it reaches the
+  user's repository as prose an agent reads.
 - The `discovery` mode has never been validated against a real meeting. Its 21
   test cases run on synthetic fixtures.
 

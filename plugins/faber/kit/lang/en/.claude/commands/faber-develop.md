@@ -18,7 +18,7 @@ worktree.
    before continuing.
 
 1. **Implementation:** invoke the `senior-developer` subagent (Mode 2) with the
-   minimum contract — the paths to the demand's `spec.md` and `refinamento.md`,
+   minimum contract — the paths to the demand's `spec.md` and `refinement.md`,
    never a dump of the project. Its handoff is validated by H5 (and counts
    toward `invocations`; anti-loop §15).
 

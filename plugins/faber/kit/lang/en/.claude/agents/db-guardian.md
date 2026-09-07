@@ -43,11 +43,11 @@ Before G1:
    **destructiveness expected**; is any untouchable invariant touched? (→
    @@FABER_OWNER_NAME@@); indexes and performance; a sketch of the **rollback
    plan**; compatibility (deployment is **not** atomic with CI).
-3. Write the analysis into **`db-analise.md`** (your own file, through `Write`)
-   plus the handoff. You do **not** edit the shared `refinamento.md` (you have no
+3. Write the analysis into **`db-analysis.md`** (your own file, through `Write`)
+   plus the handoff. You do **not** edit the shared `refinement.md` (you have no
    `Edit`, and it is the CTO's consolidation) — the CTO merges your
-   `db-analise.md` into the refinement, the same way it merges `refinamento-A`
-   and `refinamento-B`.
+   `db-analysis.md` into the refinement, the same way it merges `refinement-A`
+   and `refinement-B`.
 
 ## Mode 2 — Reviewing the migration during validation (state `validation`)
 
@@ -99,7 +99,7 @@ suggested_state: <refinement | validation | in-development | blocked>
 # Mode 1: refinement (the pre-analysis is ready). Mode 2: validation (the migration is approved) |
 # in-development (rejected: destructiveness/access/exposure) | blocked (it touches an untouchable invariant).
 inputs_consumed: [spec.md, @@FABER_MIGRATIONS_DIR@@/<timestamp>_<slug>.sql]
-outputs_produced: [db-analise.md]   # by mode: Mode 1 → db-analise.md; Mode 2 → db-review.md
+outputs_produced: [db-analysis.md]   # by mode: Mode 1 → db-analysis.md; Mode 2 → db-review.md
 evidence: [evidence/NN-reset-local.log]
 open_issues: []
 new_risks: []

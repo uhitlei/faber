@@ -160,7 +160,7 @@ Em todos os pontos: transições gravadas em `state.yaml` + comentário na issue
 | 1 | `intake` | Backlog | CTO | Solicitação recebida | Tipo classificado; ID emitido; issue + branch + pasta |
 | 2 | `clarification` | Backlog | CTO → Owner | Ambiguidade crítica | Respostas registradas na spec |
 | 3 | `specifying` | Especificação | PO (ou CTO/dev se técnica) | Fluxo selecionado | `spec.md` no nível do template; ACs claros; dúvidas zeradas ou escaladas |
-| 4 | `refinement` | Especificação | CTO + senior-developer (+ devsecops, db-guardian) | Spec pronta | `refinamento.md` (A e B, divergências resolvidas/trade-offs); tarefas DevSecOps; `ui_impact` |
+| 4 | `refinement` | Especificação | CTO + senior-developer (+ devsecops, db-guardian) | Spec pronta | `refinement.md` (A e B, divergências resolvidas/trade-offs); tarefas DevSecOps; `ui_impact` |
 | 5 | `ready-for-dev` | Ready for Dev | **Owner** (G1) | DoR 100% (§18) | Aprovação registrada (`/faber-approve`) |
 | 6 | `in-development` | Em Desenvolvimento | senior-developer | G1 aprovado | Escopo implementado; testes; lint+build+test verdes (logs) |
 | 7 | `developed` | Em Desenvolvimento | gate-check.sh | Evidências G3 | Push da branch |
@@ -312,7 +312,7 @@ Board-sync é um script (`board.sh`), não uma Skill: zero LLM.
 | `spike` | Timebox no intake; **saída = mini-ADR**, sem implementação; pode gerar filhas | CTO, dev |
 | `design` | Designer lidera; dev só na implementação | designer, dev, reviewer |
 
-**ID da demanda = número da issue** (`TASK-<issue#>`); sem GitHub (`FABER_GH=off`), um contador local em `faber/tasks/.contador`.
+**ID da demanda = número da issue** (`TASK-<issue#>`); sem GitHub (`FABER_GH=off`), um contador local em `faber/tasks/.counter`.
 
 ## 15. Estrutura do harness — mecanismos anti-falha
 
@@ -348,7 +348,7 @@ faber/
 ├── dashboard/                 # (opcional) Kanban web local + telemetria
 └── demandas/
     └── TASK-052/            # viaja na feature branch
-        ├── state.yaml · spec.md · refinamento.md · decisions.md · tarefas.md · review.md
+        ├── state.yaml · spec.md · refinement.md · decisions.md · tasks.md · review.md
         ├── handoffs/          # NN-<de>-para-cto.md
         └── evidence/        # NN-*.log (≤ 2 MB/arquivo)
 @@FABER_SPECS_DIR@@/
@@ -364,7 +364,7 @@ task: TASK-052
 from_agent: senior-developer
 to_agent: cto
 suggested_state: developed
-inputs_consumed: [spec.md, refinamento.md]          # paths, nunca conteúdo
+inputs_consumed: [spec.md, refinement.md]          # paths, nunca conteúdo
 outputs_produced: [src/..., migrations/...]
 evidence: [evidence/03-test-run.log, evidence/04-lint.log]
 open_issues: []

@@ -289,7 +289,7 @@ if destino == "refinement":
     exige_arquivo("spec.md", "refinement")
 elif destino == "ready-for-dev":
     exige_arquivo("spec.md", "ready-for-dev")
-    exige_arquivo("refinamento.md", "ready-for-dev")
+    exige_arquivo("refinement.md", "ready-for-dev")
     spec_path = os.path.join(ddir, "spec.md")
     if os.path.isfile(spec_path):
         n_ph = open(spec_path).read().count("{{")

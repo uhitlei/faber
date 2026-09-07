@@ -195,12 +195,12 @@ caso "--reason sem valor não trava"         BLQ d18 cancelled --reason
 # não o campo novo — cada caso com uma causa só.
 mk d19 '{"state":"refinement","ui_impact":false}'
 printf '# Spec\nAC-1: {{...}} ainda pending\n' > faber/tasks/d19/spec.md
-echo ref > faber/tasks/d19/refinamento.md
+echo ref > faber/tasks/d19/refinement.md
 caso "ready-for-dev com placeholder {{"       BLQ d19 ready-for-dev
 
 mk d20 '{"state":"refinement","ui_impact":false}'
 printf '# Spec\nAC-1: dado X, quando Y, entao Z\n' > faber/tasks/d20/spec.md
-echo ref > faber/tasks/d20/refinamento.md
+echo ref > faber/tasks/d20/refinement.md
 caso "ready-for-dev com spec limpa"                   LIB d20 ready-for-dev
 
 # ── gate de E2E no G5 ─────────────────────────────
@@ -276,7 +276,7 @@ caso "(d) impacto_ui ausente (demanda anterior)"      LIB d26 my-review
 
 # ── impacto_ui obrigatório em ready-for-dev ───────
 spec_ok() { printf '# Spec\nAC-1: dado X, quando Y, entao Z\n' > "faber/tasks/$1/spec.md"
-            echo ref > "faber/tasks/$1/refinamento.md"; }
+            echo ref > "faber/tasks/$1/refinement.md"; }
 
 mk d27 '{"state":"refinement"}'; spec_ok d27
 caso "ready-for-dev NOVA sem impacto_ui declarado"    BLQ d27 ready-for-dev

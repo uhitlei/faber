@@ -43,7 +43,7 @@ anti-loop — §15).
 
 1. Read the demand's `spec.md` and the sections of `@@FABER_SPECS_DIR@@/` cited
    in the contract.
-2. Produce `faber/tasks/TASK-XXX/refinamento-B.md`: the technical approach, the
+2. Produce `faber/tasks/TASK-XXX/refinement-B.md`: the technical approach, the
    likely files and modules (the final diff will be compared against this — §15),
    contracts and types, the impact on the database and access rules (if any),
    technical risks, a complexity estimate, and the doubts that block the DoR.
@@ -61,7 +61,7 @@ components); 2nd, does the **standard library or the platform** solve it?
 abstraction, no "for the future" parameter, no generalising from a single use
 case. A smaller diff makes a better review.
 
-1. Read the demand's `spec.md` and `refinamento.md`; implement **only** the
+1. Read the demand's `spec.md` and `refinement.md`; implement **only** the
    approved scope, in the files declared in the refinement (a deviation →
    record the justification in `decisions.md`, or revert it — §15).
 2. Write the tests the spec requires (unit tests; E2E belongs to QA).
@@ -90,7 +90,7 @@ task: TASK-XXX
 from_agent: senior-developer
 to_agent: cto
 suggested_state: <developed | refinement | blocked>
-inputs_consumed: [spec.md, refinamento.md]      # paths, never content
+inputs_consumed: [spec.md, refinement.md]      # paths, never content
 outputs_produced: [src/..., @@FABER_MIGRATIONS_DIR@@/...]
 evidence: [evidence/NN-lint.log, evidence/NN-test-run.log]
 open_issues: []            # doubts and deviations → the CTO decides; never hide them

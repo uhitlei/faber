@@ -106,10 +106,10 @@ else
   if [ -n "$ADOPT_ISSUE" ]; then N="$ADOPT_ISSUE"; else
     MAX=$( { ls -1 "$DIR/../tasks" 2>/dev/null | sed -n 's/^TASK-\([0-9]*\)$/\1/p';
             git for-each-ref --format='%(refname:short)' 'refs/heads/feature/TASK-*' 'refs/remotes/*/feature/TASK-*' 2>/dev/null | sed -n 's/.*TASK-\([0-9]*\)$/\1/p';
-            cat "$DIR/../tasks/.contador" 2>/dev/null; } | sort -n | tail -1)
+            cat "$DIR/../tasks/.counter" 2>/dev/null; } | sort -n | tail -1)
     N=$(( ${MAX:-0} + 1 ))
   fi
-  echo "$N" > "$DIR/../tasks/.contador"
+  echo "$N" > "$DIR/../tasks/.counter"
   echo "demanda #$N (contador local — FABER_GH=off)"
 fi
 TASK="TASK-$N"

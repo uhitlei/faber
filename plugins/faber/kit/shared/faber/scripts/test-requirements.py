@@ -145,7 +145,7 @@ class RequirementsGateTests(unittest.TestCase):
         template = yaml.safe_load((HERE.parent / "templates/state.template.yaml").read_text())
         owner = template.pop("_schema")["owner"]
         template.update(state="refinement", ui_impact=False)
-        for name in ("spec.md", "refinamento.md"):
+        for name in ("spec.md", "refinement.md"):
             (self.base / name).write_text("REQ-001 fixture técnica")
         # O gate exige a ordem canônica, mesmo quando o fixture é serializado.
         def save_state():
@@ -186,7 +186,7 @@ class RequirementsGateTests(unittest.TestCase):
             owner = template.pop("_schema")["owner"]
             template.update(state="ready-for-dev", ui_impact=False)
             (target / "state.yaml").write_text(yaml.safe_dump(template, sort_keys=False))
-            for name in ("spec.md", "refinamento.md"):
+            for name in ("spec.md", "refinement.md"):
                 (target / name).write_text("REQ-001 fixture técnica")
             (runtime / "faber/config/faber.env").write_text('FABER_GH="off"\nFABER_BOARD="off"\n')
             for cmd in (["git", "init", "-q"], ["git", "config", "user.name", "Teste local"], ["git", "config", "user.email", "test@example.invalid"]):

@@ -26,7 +26,7 @@ aconteceu**.
      relativo a esse worktree).
 1. Leia, nesta ordem, o que existir em `faber/tasks/TASK-XXX/`:
    `state.yaml` (estado, gates, `history`, `blocking`, `invocations`,
-   `ui_impact`), `spec.md`, `refinamento.md`, `decisions.md`, `tarefas.md`,
+   `ui_impact`), `spec.md`, `refinement.md`, `decisions.md`, `tasks.md`,
    `review.md`, o handoff de **maior prefixo numérico** em `handoffs/` e o `log.md`.
    Se houver discovery ativo ou `requirements/`, leia sources, model,
    assessment e handoff BA. Rode requirements-gate.py report para recalcular;

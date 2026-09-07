@@ -41,10 +41,10 @@ Banco entra **desde o refinamento** (não só na validação). Antes do G1:
    prevista**; alguma invariante intocável tocada? (→ @@FABER_OWNER_NAME@@);
    índices/performance; esboço do **plano de rollback**; compatibilidade
    (deploy **não** é atômico com o CI).
-3. Escreva a análise em **`db-analise.md`** (arquivo próprio, via `Write`) + handoff.
-   Você **não** edita o `refinamento.md` compartilhado (não tem `Edit`, e ele é a
-   consolidação do CTO) — o CTO funde a sua `db-analise.md` no refinamento, como
-   faz com `refinamento-A`/`refinamento-B`.
+3. Escreva a análise em **`db-analysis.md`** (arquivo próprio, via `Write`) + handoff.
+   Você **não** edita o `refinement.md` compartilhado (não tem `Edit`, e ele é a
+   consolidação do CTO) — o CTO funde a sua `db-analysis.md` no refinamento, como
+   faz com `refinement-A`/`refinement-B`.
 
 ## Modo 2 — Revisão da migration na validação (estado `validation`)
 
@@ -95,7 +95,7 @@ suggested_state: <refinement | validation | in-development | blocked>
 # Modo 1: refinement (pré-análise pronta). Modo 2: validation (migration aprovada) |
 # in-development (reprova: destrutividade/acesso/exposição) | blocked (mexe em invariante intocável).
 inputs_consumed: [spec.md, @@FABER_MIGRATIONS_DIR@@/<timestamp>_<slug>.sql]
-outputs_produced: [db-analise.md]   # conforme o modo: Modo 1 → db-analise.md; Modo 2 → db-review.md
+outputs_produced: [db-analysis.md]   # conforme o modo: Modo 1 → db-analysis.md; Modo 2 → db-review.md
 evidence: [evidence/NN-reset-local.log]
 open_issues: []
 new_risks: []

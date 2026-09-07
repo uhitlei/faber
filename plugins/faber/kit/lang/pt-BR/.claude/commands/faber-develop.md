@@ -16,7 +16,7 @@ pelos scripts — nunca manual. Trabalhe no worktree da demanda.
    mudou desde G1, o gate bloqueia: reconciliar e renovar aprovação antes de continuar.
 
 1. **Implementação:** invoque o subagente `senior-developer` (Modo 2) com o
-   contrato mínimo — paths de `spec.md` + `refinamento.md` da demanda, nunca o
+   contrato mínimo — paths de `spec.md` + `refinement.md` da demanda, nunca o
    dump do projeto. O handoff dele é validado pelo H5 (e conta em
    `invocations`; anti-loop §15).
 

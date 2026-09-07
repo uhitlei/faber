@@ -29,13 +29,13 @@ pare e reporte o que falta — nunca pule validação técnica).
    passo cobre. Inclua os casos de exceção relevantes da spec.
 4. **Resumo no chamado (issue) — OBRIGATÓRIO (§20).** O Owner valida a partir
    da **issue**, não do chat. Antes de pedir a aprovação, grave o resumo em
-   `faber/tasks/TASK-XXX/validacao-g6.md` e **poste-o na issue**:
+   `faber/tasks/TASK-XXX/validation-g6.md` e **poste-o na issue**:
    - **(i)** breve resumo do **que foi feito**;
    - **(ii)** as **ressalvas** do review (de `review.md`: o que foi corrigido /
      o que virou follow-up ou demanda filha);
    - **(iii)** **exatamente o que validar** — roteiro clicável + a frase de aprovação.
 
-   Postar: `faber/scripts/board.sh comment-file <issue#> faber/tasks/TASK-XXX/validacao-g6.md`
+   Postar: `faber/scripts/board.sh comment-file <issue#> faber/tasks/TASK-XXX/validation-g6.md`
    (com `FABER_GH=off`, o arquivo em disco é a fonte — aponte o path no chat).
 5. **Batch no chat:** aponte para o comentário da issue (fonte única) + a frase
    de aprovação esperada: responda **"TASK-XXX validada"** (G6 aprovado — siga

@@ -45,6 +45,6 @@ dois delimitadores nunca se misturam.
 ## Invariantes que NÃO mudam
 
 - Prefixo de demanda `TASK-<issue#>`, branch `feature/TASK-XXX`, pasta `faber/tasks/TASK-XXX/`.
-- Nomes dos 15 estados, dos 9 gates, dos 10 tipos e dos artefatos (`state.yaml`, `spec.md`, `refinamento.md`, `decisions.md`, `review.md`, `handoffs/`, `evidence/`).
+- Nomes dos 15 estados, dos 9 gates, dos 10 tipos e dos artefatos (`state.yaml`, `spec.md`, `refinement.md`, `decisions.md`, `review.md`, `handoffs/`, `evidence/`).
 - Formato do handoff (§17) e a regra "handoff sem evidência = inválido".
 - Idioma PT-BR dos artefatos (configurável em `FABER_LANG`, mas o kit nasce em PT-BR).

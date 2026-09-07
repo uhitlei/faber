@@ -80,7 +80,7 @@ Esse relatório é uma projeção; nunca edite a nota para fazer o gate passar.
 ## delivery.json, aprovação e fonte de verdade
 
 O comando seal registra hashes das entradas e de BRD, PRD, speckit/spec.md e,
-em demandas, spec.md/refinamento.md. Execute somente após revisão PO/QA e
+em demandas, spec.md/refinement.md. Execute somente após revisão PO/QA e
 refinamento. O selo não é aprovação; G1 continua sendo do Owner.
 
 Antes do desenvolvimento, o gate recalcula hashes e verifica se G1 corresponde

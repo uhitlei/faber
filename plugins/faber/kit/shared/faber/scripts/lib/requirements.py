@@ -226,7 +226,7 @@ def output_hashes(folder):
     paths = [base / "requirements" / x for x in OUTPUTS]
     # Bootstrap não tem spec de demanda/refinamento. Demandas exigem ambos.
     if (base / "state.yaml").exists():
-        paths += [base / "spec.md", base / "refinamento.md"]
+        paths += [base / "spec.md", base / "refinement.md"]
     hashes = {}
     for p in paths:
         if not p.is_file() or p.stat().st_size == 0:

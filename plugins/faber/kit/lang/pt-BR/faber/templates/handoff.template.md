@@ -12,7 +12,7 @@ task: {{TASK-XXX}}
 from_agent: {{product-owner | senior-developer | code-reviewer | qa | devsecops | db-guardian | product-designer | doc-writer}}
 to_agent: cto
 suggested_state: {{estado do §6.2 — sugestão; quem decide é o CTO}}
-inputs_consumed: [{{spec.md, refinamento.md, ...}}]
+inputs_consumed: [{{spec.md, refinement.md, ...}}]
 outputs_produced: [{{spec.md | review.md | src/... | ...}}]
 evidence: [{{evidence/NN-slug.log, https://... (URL de CI/Sonar)}}]
 open_issues: []            # dúvidas/desvios → obrigam decisão do CTO (ou escalonamento ao Owner)

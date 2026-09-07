@@ -87,7 +87,7 @@ the gate pass.
 ## delivery.json, approval and the source of truth
 
 The `seal` command records the hashes of the inputs and of BRD, PRD,
-`speckit/spec.md` and, on a demand, `spec.md` and `refinamento.md`. Run it only
+`speckit/spec.md` and, on a demand, `spec.md` and `refinement.md`. Run it only
 after the PO/QA review and the refinement. The seal is not an approval; G1 is
 still the Owner's.
 
