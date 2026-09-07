@@ -1,48 +1,50 @@
-# 02 · Design System
+# 02 · Design system
 
-<!-- Projetos sem interface: "não se aplica" na seção 1 e remova o resto
-     (FABER_DESIGN_SYSTEM=off). -->
+<!-- Projects with no interface: "not applicable" in section 1, and remove the
+     rest (FABER_DESIGN_SYSTEM=off). -->
 
-## 1. Fundamentos
+## 1. Fundamentals
 
-- **Biblioteca/base:** {{ex.: shadcn/ui, MUI, componentes próprios}}
-- **Tokens:** {{onde vivem (arquivo CSS/theme) e como são consumidos}}
-- **Regra de ouro:** zero cor/espaçamento hardcoded — sempre tokens semânticos.
+- **Library / base:** {{e.g. shadcn/ui, MUI, in-house components}}
+- **Tokens:** {{where they live (a CSS or theme file) and how they are consumed}}
+- **The golden rule:** zero hardcoded colour or spacing — always semantic tokens.
 
-## 2. Tokens semânticos
+## 2. Semantic tokens
 
-| Token | Uso | Light | Dark |
+| Token | Use | Light | Dark |
 |---|---|---|---|
-| {{primary}} | {{ação principal}} | {{...}} | {{...}} |
+| {{primary}} | {{the primary action}} | {{...}} | {{...}} |
 
-## 3. Tipografia e espaçamento
+## 3. Typography and spacing
 
-{{escala tipográfica, grid, breakpoints}}
+{{the type scale, the grid, the breakpoints}}
 
-## 4. Componentes canônicos
+## 4. Canonical components
 
-| Componente | Quando usar | Onde está |
+| Component | When to use it | Where it is |
 |---|---|---|
 | {{Button}} | {{...}} | {{path}} |
 
-## 5. Estados de interface
+## 5. Interface states
 
-- loading · vazio · erro · sucesso — {{padrões e componentes de cada estado}}
+- loading · empty · error · success — {{the patterns and components for each state}}
 
-## 6. Responsivo
+## 6. Responsiveness
 
-- {{mobile-first? breakpoints? sem overflow horizontal}}
+- {{mobile-first? breakpoints? no horizontal overflow}}
 
-## 7. Acessibilidade
+## 7. Accessibility
 
-- Alvo de toque ≥ 44×44px · contraste AA · foco visível · navegação por teclado · `aria-*` em componentes customizados.
+- Touch targets ≥ 44×44px · AA contrast · visible focus · keyboard navigation ·
+  `aria-*` on custom components.
 
-## 8. Exceções
+## 8. Exceptions
 
-### 8.1 Como declarar
-`// ds-exception: <motivo>` na linha anterior ao trecho (a Skill `design-system-check` lista as exceções para o review julgar).
+### 8.1 How to declare one
+`// ds-exception: <reason>` on the line before the excerpt (the
+`design-system-check` skill lists the exceptions so the review can judge them).
 
-### 8.2 Exceções justificadas
-| Onde | Motivo |
+### 8.2 Justified exceptions
+| Where | Reason |
 |---|---|
-| {{... ou "nenhuma"}} | {{ex.: cor de marca de terceiro}} |
+| {{... or "none"}} | {{e.g. a third party's brand colour}} |

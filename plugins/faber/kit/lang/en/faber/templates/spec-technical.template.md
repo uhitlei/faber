@@ -1,61 +1,63 @@
-# Spec — {{TASK-XXX}}: {{título}}
+# Spec — {{TASK-XXX}}: {{title}}
 
-<!-- Template: TÉCNICA (tipos: tech-debt, infra, security, database,
-     docs — ARQUITETURA §14). PO é pulado: CTO ou senior-developer
-     especifica. Proporcionalidade (§11): preencher no nível do risco real —
-     documentação simples pode ter seções curtas; banco/segurança, nunca.
-     Notas por tipo:
-     · security — tratamento discreto: NÃO detalhar exploit em issue pública;
-       devsecops lidera; db-guardian se houver dados.
-     · banco — db-guardian participa DESDE o refinamento; migration-safe
-       obrigatória; migrations imutáveis (H2).
-     · infra — TODO diff em .github/workflows/ exige revisão explícita de
+<!-- Template: TECHNICAL (types: tech-debt, infra, security, database,
+     docs — ARCHITECTURE §14). The PO is skipped: the CTO or the
+     senior-developer specifies it. Proportionality (§11): fill it to the level
+     of the real risk — simple documentation can have short sections; database
+     and security work never can.
+     Notes by type:
+     · security — handle it discreetly: do NOT detail an exploit in a public
+       issue; devsecops leads; db-guardian joins if data is involved.
+     · database — db-guardian participates FROM the refinement onward;
+       migration-safe is mandatory; migrations are immutable (H2).
+     · infra — EVERY diff in .github/workflows/ requires an explicit review by
        @@FABER_OWNER_NAME@@ (H2/§19).
-     · docs — direto ao doc-writer; gate único = review do CTO. -->
+     · docs — straight to the doc-writer; the only gate is the CTO's review. -->
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| Demanda | {{TASK-XXX}} |
-| Tipo | {{tech-debt \| infra \| security \| database \| docs}} |
-| Autor | {{cto \| senior-developer \| devsecops}} |
-| Data | {{AAAA-MM-DD}} |
+| Demand | {{TASK-XXX}} |
+| Type | {{tech-debt \| infra \| security \| database \| docs}} |
+| Author | {{cto \| senior-developer \| devsecops}} |
+| Date | {{YYYY-MM-DD}} |
 
-## 1. Motivação
+## 1. Motivation
 
-<!-- Por que este trabalho técnico precisa acontecer; custo de NÃO fazer. -->
+<!-- Why this technical work needs to happen; the cost of NOT doing it. -->
 {{...}}
 
-## 2. Estado atual → estado desejado
+## 2. Current state → desired state
 
-- **Hoje:** {{...}}
-- **Depois:** {{...}}
+- **Today:** {{...}}
+- **After:** {{...}}
 
-## 3. Plano técnico
+## 3. Technical plan
 
-<!-- Passos objetivos; arquivos/módulos prováveis (o diff final é comparado
-     a isto — §15). Para banco: migrations previstas, RLS/GRANT afetados. -->
+<!-- Objective steps; the likely files and modules (the final diff is compared
+     against this — §15). For the database: the migrations foreseen, the RLS and
+     GRANTs affected. -->
 1. {{...}}
 
-## 4. Critérios de validação
+## 4. Validation criteria
 
-<!-- Numerados AC-1… verificáveis por comando/teste. Base do G5. -->
-- **AC-1:** {{comando/teste → resultado esperado}}
+<!-- Numbered AC-1… and verifiable by a command or a test. The basis of G5. -->
+- **AC-1:** {{command / test → expected result}}
 
-## 5. Impactos e segurança
+## 5. Impact and security
 
-| Área | Impacta? | Detalhe |
+| Area | Affected? | Detail |
 |---|---|---|
-| Pipeline/workflows (revisão de @@FABER_OWNER_NAME@@ se `.github/workflows/`) | {{sim/não}} | {{...}} |
-| Secrets (sempre por NOME, ex.: `API_TOKEN`) | {{sim/não}} | {{...}} |
-| Banco/RLS (db-guardian; `01-DATABASE`) | {{sim/não}} | {{...}} |
-| Superfície de segurança (`03-SECURITY`) | {{sim/não}} | {{...}} |
+| Pipeline / workflows (@@FABER_OWNER_NAME@@'s review if `.github/workflows/`) | {{yes/no}} | {{...}} |
+| Secrets (always by NAME, e.g. `API_TOKEN`) | {{yes/no}} | {{...}} |
+| Database / RLS (db-guardian; `01-DATABASE`) | {{yes/no}} | {{...}} |
+| Security surface (`03-SECURITY`) | {{yes/no}} | {{...}} |
 
-## 6. Riscos e rollback
+## 6. Risks and rollback
 
-- **Riscos:** {{...}}
-- **Rollback:** {{como desfazer com segurança; para banco, plano reverso da
-  migration (migration-safe)}}
+- **Risks:** {{...}}
+- **Rollback:** {{how to undo it safely; for the database, the migration's
+  reverse plan (migration-safe)}}
 
-## 7. Dúvidas abertas
+## 7. Open questions
 
-- {{... ou "nenhuma"}}
+- {{... or "none"}}

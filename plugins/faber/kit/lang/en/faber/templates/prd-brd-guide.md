@@ -1,59 +1,69 @@
-# Guia de PRD/BRD — como a fábrica transforma um Brainstorm em PRD e BRD
+# PRD/BRD guide — how the factory turns a brainstorm into a PRD and a BRD
 
-> **Este arquivo é um SLOT.** Substitua-o pelo SEU guia de PRD/BRD (o `.md`
-> que você usa na sua organização): o comando `/faber-init` no modo
-> `brainstorm` **segue à letra o que estiver aqui** — estrutura, seções,
-> critérios de completude e tom. O instalador aceita `--prd-guide <arquivo.md>`
-> para colocar o seu guia neste lugar. O conteúdo abaixo é o guia PADRÃO,
-> usado só quando você não fornece o seu.
+> **This file is a SLOT.** Replace it with YOUR PRD/BRD guide (the `.md` your
+> organisation uses): the `/faber-init` command in `brainstorm` mode **follows
+> to the letter whatever is here** — structure, sections, completeness criteria
+> and tone. The installer accepts `--prd-guide <file.md>` to drop your guide
+> into this place. What follows is the DEFAULT guide, used only when you do not
+> supply your own.
 
-## 1. Princípios
+## 1. Principles
 
-1. **Nada inventado:** todo requisito deve rastrear a uma linha do brainstorm
-   ou a uma decisão explícita do Owner. O que não está no brainstorm vira
-   **pergunta aberta**, nunca suposição.
-2. **Problema antes de solução:** o PRD descreve o problema, o público e o
-   resultado esperado; a solução técnica pertence às specs (fase seguinte).
-3. **Mensurável:** objetivos com métrica e alvo; requisitos com critério de
-   aceitação verificável.
-4. **Proporcional:** um brainstorm curto gera um PRD curto. Seções sem
-   substância recebem "não se aplica" explícito, nunca texto de enchimento.
-5. **Gate humano:** o PRD/BRD gerado é um RASCUNHO até o Owner aprovar
-   (`/faber-approve` do bootstrap). Só depois nascem as specs.
+1. **Nothing invented:** every requirement must trace back to a line of the
+   brainstorm or to an explicit decision by the Owner. Whatever is not in the
+   brainstorm becomes an **open question**, never an assumption.
+2. **Problem before solution:** the PRD describes the problem, the audience and
+   the expected outcome; the technical solution belongs to the specs (the next
+   phase).
+3. **Measurable:** goals with a metric and a target; requirements with a
+   verifiable acceptance criterion.
+4. **Proportional:** a short brainstorm produces a short PRD. Sections with no
+   substance get an explicit "not applicable", never filler text.
+5. **A human gate:** the generated PRD/BRD is a DRAFT until the Owner approves
+   it (the bootstrap's `/faber-approve`). Only then are the specs born.
 
-## 2. Estrutura do PRD (`docs/PRD.md`)
+## 2. The PRD's structure (`docs/PRD.md`)
 
-1. **Visão** — uma frase: para quem, o quê, por quê.
-2. **Problema e oportunidade** — dores observadas (cite o brainstorm), contexto, o custo de não fazer.
-3. **Público e personas** — quem usa, em que contexto, com que frequência.
-4. **Objetivos e métricas de sucesso** — tabela objetivo × métrica × alvo × prazo.
-5. **Escopo do MVP** — o que entra na primeira entrega (lista numerada).
-6. **Fora de escopo** — o que explicitamente NÃO entra agora (e por quê).
-7. **Requisitos funcionais** — `RF-NN`, um por linha, cada um com critério de aceitação testável.
-8. **Requisitos não-funcionais** — `RNF-NN`: desempenho, segurança/privacidade, acessibilidade, disponibilidade, compliance.
-9. **Jornadas principais** — 2–5 fluxos de ponta a ponta em passos numerados.
-10. **Dependências, riscos e premissas** — tabela com mitigação/dono.
-11. **Roadmap de alto nível** — fases/marcos (sem datas inventadas: "a definir" se não houver).
-12. **Perguntas abertas** — tudo que o brainstorm não responde; cada uma com quem decide.
-13. **Rastreabilidade** — tabela `RF/RNF × trecho do brainstorm` (citação curta).
+1. **Vision** — one sentence: for whom, what, why.
+2. **Problem and opportunity** — the pains observed (cite the brainstorm), the
+   context, the cost of not doing it.
+3. **Audience and personas** — who uses it, in what context, how often.
+4. **Goals and success metrics** — a table of goal × metric × target × deadline.
+5. **MVP scope** — what goes into the first delivery (a numbered list).
+6. **Out of scope** — what explicitly does NOT go in now (and why).
+7. **Functional requirements** — `RF-NN`, one per line, each with a testable
+   acceptance criterion.
+8. **Non-functional requirements** — `RNF-NN`: performance, security and
+   privacy, accessibility, availability, compliance.
+9. **Main journeys** — 2–5 end-to-end flows in numbered steps.
+10. **Dependencies, risks and assumptions** — a table with the mitigation and
+    the owner.
+11. **High-level roadmap** — phases and milestones (no invented dates: "to be
+    defined" when there are none).
+12. **Open questions** — everything the brainstorm does not answer; each with
+    who decides.
+13. **Traceability** — a table of `RF/RNF × the brainstorm excerpt` (a short
+    quotation).
 
-## 3. Estrutura do BRD (`docs/BRD.md`)
+## 3. The BRD's structure (`docs/BRD.md`)
 
-1. **Resumo executivo** — o caso de negócio em 5 linhas.
-2. **Contexto de negócio** — mercado/organização, motivação, alternativas consideradas.
-3. **Stakeholders** — papel, interesse, influência, decisão que tomam.
-4. **Objetivos de negócio e KPIs** — alinhados aos objetivos do PRD.
-5. **Benefícios esperados** — quantitativos e qualitativos.
-6. **Custos e esforço estimado** — ordem de grandeza (ou "a estimar após as specs").
-7. **Restrições** — prazo, orçamento, regulatório, tecnologia imposta.
-8. **Riscos de negócio** — probabilidade × impacto × mitigação.
-9. **Critérios de sucesso do projeto** — como saberemos que deu certo.
-10. **Aprovação** — quem aprova e o que muda após aprovado.
+1. **Executive summary** — the business case in five lines.
+2. **Business context** — the market or organisation, the motivation, the
+   alternatives considered.
+3. **Stakeholders** — role, interest, influence, the decision they make.
+4. **Business goals and KPIs** — aligned with the PRD's goals.
+5. **Expected benefits** — quantitative and qualitative.
+6. **Costs and estimated effort** — an order of magnitude (or "to be estimated
+   after the specs").
+7. **Constraints** — deadline, budget, regulatory, imposed technology.
+8. **Business risks** — likelihood × impact × mitigation.
+9. **Project success criteria** — how we will know it worked.
+10. **Approval** — who approves, and what changes once it is approved.
 
-## 4. Critérios de completude (o CTO confere antes de pedir aprovação)
+## 4. Completeness criteria (the CTO checks these before asking for approval)
 
-- [ ] Toda seção presente (ou "não se aplica" justificado).
-- [ ] Todo RF/RNF com critério de aceitação e linha de rastreabilidade.
-- [ ] Nenhuma métrica/prazo/custo inventado — ausência declarada.
-- [ ] Perguntas abertas listadas e endereçadas a quem decide.
-- [ ] Idioma: o de `FABER_LANG`.
+- [ ] Every section present (or a justified "not applicable").
+- [ ] Every RF/RNF with an acceptance criterion and a traceability line.
+- [ ] No invented metric, deadline or cost — absence is declared.
+- [ ] Open questions listed and addressed to whoever decides.
+- [ ] Language: the one set by `FABER_LANG`.

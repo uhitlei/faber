@@ -1,33 +1,34 @@
-# faber/bootstrap — inicialização da fábrica neste repositório
+# faber/bootstrap — initialising the factory in this repository
 
-Esta pasta é o **canal entre o instalador (`install.sh`, sem LLM) e o CTO
-(`/faber-init`, com LLM)**.
+This folder is the **channel between the installer (`install.sh`, no LLM) and
+the CTO (`/faber-init`, with an LLM)**.
 
-| Arquivo | Quem escreve | Conteúdo |
+| File | Who writes it | Contents |
 |---|---|---|
-| `CONTEXT.md` | `install.sh` (cria) · `/faber-init` (conclui) | modo detectado, sinais, arquivos de entrada, interação, `status: pending|done` |
-| `modes/<modo>.md` | kit | playbook que o CTO segue em cada modo |
-| `PERGUNTAS.md` | `/faber-init` | dúvidas agrupadas para o Owner (uma rodada) |
-| `BACKLOG.md` | `/faber-init` | demandas candidatas (título · tipo · prioridade · origem) |
-| `evidence/` | `/faber-init` via `evidence.sh faber/bootstrap …` | comandos executados durante o bootstrap |
+| `CONTEXT.md` | `install.sh` (creates it) · `/faber-init` (completes it) | the detected mode, the signals, the input files, the interaction mode, `status: pending|done` |
+| `modes/<mode>.md` | the kit | the playbook the CTO follows in each mode |
+| `PERGUNTAS.md` | `/faber-init` | the doubts, grouped for the Owner (one round) |
+| `BACKLOG.md` | `/faber-init` | candidate demands (title · type · priority · origin) |
+| `evidence/` | `/faber-init`, through `evidence.sh faber/bootstrap …` | the commands executed during the bootstrap |
 
-## Os cinco modos
+## The six modes
 
-| Modo | Sinal detectado | O que o CTO gera |
+| Mode | Signal detected | What the CTO generates |
 |---|---|---|
-| `existing-repo` | código-fonte + histórico git | specs globais lidas do código, inventário de features, config real (lint/build/test, migrations, paths protegidos) |
-| `spec-kit` | `.specify/`, `memory/constitution.md`, `specs/NNN-*/spec.md` | constituição → regras; cada feature spec-kit → SPEC RFC; plan.md → arquitetura; tasks.md → backlog |
-| `prd` | `PRD*.md` / `BRD*.md` (raiz ou `docs/`) | arquitetura `[PROPOSTA]`, specs de feature derivadas dos RF/RNF, backlog priorizado |
-| `brainstorm` | `*brainstorm*.md` / `ideias.md` / `braindump.md` | PRD + BRD seguindo `faber/templates/prd-brd-guide.md` → **parada para aprovação** → continua como `prd` |
-| `empty` | nada acima | pergunta ao Owner qual insumo trazer (ou uma descrição) e cai num dos modos acima |
+| `existing-repo` | source code + git history | global specs read out of the code, a feature inventory, the real config (lint/build/test, migrations, protected paths) |
+| `spec-kit` | `.specify/`, `memory/constitution.md`, `specs/NNN-*/spec.md` | constitution → rules; each spec-kit feature → a SPEC RFC; plan.md → architecture; tasks.md → backlog |
+| `prd` | `PRD*.md` / `BRD*.md` (root or `docs/`) | a `[PROPOSED]` architecture, feature specs derived from the functional and non-functional requirements, a prioritised backlog |
+| `brainstorm` | `*brainstorm*.md` / `ideias.md` / `braindump.md` | PRD + BRD following `faber/templates/prd-brd-guide.md` → **a stop for approval** → continues as `prd` |
+| `discovery` | chosen explicitly (`--mode discovery`) | the BA extracts evidence and requirements from transcripts and notes, produces the BRD/PRD, and resolves the gaps |
+| `empty` | none of the above | asks the Owner which input they will bring (or a description) and falls into one of the modes above |
 
-Precedência quando há mais de um sinal: `existing-repo` > `spec-kit` > `prd` >
-`brainstorm` > `empty` (o insumo mais rico manda; os demais são citados no
-CONTEXTO e usados como fonte secundária). Override: `install.sh --mode <x>` ou
+Precedence when more than one signal is present: `existing-repo` > `spec-kit` >
+`prd` > `brainstorm` > `empty` (the richest input wins; the others are cited in
+CONTEXT and used as secondary sources). Override: `install.sh --mode <x>` or
 `/faber-init --mode <x>`.
 
-## Gate de fundação
+## The foundation gate
 
-O bootstrap termina numa PR `faber/bootstrap → <trunk>`. O **merge pelo
-Owner é a aprovação** da base de conhecimento. Depois dela, a primeira
-demanda nasce com `/faber-task`.
+The bootstrap ends in a `faber/bootstrap → <trunk>` pull request. **The Owner's
+merge is the approval** of the knowledge base. After it, the first demand is
+born with `/faber-task`.

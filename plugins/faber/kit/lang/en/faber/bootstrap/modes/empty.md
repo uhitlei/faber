@@ -1,23 +1,23 @@
-# Modo `empty` — nenhum insumo detectado
+# Mode `empty` — no input detected
 
-O repositório não tem código relevante, nem specs, nem PRD/BRD, nem
-brainstorm. A fábrica está instalada, mas não tem do que partir.
+The repository has no relevant code, no specs, no PRD/BRD and no brainstorm. The
+factory is installed, but it has nothing to start from.
 
-## O que fazer
+## What to do
 
-1. Pergunte a @@FABER_OWNER_NAME@@ (uma rodada, opções fechadas):
-   - **(a)** vai trazer um arquivo de brainstorm (`docs/brainstorm.md`) → modo `brainstorm`;
-   - **(b)** vai trazer um PRD/BRD (`docs/PRD.md`) → modo `prd`;
-   - **(c)** vai trazer specs no formato Spec Kit → modo `spec-kit`;
-   - **(d)** quer **ditar agora, no chat**, a ideia do produto em algumas
-     frases → você grava **literalmente** em `docs/brainstorm.md` (sem
-     interpretar) e segue o modo `brainstorm`;
-   - **(e)** o repositório receberá código de outro lugar antes → parar; rodar
-     `/faber-init --mode existing-repo` depois.
-2. Ao receber o insumo, atualize `faber/bootstrap/CONTEXT.md` (`modo`,
-   arquivos de entrada) e siga o playbook correspondente.
-3. Se o Owner só quiser abrir uma primeira demanda sem base de conhecimento:
-   explique que a fábrica funciona melhor com specs, mas é possível — marque o
-   bootstrap como `concluido (mínimo)` e deixe as globais como esqueleto com
-   `[A DEFINIR]`; a primeira demanda `feature` vai exigir do PO um esforço
-   maior de clarificação (§6.2).
+1. Ask @@FABER_OWNER_NAME@@ (one round, closed options):
+   - **(a)** they will bring a brainstorm file (`docs/brainstorm.md`) → mode `brainstorm`;
+   - **(b)** they will bring a PRD/BRD (`docs/PRD.md`) → mode `prd`;
+   - **(c)** they will bring specs in the Spec Kit format → mode `spec-kit`;
+   - **(d)** they want to **dictate the product idea now, in the chat**, in a few
+     sentences → you write it down **literally** in `docs/brainstorm.md` (without
+     interpreting it) and follow mode `brainstorm`;
+   - **(e)** the repository will receive code from elsewhere first → stop; run
+     `/faber-init --mode existing-repo` afterwards.
+2. Once the input arrives, update `faber/bootstrap/CONTEXT.md` (the `modo`, the
+   input files) and follow the matching playbook.
+3. If the Owner only wants to open a first demand with no knowledge base:
+   explain that the factory works better with specs, but that it is possible —
+   mark the bootstrap as `done (minimal)` and leave the global specs as a
+   skeleton with `[TO BE DEFINED]`; the first `feature` demand will then demand a
+   much larger clarification effort from the PO (§6.2).

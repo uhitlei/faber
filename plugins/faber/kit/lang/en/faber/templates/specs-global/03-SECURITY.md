@@ -1,45 +1,47 @@
-# 03 · Segurança
+# 03 · Security
 
-## 1. Modelo de ameaças (resumo)
+## 1. Threat model (summary)
 
-| Ativo | Ameaça | Controle |
+| Asset | Threat | Control |
 |---|---|---|
-| {{dados de usuário}} | {{acesso indevido}} | {{RLS/ACL, autenticação}} |
+| {{user data}} | {{improper access}} | {{RLS/ACL, authentication}} |
 
-## 2. Autenticação e autorização
+## 2. Authentication and authorization
 
-- **Identidade:** {{provedor, sessões, tokens}}
-- **Papéis:** {{onde vivem, como são checados — função/decorator/policy}}
-- **Regra:** autorização sempre no servidor/banco; nunca só no cliente.
+- **Identity:** {{the provider, sessions, tokens}}
+- **Roles:** {{where they live, how they are checked — a function, a decorator, a policy}}
+- **The rule:** authorization always on the server or in the database; never in
+  the client alone.
 
-## 3. Invariantes intocáveis
+## 3. Untouchable invariants
 
-<!-- Lista fechada do que NENHUM agente altera sem revisão explícita do Owner.
-     db-guardian, code-reviewer e migration-safe leem ESTA seção. -->
-| Invariante | Onde vive | Por quê |
+<!-- A closed list of what NO agent changes without the Owner's explicit review.
+     db-guardian, code-reviewer and migration-safe all read THIS section. -->
+| Invariant | Where it lives | Why |
 |---|---|---|
-| {{ex.: função de papéis `has_role`}} | {{path}} | {{escalação de privilégio}} |
-| {{ex.: campo sensível só via RPC mascarada}} | {{path}} | {{vazamento de dado}} |
+| {{e.g. the role function `has_role`}} | {{path}} | {{privilege escalation}} |
+| {{e.g. a sensitive field only through a masked RPC}} | {{path}} | {{data leakage}} |
 
-## 4. Dados sensíveis e privacidade
+## 4. Sensitive data and privacy
 
-- {{classificação; mascaramento; retenção; LGPD/GDPR}}
+- {{classification; masking; retention; the applicable data-protection regime}}
 
 ## 5. Secrets
 
-- Sempre por **nome** (`{{API_TOKEN}}`), via variável de ambiente; nunca em arquivo versionado, log ou chat.
-- Arquivos de secrets protegidos pelo H2: `{{FABER_SECRET_FILES}}`.
+- Always by **name** (`{{API_TOKEN}}`), through an environment variable; never
+  in a versioned file, a log or the chat.
+- Secret files protected by H2: `{{FABER_SECRET_FILES}}`.
 
-## 6. Superfície exposta
+## 6. Exposed surface
 
-| Superfície | Proteção |
+| Surface | Protection |
 |---|---|
-| {{API pública}} | {{rate limit, validação de entrada, CORS}} |
+| {{the public API}} | {{rate limiting, input validation, CORS}} |
 
-## 7. Checklist de review de segurança
+## 7. Security review checklist
 
-- [ ] Entrada validada (tipo, tamanho, encoding)
-- [ ] Autorização verificada no servidor
-- [ ] Nenhum secret em código/log
-- [ ] Dados sensíveis mascarados na saída
-- [ ] Dependências novas auditadas
+- [ ] Input validated (type, size, encoding)
+- [ ] Authorization checked on the server
+- [ ] No secret in code or logs
+- [ ] Sensitive data masked on the way out
+- [ ] New dependencies audited

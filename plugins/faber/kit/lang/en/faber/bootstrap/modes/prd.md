@@ -1,56 +1,61 @@
-# Modo `prd` — só existe um PRD e/ou BRD
+# Mode `prd` — only a PRD and/or a BRD exists
 
-Sinais: `PRD*.md`, `BRD*.md`, `prd.md`, `brd.md`, `docs/PRD*.md`,
-`docs/BRD*.md`, `docs/requisitos*.md`. Não há código nem specs técnicas: a
-fábrica **deriva** a base de conhecimento do documento de produto/negócio e
-marca tudo que for decisão técnica como `[PROPOSTA]`.
+Signals: `PRD*.md`, `BRD*.md`, `prd.md`, `brd.md`, `docs/PRD*.md`,
+`docs/BRD*.md`, `docs/requisitos*.md`. There is no code and no technical specs:
+the factory **derives** the knowledge base from the product or business document
+and marks everything that is a technical decision as `[PROPOSED]`.
 
-Quando chamado pelo discovery/brainstorm 1.1.0, consuma BRD/PRD de
-`faber/bootstrap/requirements/`, verifique o selo e o hash aprovado no
-CONTEXTO e prossiga à etapa 2. Preserve IDs do modelo, sem novo MAPA divergente.
-A importação direta de PRD legado continua nas etapas abaixo.
+When called from discovery or brainstorm, consume the BRD/PRD from
+`faber/bootstrap/requirements/`, verify the seal and the approved hash in
+CONTEXT, and go straight to step 2. Preserve the model's IDs; do not create a
+second, divergent map. Importing a legacy PRD directly continues through the
+steps below.
 
-## Etapa 1 — Ler e mapear (com evidência)
+## Step 1 — Read and map (with evidence)
 
-1. `inventario-prd` — liste os documentos de entrada e o tamanho de cada um.
-2. Leia o PRD/BRD por seção. Extraia para `faber/bootstrap/MAPA-PRD.md`:
-   visão · personas · objetivos/métricas · escopo MVP e fora de escopo ·
-   requisitos (RF/RNF com IDs; se não houver IDs, atribua `RF-NN` citando o
-   trecho) · jornadas · restrições · riscos · perguntas abertas.
-3. Tudo que o PRD **não** responde e que impede decidir arquitetura ou escopo
-   → `PERGUNTAS.md` (uma rodada).
+1. `prd-inventory` — list the input documents and the size of each.
+2. Read the PRD/BRD by section. Extract into `faber/bootstrap/MAPA-PRD.md`:
+   the vision · personas · goals and metrics · MVP scope and out of scope ·
+   requirements (functional and non-functional, with IDs; where there are no
+   IDs, assign `RF-NN` and cite the passage) · journeys · constraints · risks ·
+   open questions.
+3. Everything the PRD does **not** answer and that blocks a decision about
+   architecture or scope → `PERGUNTAS.md` (one round).
 
-## Etapa 2 — Proposta de arquitetura (`00-ARCHITECTURE.md` `[PROPOSTA]`)
+## Step 2 — Proposed architecture (`00-ARCHITECTURE.md`, `[PROPOSED]`)
 
-Com base em RNFs, restrições e integrações citadas, proponha stack, camadas e
-integrações — **em uma tabela de opções × trade-offs**, com a recomendação
-marcada. Nada é decidido sem o Owner; o documento nasce inteiro `[PROPOSTA]`.
-Se o PRD já fixa tecnologia, registre como restrição (fato).
+Based on the non-functional requirements, the constraints and the integrations
+cited, propose a stack, the layers and the integrations — **as a table of
+options × trade-offs**, with your recommendation marked. Nothing is decided
+without the Owner; the document is born entirely `[PROPOSED]`. If the PRD
+already pins a technology, record that as a constraint (a fact).
 
-## Etapa 3 — Globais derivadas
+## Step 3 — Derived global specs
 
-- `01-DATABASE.md`: entidades inferidas dos requisitos (ER `[PROPOSTA]`).
-- `02-DESIGN-SYSTEM.md`: "a definir" + princípios de acessibilidade do PRD, ou
-  "não se aplica".
-- `03-SECURITY.md`: dados sensíveis e papéis citados no PRD; invariantes
-  `[PROPOSTA]`.
-- `04-DEPLOYMENT.md`, `05-TESTING.md`, `06-CONVENTIONS.md`, `07-ENV-AND-SECRETS.md`:
-  esqueleto com o que o PRD impõe (ambientes, compliance) e o resto "a definir
-  na primeira demanda técnica".
-- `08-AGENT-PLAYBOOK.md`: identidade do produto (fatos do PRD) + regras.
+- `01-DATABASE.md`: entities inferred from the requirements (an ER, `[PROPOSED]`).
+- `02-DESIGN-SYSTEM.md`: "to be defined" plus the accessibility principles from
+  the PRD, or "not applicable".
+- `03-SECURITY.md`: the sensitive data and the roles the PRD cites; the
+  invariants as `[PROPOSED]`.
+- `04-DEPLOYMENT.md`, `05-TESTING.md`, `06-CONVENTIONS.md`,
+  `07-ENV-AND-SECRETS.md`: a skeleton with whatever the PRD imposes
+  (environments, compliance) and the rest "to be defined in the first technical
+  demand".
+- `08-AGENT-PLAYBOOK.md`: the product's identity (facts from the PRD) plus the rules.
 
-## Etapa 4 — Features (`features/NN-nome/SPEC.md`)
+## Step 4 — Features (`features/NN-name/SPEC.md`)
 
-Agrupe RF/RNF por capacidade de produto (uma feature = um conjunto coeso de
-requisitos e jornadas). Para cada uma, o template de 17 seções com: resumo,
-problema, personas, requisitos (com rastreabilidade ao PRD), fluxos (das
-jornadas), regras de negócio, edge cases, testes (critérios de aceite do PRD),
-open questions. Seções técnicas (dados, contratos, arquitetura) ficam
-`[PROPOSTA]` ou "a definir no refinamento".
+Group the requirements by product capability (one feature = one coherent set of
+requirements and journeys). For each one, use the 17-section template with: the
+summary, the problem, the personas, the requirements (traceable to the PRD), the
+flows (from the journeys), the business rules, the edge cases, the tests (the
+PRD's acceptance criteria) and the open questions. Technical sections (data,
+contracts, architecture) stay `[PROPOSED]` or "to be defined during refinement".
 
-## Etapa 5 — Backlog priorizado
+## Step 5 — Prioritised backlog
 
-`BACKLOG.md`: uma demanda `feature` por feature do MVP (ordem: dependências →
-valor → risco), demandas `infra`/`database` de fundação (repo, CI, banco) antes
-das features, e `spike` para cada `[PROPOSTA]` arquitetural que precisa de
-prova. Siga o "Encerramento" do `/faber-init`.
+`BACKLOG.md`: one `feature` demand per MVP feature (ordered by dependencies →
+value → risk), foundation `infra` and `database` demands (repository, CI,
+database) before the features, and a `spike` for every architectural
+`[PROPOSED]` that needs proof. Then follow the "Closing out" section of
+`/faber-init`.

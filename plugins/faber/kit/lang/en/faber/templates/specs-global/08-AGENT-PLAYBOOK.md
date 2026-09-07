@@ -1,39 +1,42 @@
-# 08 · Agent Playbook (para IAs locais)
+# 08 · Agent playbook (for local AIs)
 
-> Leitura **obrigatória** no início de qualquer sessão. Condensa o que um agente
-> precisa saber para produzir mudanças seguras neste codebase.
+> **Required** reading at the start of any session. It condenses what an agent
+> needs to know in order to produce safe changes in this codebase.
 
-## 1. Identidade do projeto
+## 1. The project's identity
 
-- **Nome:** @@FABER_PROJECT@@
-- **Domínio:** {{...}}
+- **Name:** @@FABER_PROJECT@@
+- **Domain:** {{...}}
 - **Stack:** {{...}}
-- **Idioma do código/UI:** {{...}}
-- **Perfis de usuário:** {{...}}
+- **Language of the code and UI:** {{...}}
+- **User personas:** {{...}}
 
-## 2. Ordem de leitura recomendada
+## 2. Recommended reading order
 
-1. `00-ARCHITECTURE.md` · 2. `01-DATABASE.md` · 3. `03-SECURITY.md` · 4. `06-CONVENTIONS.md` · 5. `02-DESIGN-SYSTEM.md` · 6. a SPEC da feature que vai mexer.
-Depois (CI/ambientes): `04-DEPLOYMENT.md` e `07-ENV-AND-SECRETS.md`.
+1. `00-ARCHITECTURE.md` · 2. `01-DATABASE.md` · 3. `03-SECURITY.md` ·
+4. `06-CONVENTIONS.md` · 5. `02-DESIGN-SYSTEM.md` · 6. the SPEC of the feature
+you are about to touch.
+Then (CI and environments): `04-DEPLOYMENT.md` and `07-ENV-AND-SECRETS.md`.
 
-## 3. Regras invioláveis
+## 3. Inviolable rules
 
-1. Nunca editar: {{arquivos gerados/protegidos — FABER_PROTECTED_PATHS}}.
-2. Nunca alterar migrations já aplicadas; criar nova sempre.
-3. {{Autorização/RLS habilitada em toda entidade nova + GRANTs explícitos}}.
-4. Invariantes intocáveis de `03-SECURITY.md §3` só com revisão de @@FABER_OWNER_NAME@@.
-5. Zero secrets em código/log/chat — sempre por nome.
-6. {{regras específicas do projeto…}}
+1. Never edit: {{generated and protected files — FABER_PROTECTED_PATHS}}.
+2. Never change an already-applied migration; always create a new one.
+3. {{Authorization/RLS enabled on every new entity, plus explicit GRANTs}}.
+4. The untouchable invariants in `03-SECURITY.md §3` only with
+   @@FABER_OWNER_NAME@@'s review.
+5. Zero secrets in code, logs or chat — always by name.
+6. {{project-specific rules…}}
 
-## 4. Quando precisar mexer em código
+## 4. When you need to touch code
 
-| Mudança pretendida | Ler antes | Atenção a |
+| Intended change | Read first | Watch out for |
 |---|---|---|
-| {{nova tela/endpoint}} | {{00, 02/03, spec}} | {{...}} |
-| {{nova entidade}} | {{01, 03}} | {{migration-safe}} |
-| {{integração externa}} | {{07}} | {{secret por nome}} |
+| {{a new screen or endpoint}} | {{00, 02/03, the spec}} | {{...}} |
+| {{a new entity}} | {{01, 03}} | {{migration-safe}} |
+| {{an external integration}} | {{07}} | {{the secret, by name}} |
 
-## 5. Comandos de cabeceira
+## 5. Everyday commands
 
 ```bash
 @@FABER_CMD_LINT@@
@@ -42,14 +45,17 @@ Depois (CI/ambientes): `04-DEPLOYMENT.md` e `07-ENV-AND-SECRETS.md`.
 @@FABER_CMD_E2E@@
 ```
 
-## 6. Como descobrir o que existe
+## 6. How to find out what exists
 
-| Pergunta | Onde olhar |
+| Question | Where to look |
 |---|---|
-| Quais entidades existem? | `01-DATABASE.md` / `{{FABER_MIGRATIONS_DIR}}` |
-| Quais rotas/endpoints? | {{path}} |
-| Como auth funciona? | {{path}} + `03-SECURITY.md` |
+| Which entities exist? | `01-DATABASE.md` / `{{FABER_MIGRATIONS_DIR}}` |
+| Which routes and endpoints? | {{path}} |
+| How does auth work? | {{path}} + `03-SECURITY.md` |
 
-## 7. A fábrica
+## 7. The factory
 
-Demandas rodam como `TASK-<issue#>` em `faber/tasks/`, com gates G1–G9 (`faber/ARCHITECTURE.md`). Comandos: `/faber-task`, `/faber-bug`, `/faber-spike`, `/faber-incident`, `/faber-status`, `/faber-resume`, `/faber-approve`, `/faber-develop`, `/faber-validate`, `/faber-pr`.
+Demands run as `TASK-<issue#>` under `faber/tasks/`, through gates G1–G9
+(`faber/ARCHITECTURE.md`). Commands: `/faber-task`, `/faber-bug`,
+`/faber-spike`, `/faber-incident`, `/faber-status`, `/faber-resume`,
+`/faber-approve`, `/faber-develop`, `/faber-validate`, `/faber-pr`.

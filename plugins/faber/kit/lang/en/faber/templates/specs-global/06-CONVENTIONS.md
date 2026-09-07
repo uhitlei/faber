@@ -1,37 +1,42 @@
-# 06 · Convenções de Código
+# 06 · Code conventions
 
-## 1. Linguagem e configuração
+## 1. Language and configuration
 
-- {{versão da linguagem; modo estrito; linter/formatter e config}}
+- {{the language version; strict mode; the linter/formatter and its config}}
 
 ## 2. Naming
 
-| Item | Convenção |
+| Item | Convention |
 |---|---|
-| Arquivos | {{...}} |
-| Funções/métodos | {{...}} |
-| Tipos/classes | {{...}} |
-| Constantes | {{...}} |
-| Banco (tabelas/colunas) | {{...}} |
-| Eventos/telemetria | {{...}} |
+| Files | {{...}} |
+| Functions / methods | {{...}} |
+| Types / classes | {{...}} |
+| Constants | {{...}} |
+| Database (tables, columns) | {{...}} |
+| Events / telemetry | {{...}} |
 
-## 3. Estrutura de módulos
+## 3. Module structure
 
-- {{onde vive cada tipo de código; regras de import; limites de tamanho}}
+- {{where each kind of code lives; import rules; size limits}}
 
-## 4. Padrões obrigatórios
+## 4. Mandatory patterns
 
-- {{tratamento de erros; logging; validação de entrada; acesso a dados}}
+- {{error handling; logging; input validation; data access}}
 
-## 5. Padrões proibidos
+## 5. Forbidden patterns
 
-- {{`any` sem justificativa; segredos em código; cores hardcoded; …}}
+- {{`any` without justification; secrets in code; hardcoded colours; …}}
 
-## 6. Commits e branches
+## 6. Commits and branches
 
-- Commits: `tipo(escopo): descrição` (`feat|fix|chore|docs|test|refactor|perf|style|ci|build|revert`), referenciando `TASK-XXX` quando na branch de demanda (hook H4).
-- Branches: `feature/TASK-XXX` (demandas) · `docs/TASK-XXX-specs` (consolidação pós-merge).
+- Commits: `type(scope): description`
+  (`feat|fix|chore|docs|test|refactor|perf|style|ci|build|revert`), referencing
+  `TASK-XXX` when on a demand's branch (hook H4).
+- Branches: `feature/TASK-XXX` (demands) · `docs/TASK-XXX-specs` (the
+  post-merge consolidation).
 
-## 7. Revisão de código — o que o reviewer confere
+## 7. Code review — what the reviewer checks
 
-- Aderência à spec (AC por AC) · segurança (03) · convenções (este doc) · código mínimo (escada da preguiça: repo → stdlib → dependência instalada → código novo) · testes · bordas · performance · regressão.
+- Adherence to the spec (AC by AC) · security (03) · conventions (this document)
+  · minimum code (the ladder of laziness: repo → standard library → installed
+  dependency → new code) · tests · edge cases · performance · regression.

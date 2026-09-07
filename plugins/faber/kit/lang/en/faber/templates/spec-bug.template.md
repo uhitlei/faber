@@ -1,56 +1,56 @@
-# Spec — {{TASK-XXX}}: {{título do bug}}
+# Spec — {{TASK-XXX}}: {{the bug's title}}
 
-<!-- Template: BUG (ARQUITETURA §14). Spec reduzida DE PROPÓSITO (§11):
-     reprodução + causa raiz + fix + teste de regressão. Não inchar.
-     REGRA DE OURO: sem reprodução registrada com evidência, a spec não
-     avança (§14 — "reprodução obrigatória antes da spec"). -->
+<!-- Template: BUG (ARCHITECTURE §14). A reduced spec ON PURPOSE (§11):
+     reproduction + root cause + fix + regression test. Do not pad it.
+     GOLDEN RULE: with no reproduction recorded with evidence, the spec does
+     not advance (§14 — "reproduction is mandatory before the spec"). -->
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| Demanda | {{TASK-XXX}} |
-| Tipo | bug |
-| Severidade | {{crítica \| alta \| média \| baixa}} |
-| Data | {{AAAA-MM-DD}} |
+| Demand | {{TASK-XXX}} |
+| Type | bug |
+| Severity | {{critical \| high \| medium \| low}} |
+| Date | {{YYYY-MM-DD}} |
 
-## 1. Reprodução (obrigatória)
+## 1. Reproduction (mandatory)
 
-<!-- Passos exatos executados, com evidência REAL gravada em evidence/
-     (log, screenshot). Evidência narrada = inválida (§15). -->
-- Ambiente: {{local/homologação + browser/dispositivo}}
-- Perfil/usuário: {{perfil de usuário}}
-- Passos:
+<!-- The exact steps executed, with REAL evidence recorded in evidence/
+     (a log, a screenshot). Narrated evidence is invalid (§15). -->
+- Environment: {{local/staging + browser/device}}
+- Persona / user: {{the product persona}}
+- Steps:
   1. {{...}}
-- **Evidência da reprodução:** {{evidence/NN-repro.log}}
+- **Reproduction evidence:** {{evidence/NN-repro.log}}
 
-## 2. Comportamento esperado × observado
+## 2. Expected behaviour × observed behaviour
 
-- **Esperado:** {{...}}
-- **Observado:** {{...}}
+- **Expected:** {{...}}
+- **Observed:** {{...}}
 
-## 3. Causa raiz
+## 3. Root cause
 
-<!-- Diagnóstico técnico: arquivo/função/query. "Não sei ainda" → investigar
-     antes de fechar a spec, ou converter em spike (§14). -->
+<!-- The technical diagnosis: file, function, query. "I do not know yet" →
+     investigate before closing the spec, or convert it into a spike (§14). -->
 {{...}}
 
-## 4. Fix proposto
+## 4. Proposed fix
 
-<!-- Escopo mínimo do conserto. Mudança de comportamento além do conserto =
-     outra demanda. -->
+<!-- The minimum scope of the fix. A behaviour change beyond the fix is a
+     different demand. -->
 {{...}}
 
-## 5. Teste de regressão
+## 5. Regression test
 
-<!-- Obrigatório (§14): teste que FALHA antes do fix e PASSA depois.
-     Indicar o arquivo de teste e as duas execuções como evidência. -->
-- Teste: {{caminho do teste unitário | caminho do teste E2E}}
-- Evidência "falha antes": {{evidence/NN-teste-antes.log}}
-- Evidência "passa depois": {{evidence/NN-teste-depois.log}}
+<!-- Mandatory (§14): a test that FAILS before the fix and PASSES after it.
+     Name the test file and both runs, as evidence. -->
+- Test: {{path to the unit test | path to the E2E test}}
+- Evidence "fails before": {{evidence/NN-test-before.log}}
+- Evidence "passes after": {{evidence/NN-test-after.log}}
 
-## 6. Riscos e impacto colateral
+## 6. Risks and collateral impact
 
-- {{... ou "nenhum identificado"}}
+- {{... or "none identified"}}
 
-## 7. Dúvidas abertas
+## 7. Open questions
 
-- {{... ou "nenhuma"}}
+- {{... or "none"}}

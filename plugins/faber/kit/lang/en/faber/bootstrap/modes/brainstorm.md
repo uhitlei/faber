@@ -1,54 +1,55 @@
-# Modo `brainstorm` — só existe um arquivo de brainstorm
+# Mode `brainstorm` — only a brainstorm file exists
 
-## Fluxo vigente desde 1.1.0
+## The current flow
 
-Execute o playbook `discovery.md` usando o brainstorm como fonte textual.
-Preserve IDs B-NN existentes como aliases nas evidências. O pacote e BRD/PRD
-ficam em `faber/bootstrap/requirements/`; não crie cópias concorrentes em docs.
-A aprovação humana continua obrigatória. As etapas abaixo descrevem o fluxo
-legado para leitura de projetos anteriores; não execute os dois fluxos.
+Run the `discovery.md` playbook, using the brainstorm as the textual source.
+Preserve any existing `B-NN` IDs as aliases in the evidence. The package and the
+BRD/PRD live in `faber/bootstrap/requirements/`; do not create competing copies
+under `docs`. Human approval is still mandatory. The steps below describe the
+legacy flow, kept so that older projects can still be read — do not run both.
 
-## Fluxo histórico 1.0.0
+## The historical 1.0.0 flow
 
-Sinais: `*brainstorm*.md`, `ideias.md`, `ideas.md`, `braindump.md`,
-`notas*.md` na raiz ou em `docs/`. É o insumo mais cru: a fábrica primeiro
-**produz o PRD e o BRD**, seguindo o guia do Owner, e só depois de aprovados
-continua como o modo `prd`.
+Signals: `*brainstorm*.md`, `ideias.md`, `ideas.md`, `braindump.md`,
+`notas*.md`, at the root or under `docs/`. This is the rawest input: the factory
+first **produces the PRD and the BRD**, following the Owner's guide, and only
+continues as mode `prd` once they are approved.
 
-## Etapa 1 — Ler o guia e o brainstorm (com evidência)
+## Step 1 — Read the guide and the brainstorm (with evidence)
 
-1. `inventario-brainstorm` — liste os arquivos de entrada e o guia em uso.
-2. Leia **`faber/templates/prd-brd-guide.md` inteiro** — é o guia do Owner
-   (ou o padrão do kit, se ele não trouxe o seu). **Ele manda** na estrutura,
-   seções, critérios de completude e tom do PRD/BRD. Os templates
-   `prd.template.md`/`brd.template.md` são só o esqueleto padrão: se o guia
-   definir outra estrutura, use a do guia.
-3. Leia o brainstorm inteiro. Monte `faber/bootstrap/MAPA-BRAINSTORM.md`:
-   cada ideia/frase numerada (`B-NN`) com classificação (problema · público ·
-   objetivo · requisito · restrição · risco · dúvida · fora de escopo).
+1. `brainstorm-inventory` — list the input files and the guide in use.
+2. Read **all of `faber/templates/prd-brd-guide.md`** — it is the Owner's guide
+   (or the kit's default, if they did not bring their own). **It governs** the
+   structure, the sections, the completeness criteria and the tone of the
+   PRD/BRD. The `prd.template.md` / `brd.template.md` files are only the default
+   skeleton: if the guide defines a different structure, use the guide's.
+3. Read the whole brainstorm. Build `faber/bootstrap/MAPA-BRAINSTORM.md`: every
+   idea or sentence numbered (`B-NN`) with a classification (problem · audience ·
+   goal · requirement · constraint · risk · doubt · out of scope).
 
-## Etapa 2 — PRD e BRD (rascunhos)
+## Step 2 — PRD and BRD (drafts)
 
-- `docs/PRD.md` e `docs/BRD.md` (crie `docs/` se não existir), seguindo o
-  guia. **Rastreabilidade obrigatória:** todo requisito cita o `B-NN` de
-  origem. O que o brainstorm não diz vira **pergunta aberta** (no PRD e em
-  `PERGUNTAS.md`), nunca suposição — métricas, prazos e custos inventados são
-  proibidos ("a definir" é a resposta honesta).
-- Confira os **critérios de completude** do guia antes de entregar.
-- Evidência: `faber/scripts/evidence.sh faber/bootstrap prd-completo --
+- `docs/PRD.md` and `docs/BRD.md` (create `docs/` if it does not exist),
+  following the guide. **Traceability is mandatory:** every requirement cites the
+  `B-NN` it came from. Whatever the brainstorm does not say becomes an **open
+  question** (in the PRD and in `PERGUNTAS.md`), never an assumption — invented
+  metrics, deadlines and costs are forbidden ("to be defined" is the honest
+  answer).
+- Check the guide's **completeness criteria** before delivering.
+- Evidence: `faber/scripts/evidence.sh faber/bootstrap prd-complete --
   bash -c "! grep -qF '{{' docs/PRD.md docs/BRD.md && echo ok"`.
 
-## Etapa 3 — PARADA OBRIGATÓRIA: aprovação do PRD/BRD
+## Step 3 — MANDATORY STOP: the PRD/BRD approval
 
-Em **qualquer** modo de interação, pare aqui. Commit + push da branch
-`faber/bootstrap` e um único pedido ao Owner: ler `docs/PRD.md` e
-`docs/BRD.md`, responder as perguntas de `PERGUNTAS.md` e dizer
-**"PRD aprovado"** (ou pedir ajustes). Registre a aprovação em
-`faber/bootstrap/CONTEXT.md` (`prd_aprovado_em`, `por`). Sem aprovação, não
-existem specs — o PRD errado contaminaria tudo que vem depois.
+In **either** interaction mode, stop here. Commit and push the
+`faber/bootstrap` branch, and make a single request to the Owner: read
+`docs/PRD.md` and `docs/BRD.md`, answer the questions in `PERGUNTAS.md`, and say
+**"PRD approved"** (or ask for changes). Record the approval in
+`faber/bootstrap/CONTEXT.md` (`prd_aprovado_em`, `por`). Without that approval
+there are no specs — a wrong PRD would contaminate everything that follows.
 
-## Etapa 4 — Continuar como `prd`
+## Step 4 — Continue as `prd`
 
-Com o PRD/BRD aprovados, execute as Etapas 2–5 de
-`faber/bootstrap/modes/prd.md` (arquitetura `[PROPOSTA]`, globais, features,
-backlog) e o "Encerramento" do `/faber-init`.
+With the PRD/BRD approved, run Steps 2–5 of
+`faber/bootstrap/modes/prd.md` (the `[PROPOSED]` architecture, the global specs,
+the features, the backlog) and then the "Closing out" section of `/faber-init`.

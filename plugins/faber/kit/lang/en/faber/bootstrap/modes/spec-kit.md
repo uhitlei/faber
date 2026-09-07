@@ -1,62 +1,66 @@
-# Modo `spec-kit` — repositório novo com especificações no formato Spec Kit
+# Mode `spec-kit` — a new repository with specifications in the Spec Kit format
 
-Sinais: `.specify/` (memory/constitution.md, templates/, scripts/) e/ou
-`memory/constitution.md` na raiz, e `specs/NNN-nome/spec.md` (+ `plan.md`,
-`research.md`, `data-model.md`, `contracts/`, `quickstart.md`, `tasks.md`).
-O Spec Kit é um **insumo**, não um concorrente: a fábrica consome o que ele
-produziu e passa a governar o ciclo daqui em diante.
+Signals: `.specify/` (memory/constitution.md, templates/, scripts/) and/or
+`memory/constitution.md` at the root, plus `specs/NNN-name/spec.md` (with
+`plan.md`, `research.md`, `data-model.md`, `contracts/`, `quickstart.md`,
+`tasks.md`). Spec Kit is an **input**, not a competitor: the factory consumes
+what it produced and governs the cycle from here on.
 
-## Etapa 1 — Ler o que existe (com evidência)
+## Step 1 — Read what is there (with evidence)
 
-1. `inventario-speckit` — liste os arquivos do Spec Kit encontrados
+1. `speckit-inventory` — list the Spec Kit files found
    (`find . -path ./node_modules -prune -o \( -name constitution.md -o -path '*/specs/*/spec.md' -o -path '*/specs/*/plan.md' -o -path '*/specs/*/tasks.md' \) -print`).
-2. Leia `constitution.md` inteira; leia cada `spec.md`/`plan.md`/`tasks.md`
-   **por seção**, sob demanda.
+2. Read all of `constitution.md`; read each `spec.md`/`plan.md`/`tasks.md`
+   **by section**, on demand.
 
-## Etapa 2 — Constituição → regras da fábrica
+## Step 2 — The constitution → the factory's rules
 
-- Princípios da constituição que são **regras invioláveis** → `CLAUDE.md §2`
-  (bloco "Regras do projeto", abaixo das regras da fábrica — sem alterar as da
-  fábrica) e `@@FABER_SPECS_DIR@@/global/06-CONVENTIONS.md`.
-- Princípios de qualidade/testes → `05-TESTING.md` (e, se pedirem cobertura
-  bloqueante, registre em `ARQUITETURA §18` como exceção formal a decidir).
-- Princípios de segurança → `03-SECURITY.md §3` (invariantes intocáveis).
+- Principles from the constitution that are **inviolable rules** → `CLAUDE.md §2`
+  (the "project rules" block, below the factory's own rules — without altering
+  the factory's) and `@@FABER_SPECS_DIR@@/global/06-CONVENTIONS.md`.
+- Quality and testing principles → `05-TESTING.md` (and, if they demand blocking
+  coverage, record it in `ARCHITECTURE §18` as a formal exception to be decided).
+- Security principles → `03-SECURITY.md §3` (the untouchable invariants).
 
-## Etapa 3 — plan.md/research.md/data-model.md → globais
+## Step 3 — plan.md / research.md / data-model.md → the global specs
 
-- Stack e estrutura declaradas no `plan.md` → `00-ARCHITECTURE.md` (marque
-  `[PROPOSTA]` o que ainda não existe em código).
-- `data-model.md` → `01-DATABASE.md`; `contracts/` → seção 8 das SPECs de feature.
-- Decisões de `research.md` → ADRs resumidos em `00-ARCHITECTURE.md §5`.
+- The stack and structure declared in `plan.md` → `00-ARCHITECTURE.md` (mark
+  `[PROPOSED]` whatever does not exist in code yet).
+- `data-model.md` → `01-DATABASE.md`; `contracts/` → section 8 of the feature SPECs.
+- Decisions in `research.md` → ADRs summarised in `00-ARCHITECTURE.md §5`.
 
-## Etapa 4 — Cada `specs/NNN-nome/spec.md` → `@@FABER_SPECS_DIR@@/features/NN-nome/SPEC.md`
+## Step 4 — Each `specs/NNN-name/spec.md` → `@@FABER_SPECS_DIR@@/features/NN-name/SPEC.md`
 
-Converta para o padrão RFC (17 seções) via `faber/templates/spec-feature.template.md`:
-user stories → personas + fluxos; requisitos funcionais → RF-NN (mantendo os
-IDs originais entre parênteses para rastreabilidade); acceptance scenarios →
-seção 14 (testes) e regras de negócio; edge cases → seção 11; `[NEEDS
-CLARIFICATION]` do Spec Kit → **Open questions** (seção 16) e `PERGUNTAS.md`.
-Não apague os arquivos do Spec Kit — eles ficam como origem histórica; a
-verdade canônica passa a ser a SPEC RFC (CHANGELOG: "convertida do Spec Kit").
+Convert to the RFC pattern (17 sections) through
+`faber/templates/spec-feature.template.md`: user stories → personas plus flows;
+functional requirements → RF-NN (keeping the original IDs in parentheses for
+traceability); acceptance scenarios → section 14 (tests) and the business rules;
+edge cases → section 11; Spec Kit's `[NEEDS CLARIFICATION]` → **Open questions**
+(section 16) and `PERGUNTAS.md`. Do not delete the Spec Kit files — they remain
+as the historical origin; the canonical truth becomes the SPEC RFC (CHANGELOG:
+"converted from Spec Kit").
 
-## Etapa 5 — tasks.md → backlog
+## Step 5 — tasks.md → the backlog
 
-Cada `tasks.md` vira demandas candidatas em `faber/bootstrap/BACKLOG.md`
-(agrupe tarefas pequenas numa demanda `feature`; infra/CI → `infra`; banco →
-`database`). Preserve a ordem/dependências declaradas. Não crie issues ainda.
+Each `tasks.md` becomes candidate demands in `faber/bootstrap/BACKLOG.md` (group
+small tasks into one `feature` demand; infra and CI → `infra`; database →
+`database`). Preserve the declared order and dependencies. Do not create issues
+yet.
 
-## Etapa 6 — Configuração e fechamento
+## Step 6 — Configuration and closing
 
-Se o `plan.md` declara a stack, proponha `FABER_CMD_*`, `FABER_MIGRATIONS_DIR`,
-`FABER_E2E` coerentes (a confirmar pelo Owner — ainda não há código para
-provar). Se a pasta `specs/` do Spec Kit colide com `FABER_SPECS_DIR`, o
-`install.sh` já escolheu outra pasta canônica (veja `CONTEXT.md`) — não misture.
-Siga o "Encerramento" do `/faber-init`.
+If `plan.md` declares the stack, propose a coherent `FABER_CMD_*`,
+`FABER_MIGRATIONS_DIR` and `FABER_E2E` (for the Owner to confirm — there is no
+code yet to prove them). If Spec Kit's `specs/` folder collides with
+`FABER_SPECS_DIR`, `install.sh` has already chosen another canonical folder (see
+`CONTEXT.md`) — do not mix them. Then follow the "Closing out" section of
+`/faber-init`.
 
-## Projeções produzidas pelo discovery
+## Projections produced by discovery
 
-Um `requirements/speckit/spec.md` da versão 1.1.0 é uma projeção do modelo,
-não um pacote técnico concluído. Preserve seus IDs e origem ao converter.
-Plan/contracts/tasks, quando utilizados, pertencem ao refinamento técnico.
-A demanda ativa governa implementação pelo G1; a SPEC RFC recebe consolidação.
-Não mantenha duas specs editadas independentemente nem suponha CLI instalado.
+A `requirements/speckit/spec.md` is a projection of the model, not a finished
+technical package. Preserve its IDs and its origin when converting. The plan,
+contracts and tasks, when used, belong to technical refinement. The active demand
+governs implementation through G1; the SPEC RFC receives the consolidation. Do
+not maintain two specs edited independently, and do not assume the CLI is
+installed.

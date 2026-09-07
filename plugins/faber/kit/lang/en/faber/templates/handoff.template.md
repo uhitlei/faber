@@ -1,25 +1,25 @@
-# Handoff — {{TASK-XXX}} · {{agente}} → cto
+# Handoff — {{TASK-XXX}} · {{agent}} → cto
 
-<!-- Template do contrato de handoff (ARQUITETURA §17). Todo subagente encerra
-     escrevendo faber/tasks/TASK-XXX/handoffs/NN-<agente>-para-cto.md
-     (NN = maior prefixo numérico existente + 1). O hook H5 valida o bloco
-     YAML abaixo: campos obrigatórios + cada evidência existente e não vazia.
-     Paths RELATIVOS à pasta da demanda (arquivos de produto: relativos à raiz
-     do repo). Nunca cole conteúdo de arquivo — só paths. -->
+<!-- Template for the handoff contract (ARCHITECTURE §17). Every subagent ends
+     by writing faber/tasks/TASK-XXX/handoffs/NN-<agent>-para-cto.md
+     (NN = the highest existing numeric prefix + 1). Hook H5 validates the YAML
+     block below: the mandatory fields, plus every piece of evidence existing
+     and non-empty. Paths are RELATIVE to the demand's folder (product files:
+     relative to the repository root). Never paste file content — paths only. -->
 
 ```yaml
 task: {{TASK-XXX}}
 from_agent: {{product-owner | senior-developer | code-reviewer | qa | devsecops | db-guardian | product-designer | doc-writer}}
 to_agent: cto
-suggested_state: {{estado do §6.2 — sugestão; quem decide é o CTO}}
+suggested_state: {{a state from §6.2 — a suggestion; the CTO decides}}
 inputs_consumed: [{{spec.md, refinamento.md, ...}}]
 outputs_produced: [{{spec.md | review.md | src/... | ...}}]
-evidence: [{{evidence/NN-slug.log, https://... (URL de CI/Sonar)}}]
-open_issues: []            # dúvidas/desvios → obrigam decisão do CTO (ou escalonamento ao Owner)
+evidence: [{{evidence/NN-slug.log, https://... (a CI or Sonar URL)}}]
+open_issues: []            # doubts and deviations → they force a CTO decision (or an escalation to the Owner)
 new_risks: []
 suggested_next_action: "{{...}}"
 ```
 
-<!-- Regra de ouro: handoff sem evidência referenciada = handoff inválido
-     (gate-check rejeita a transição). Seu texto final no chat é só um ponteiro
-     para este arquivo + o suggested_state em uma linha. -->
+<!-- Golden rule: a handoff with no evidence referenced is an invalid handoff
+     (gate-check rejects the transition). Your final message in the chat is only
+     a pointer to this file plus the suggested_state, in one line. -->

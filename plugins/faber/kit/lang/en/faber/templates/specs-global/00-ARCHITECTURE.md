@@ -1,48 +1,48 @@
-# 00 · Arquitetura
+# 00 · Architecture
 
-<!-- Gerado/preenchido pelo /faber-init a partir do contexto detectado
-     (repo existente: lido do código; spec-kit/PRD/brainstorm: proposto e
-     marcado [PROPOSTA] até o Owner confirmar). Nenhum {{...}} pode sobrar. -->
+<!-- Generated and filled in by /faber-init from the detected context (an
+     existing repo: read from the code; spec-kit/PRD/brainstorm: proposed and
+     marked [PROPOSED] until the Owner confirms). No {{...}} may survive. -->
 
-> **Stack:** {{linguagens · frameworks · banco · infra · CI/CD}}
-> **Perfis de usuário:** {{ex.: usuário, gestor, admin — ou "n/a" para libs/CLIs}}
+> **Stack:** {{languages · frameworks · database · infra · CI/CD}}
+> **User personas:** {{e.g. user, manager, admin — or "n/a" for libraries and CLIs}}
 
-## 1. Visão de contexto (C4 nível 1)
+## 1. Context view (C4 level 1)
 
 ```mermaid
 flowchart LR
-  U[{{Usuário}}]:::user --> App[{{Sistema}}]
-  App --> Ext[{{Integrações externas}}]:::ext
+  U[{{User}}]:::user --> App[{{System}}]
+  App --> Ext[{{External integrations}}]:::ext
   classDef user fill:#0ea5e9,stroke:#0369a1,color:#fff
   classDef ext fill:#475569,stroke:#1e293b,color:#fff
 ```
 
-## 2. Camadas e organização do código
+## 2. Layers and code organisation
 
 ```text
-{{árvore de diretórios comentada — o que vive em cada pasta}}
+{{an annotated directory tree — what lives in each folder}}
 ```
 
-## 3. Componentes e responsabilidades
+## 3. Components and responsibilities
 
-| Componente | Responsabilidade | Depende de |
+| Component | Responsibility | Depends on |
 |---|---|---|
 | {{...}} | {{...}} | {{...}} |
 
-## 4. Fluxos principais
+## 4. Main flows
 
-{{2–4 fluxos ponta a ponta (sequência) — Mermaid `sequenceDiagram` quando ajudar.}}
+{{2–4 end-to-end flows (as sequences) — a Mermaid `sequenceDiagram` where it helps.}}
 
-## 5. Decisões arquiteturais (ADRs resumidos)
+## 5. Architectural decisions (summarised ADRs)
 
-| # | Decisão | Motivo | Consequências |
+| # | Decision | Reason | Consequences |
 |---|---|---|---|
 | ADR-1 | {{...}} | {{...}} | {{...}} |
 
-## 6. Limites e restrições
+## 6. Limits and constraints
 
-- {{limites de plataforma, quotas, latência, tamanho de payload…}}
+- {{platform limits, quotas, latency, payload size…}}
 
-## 7. Glossário
+## 7. Glossary
 
-- **{{termo}}:** {{definição}}
+- **{{term}}:** {{definition}}

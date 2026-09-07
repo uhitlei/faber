@@ -1,99 +1,100 @@
-# Feature {{NN}} · {{Nome da feature}}
+# Feature {{NN}} · {{Feature name}}
 
-<!-- Template da SPEC CANÔNICA de feature (padrão RFC, 17 seções) — destino de
-     `@@FABER_SPECS_DIR@@/features/NN-nome/SPEC.md`. Usado pelo /faber-init
-     (bootstrap) e pelo doc-writer (spec-sync, G9). Proporcional: inclua só as
-     seções aplicáveis; a seção 17 (CHANGELOG) é SEMPRE mantida. Remover os
-     comentários ao preencher; nenhum {{...}} pode sobrar. -->
+<!-- Template for the CANONICAL feature SPEC (RFC pattern, 17 sections) —
+     destined for `@@FABER_SPECS_DIR@@/features/NN-name/SPEC.md`. Used by
+     /faber-init (bootstrap) and by the doc-writer (spec-sync, G9).
+     Proportional: include only the applicable sections; section 17 (CHANGELOG)
+     is ALWAYS kept. Remove the comments as you fill it in; no {{...}} may
+     survive. -->
 
 - **Status:** {{Draft | Beta | Stable | Deprecated}}
-- **Owners:** {{profiles/áreas responsáveis}}
-- **Rotas / pontos de entrada:** {{URLs, comandos, endpoints}}
-- **Arquivos-chave:** {{paths principais no código}}
+- **Owners:** {{the responsible profiles or areas}}
+- **Routes / entry points:** {{URLs, commands, endpoints}}
+- **Key files:** {{the main paths in the code}}
 
-## 1. Resumo
+## 1. Summary
 
-{{Síntese executiva em 3–5 linhas: o que a feature faz e para quem.}}
+{{An executive synthesis in 3–5 lines: what the feature does and for whom.}}
 
-## 2. Problema
+## 2. Problem
 
-{{Que dor resolve e por quê existe.}}
+{{What pain it solves and why it exists.}}
 
 ## 3. Personas
 
-| Persona | Contexto de uso |
+| Persona | Context of use |
 |---|---|
-| {{perfil}} | {{...}} |
+| {{profile}} | {{...}} |
 
-## 4. Requisitos
+## 4. Requirements
 
-### 4.1 Funcionais
+### 4.1 Functional
 - **RF-01:** {{...}}
 
-### 4.2 Não-funcionais
-- **RNF-01:** {{performance, disponibilidade, acessibilidade, LGPD/privacidade…}}
+### 4.2 Non-functional
+- **RNF-01:** {{performance, availability, accessibility, privacy and data protection…}}
 
-## 5. Fluxos
+## 5. Flows
 
 ```mermaid
 flowchart LR
-  A[{{início}}] --> B[{{passo}}] --> C[{{fim}}]
+  A[{{start}}] --> B[{{step}}] --> C[{{end}}]
 ```
 
-## 6. Arquitetura
+## 6. Architecture
 
-{{Camadas, dependências, integrações externas; ponteiro para 00-ARCHITECTURE.}}
+{{Layers, dependencies, external integrations; a pointer to 00-ARCHITECTURE.}}
 
-## 7. Modelo de dados
+## 7. Data model
 
-| Entidade/Tabela | Campos-chave | Autorização (RLS/ACL) |
+| Entity / table | Key fields | Authorization (RLS/ACL) |
 |---|---|---|
 | {{...}} | {{...}} | {{...}} |
 
-## 8. Contratos (APIs / RPCs / eventos)
+## 8. Contracts (APIs / RPCs / events)
 
-| Operação | Entrada | Saída | Erros |
+| Operation | Input | Output | Errors |
 |---|---|---|---|
 | {{...}} | {{...}} | {{...}} | {{...}} |
 
 ## 9. UI/UX
 
-{{Rotas, componentes, estados (loading/vazio/erro/sucesso), responsivo, acessibilidade; ponteiro para 02-DESIGN-SYSTEM.}}
+{{Routes, components, states (loading/empty/error/success), responsiveness, accessibility; a pointer to 02-DESIGN-SYSTEM.}}
 
-## 10. Regras de negócio
+## 10. Business rules
 
 - **RN-1:** {{...}}
 
 ## 11. Edge cases
 
-- {{cenário atípico → tratamento}}
+- {{the atypical scenario → how it is handled}}
 
-## 12. Segurança
+## 12. Security
 
-{{Riscos e mitigações específicas; invariantes de 03-SECURITY que esta feature toca.}}
+{{Specific risks and mitigations; the 03-SECURITY invariants this feature touches.}}
 
 ## 13. Performance
 
-{{Limites, paginação, caches, custos.}}
+{{Limits, pagination, caches, costs.}}
 
-## 14. Testes
+## 14. Tests
 
-| Tipo | Cobertura | Onde |
+| Type | Coverage | Where |
 |---|---|---|
-| unitário | {{...}} | {{path}} |
+| unit | {{...}} | {{path}} |
 | E2E | {{...}} | {{path}} |
 
-## 15. Snippets críticos
+## 15. Critical snippets
 
-```{{linguagem}}
-{{trecho crítico atual, com path:linha}}
+```{{language}}
+{{the current critical excerpt, with path:line}}
 ```
 
 ## 16. Open questions
 
-- {{decisão pendente / dívida técnica — ou "nenhuma"}}
+- {{a pending decision / technical debt — or "none"}}
 
 ## 17. CHANGELOG
 
-<!-- Convenção: `- <AAAA-MM-DD> · TASK-XXX — <o que mudou>`, mais recente no topo. -->
-- {{AAAA-MM-DD}} · {{TASK-XXX | bootstrap}} — {{criação desta spec}}
+<!-- Convention: `- <YYYY-MM-DD> · TASK-XXX — <what changed>`, newest at the top. -->
+- {{YYYY-MM-DD}} · {{TASK-XXX | bootstrap}} — {{this spec was created}}

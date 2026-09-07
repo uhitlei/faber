@@ -1,53 +1,55 @@
-# 04 · Deploy & CI/CD
+# 04 · Deployment & CI/CD
 
-## 1. Ambientes
+## 1. Environments
 
-| Ambiente | Branch/gatilho | URL/ref | Quem promove |
+| Environment | Branch / trigger | URL / ref | Who promotes |
 |---|---|---|---|
-| local | — | 127.0.0.1 | agente (autônomo) |
-| {{homologação}} | `@@FABER_TRUNK@@` | {{...}} | CI |
-| produção | `@@FABER_MAIN@@` | {{...}} | @@FABER_OWNER_NAME@@ / CI |
+| local | — | 127.0.0.1 | the agent (autonomous) |
+| {{staging}} | `@@FABER_TRUNK@@` | {{...}} | CI |
+| production | `@@FABER_MAIN@@` | {{...}} | @@FABER_OWNER_NAME@@ / CI |
 
-## 2. Estratégia de branches
+## 2. Branching strategy
 
-`feature/TASK-XXX → PR → @@FABER_TRUNK@@ → @@FABER_MAIN@@` (promoção). Merge de PR é sempre humano (G8).
+`feature/TASK-XXX → PR → @@FABER_TRUNK@@ → @@FABER_MAIN@@` (promotion). Merging
+a PR is always human (G8).
 
 ## 3. Pipeline (CI)
 
-| Job | Gatilho | O que valida |
+| Job | Trigger | What it validates |
 |---|---|---|
-| {{build-and-test}} | {{push/PR}} | {{lint, build, testes}} |
+| {{build-and-test}} | {{push/PR}} | {{lint, build, tests}} |
 
-Workflows em `.github/workflows/` — edição exige tarefa DevSecOps aprovada (H2 / `workflow-unlock.sh`).
+Workflows live in `.github/workflows/` — editing them requires an approved
+DevSecOps task (H2 / `workflow-unlock.sh`).
 
-## 4. Deploy
+## 4. Deployment
 
-- {{como o artefato é construído e publicado; passos manuais, se houver}}
+- {{how the artifact is built and published; any manual steps}}
 
-## 5. Migrations em deploy
+## 5. Migrations at deploy time
 
-- {{quem aplica, quando, e o que acontece se falhar}}
+- {{who applies them, when, and what happens if one fails}}
 
 ## 6. Rollback
 
-- {{procedimento por camada: aplicação, banco, infra}}
+- {{the procedure per layer: application, database, infra}}
 
-## 7. Observabilidade
+## 7. Observability
 
-- {{logs, métricas, alertas, health checks}}
+- {{logs, metrics, alerts, health checks}}
 
-## 8. Secrets por ambiente
+## 8. Secrets per environment
 
-- Nomes (nunca valores): `{{VAR_1}}`, `{{VAR_2}}` — ver 07-ENV-AND-SECRETS.
+- Names (never values): `{{VAR_1}}`, `{{VAR_2}}` — see 07-ENV-AND-SECRETS.
 
-## 9. Custos e limites
+## 9. Costs and limits
 
-- {{quotas, planos, limites de execução}}
+- {{quotas, plans, execution limits}}
 
-## 10. Checklist pré-merge (DoD baseline)
+## 10. Pre-merge checklist (the baseline DoD)
 
-- [ ] `@@FABER_CMD_LINT@@` · `@@FABER_CMD_BUILD@@` · `@@FABER_CMD_TEST@@` verdes (evidências na demanda)
-- [ ] E2E executado quando `ui_impact: true`
-- [ ] Migration revisada (destrutividade + rollback) quando houver
-- [ ] Variáveis de ambiente novas declaradas nos ambientes afetados
-- [ ] CHANGELOG da feature atualizado
+- [ ] `@@FABER_CMD_LINT@@` · `@@FABER_CMD_BUILD@@` · `@@FABER_CMD_TEST@@` green (evidence on the demand)
+- [ ] E2E executed when `ui_impact: true`
+- [ ] The migration reviewed (destructiveness + rollback), where there is one
+- [ ] New environment variables declared in the affected environments
+- [ ] The feature's CHANGELOG updated

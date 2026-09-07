@@ -1,43 +1,43 @@
-# 01 · Banco de Dados / Modelo de dados
+# 01 · Database / data model
 
-<!-- Se o projeto não tem persistência própria, escreva "não se aplica" na
-     seção 1 e remova o resto. Fonte: migrations em FABER_MIGRATIONS_DIR
-     (repo existente) ou o PRD/specs (proposta). -->
+<!-- If the project has no persistence of its own, write "not applicable" in
+     section 1 and remove the rest. Source: the migrations in
+     FABER_MIGRATIONS_DIR (an existing repo) or the PRD/specs (a proposal). -->
 
-## 1. Visão geral
+## 1. Overview
 
-- **SGBD / serviço:** {{Postgres, MySQL, SQLite, Mongo, DynamoDB…}}
-- **Migrations:** `{{FABER_MIGRATIONS_DIR}}` — imutáveis depois de aplicadas (H2); correção = nova migration.
-- **Autorização em dados:** {{RLS por linha | ACL na aplicação | n/a}}
+- **DBMS / service:** {{Postgres, MySQL, SQLite, Mongo, DynamoDB…}}
+- **Migrations:** `{{FABER_MIGRATIONS_DIR}}` — immutable once applied (H2); a fix is a new migration.
+- **Authorization in data:** {{row-level (RLS) | ACL in the application | n/a}}
 
-## 2. Diagrama ER
+## 2. ER diagram
 
 ```mermaid
 erDiagram
-  {{ENTIDADE_A}} ||--o{ {{ENTIDADE_B}} : "{{relação}}"
+  {{ENTITY_A}} ||--o{ {{ENTITY_B}} : "{{relationship}}"
 ```
 
-## 3. Entidades
+## 3. Entities
 
-| Entidade/Tabela | Propósito | Campos-chave | Índices | Autorização |
+| Entity / table | Purpose | Key fields | Indexes | Authorization |
 |---|---|---|---|---|
 | {{...}} | {{...}} | {{...}} | {{...}} | {{...}} |
 
-## 4. Funções / procedures / RPCs
+## 4. Functions / procedures / RPCs
 
-| Nome | Entrada → Saída | Segurança (invoker/definer) | Observações |
+| Name | Input → Output | Security (invoker/definer) | Notes |
 |---|---|---|---|
 | {{...}} | {{...}} | {{...}} | {{...}} |
 
-## 5. Regras de integridade e triggers
+## 5. Integrity rules and triggers
 
 - {{...}}
 
-## 6. Convenções
+## 6. Conventions
 
-- Nomes: {{snake_case…}}; timestamps: {{timestamptz}}; ids: {{uuid}}.
-- Toda entidade nova: {{RLS/ACL habilitada + GRANTs mínimos + índice nas FKs}}.
+- Names: {{snake_case…}}; timestamps: {{timestamptz}}; ids: {{uuid}}.
+- Every new entity: {{RLS/ACL enabled + minimum GRANTs + an index on the foreign keys}}.
 
-## 7. Dados de teste / seeds
+## 7. Test data / seeds
 
-- {{como os seeds são gerados; idempotência; onde vivem}}
+- {{how the seeds are generated; idempotence; where they live}}

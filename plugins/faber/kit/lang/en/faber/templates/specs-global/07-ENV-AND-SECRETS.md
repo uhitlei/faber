@@ -1,29 +1,30 @@
-# 07 · Ambientes & Secrets
+# 07 · Environments & secrets
 
-## 1. Variáveis de ambiente (por NOME — nunca valores)
+## 1. Environment variables (by NAME — never values)
 
-| Variável | Ambiente(s) | Propósito | Onde é definida |
+| Variable | Environment(s) | Purpose | Where it is defined |
 |---|---|---|---|
-| {{APP_URL}} | {{local/hml/prod}} | {{...}} | {{.env.local / secrets do CI / painel}} |
+| {{APP_URL}} | {{local/staging/prod}} | {{...}} | {{.env.local / CI secrets / the provider's panel}} |
 
-## 2. Arquivos de ambiente
+## 2. Environment files
 
-- `{{.env.example}}` — versionado, só nomes e valores de exemplo.
-- `{{.env, .env.local}}` — **nunca versionados, nunca editados por agente** (H2: `FABER_SECRET_FILES`).
+- `{{.env.example}}` — versioned, names and example values only.
+- `{{.env, .env.local}}` — **never versioned, never edited by an agent**
+  (H2: `FABER_SECRET_FILES`).
 
-## 3. Refs de ambientes remotos
+## 3. Remote environment refs
 
-| Ambiente | Identificador (ref) | Regime para agentes |
+| Environment | Identifier (ref) | Regime for agents |
 |---|---|---|
-| produção | {{ref}} | **proibido** (`FABER_REFS_DENY`) |
-| homologação | {{ref}} | **confirmação por execução** (`FABER_REFS_CONFIRM`) |
-| local | 127.0.0.1 | autônomo |
+| production | {{ref}} | **forbidden** (`FABER_REFS_DENY`) |
+| staging | {{ref}} | **confirmation per execution** (`FABER_REFS_CONFIRM`) |
+| local | 127.0.0.1 | autonomous |
 
-## 4. Rotação e acesso
+## 4. Rotation and access
 
-- {{quem tem acesso; como rotacionar; onde registrar}}
+- {{who has access; how to rotate; where it is recorded}}
 
-## 5. Ferramentas externas (por nome de variável)
+## 5. External tools (by variable name)
 
-- {{SONAR_TOKEN / SONAR_HOST_URL (se FABER_SONAR=on)}}
-- {{GITHUB_TOKEN (gh CLI autenticado)}}
+- {{SONAR_TOKEN / SONAR_HOST_URL (when FABER_SONAR=on)}}
+- {{GITHUB_TOKEN (an authenticated gh CLI)}}

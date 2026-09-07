@@ -1,69 +1,69 @@
 -- ============================================================================
--- Migration: {{descrição curta da mudança}}
--- Demanda:   {{TASK-XXX}} · Autor: senior-developer · Data: {{AAAA-MM-DD}}
--- Arquivo:   {{timestamp novo}}_{{slug}}.sql  (timestamp: date +%Y%m%d%H%M%S)
+-- Migration: {{a short description of the change}}
+-- Demand:    {{TASK-XXX}} · Author: senior-developer · Date: {{YYYY-MM-DD}}
+-- File:      {{new timestamp}}_{{slug}}.sql  (timestamp: date +%Y%m%d%H%M%S)
 --
--- ANÁLISE DE DESTRUTIVIDADE (obrigatória — Skill migration-safe):
---   {{nenhuma — mudança puramente aditiva | DETALHAR: o que é alterado/
---     removido, dados afetados, compatibilidade com o código em produção}}
+-- DESTRUCTIVENESS ANALYSIS (mandatory — skill migration-safe):
+--   {{none — a purely additive change | DETAIL IT: what is altered or removed,
+--     the data affected, compatibility with the code running in production}}
 --
--- ROLLBACK REVERSO: bloco comentado ao final (nunca executado aqui; vira
--- migration corretiva se necessário — migrations aplicadas são imutáveis, H2)
+-- REVERSE ROLLBACK: a commented block at the end (never executed here; it
+-- becomes a corrective migration if needed — applied migrations are immutable, H2)
 --
--- H3 valida a presença dos termos de FABER_MIGRATION_CHECKS (para Postgres
--- com RLS, o padrão sugerido é: GRANT · RLS · POLICY · search_path).
--- Este template é o exemplo Postgres+RLS; adapte ao SGBD do projeto mantendo
--- as seções (DDL · funções · RLS/autorização · GRANTs · rollback).
+-- H3 validates the presence of the statements in FABER_MIGRATION_CHECKS (for
+-- Postgres with RLS, the suggested default is: GRANT · RLS · POLICY · search_path).
+-- This template is the Postgres + RLS example; adapt it to your project's DBMS
+-- while keeping the sections (DDL · functions · RLS/authorization · GRANTs · rollback).
 -- ============================================================================
 
--- 1 ── DDL principal (aditivo sempre que possível)
-create table if not exists public.{{tabela}} (
+-- 1 ── Main DDL (additive whenever possible)
+create table if not exists public.{{table}} (
   id uuid primary key default gen_random_uuid(),
-  {{colunas}},
+  {{columns}},
   created_at timestamptz not null default now()
 );
 
--- 2 ── Funções: SEMPRE com search_path fixado (anti privilege-escalation).
---      Padrão: security INVOKER (roda com as permissões de quem chama,
---      respeitando RLS). Use security DEFINER **apenas** quando a função
---      precisa atravessar RLS por desenho — e, nesse caso, justifique na
---      ANÁLISE acima; definer sem search_path fixado é escalação de
---      privilégio esperando para acontecer.
-create or replace function public.{{fn_nome}}()
+-- 2 ── Functions: ALWAYS with search_path pinned (anti privilege-escalation).
+--      Default: security INVOKER (it runs with the caller's permissions,
+--      respecting RLS). Use security DEFINER **only** when the function must
+--      cross RLS by design — and in that case, justify it in the ANALYSIS
+--      above; a definer with no pinned search_path is a privilege escalation
+--      waiting to happen.
+create or replace function public.{{fn_name}}()
 returns trigger
 language plpgsql
 security invoker
 set search_path = public
 as $$
 begin
-  {{corpo}};
+  {{body}};
   return new;
 end;
 $$;
 
--- 3 ── Trigger (se aplicável; senão, remover a seção e registrar na análise)
-create trigger {{trg_nome}}
-  before insert or update on public.{{tabela}}
-  for each row execute function public.{{fn_nome}}();
+-- 3 ── Trigger (if applicable; otherwise remove the section and record it in the analysis)
+create trigger {{trg_name}}
+  before insert or update on public.{{table}}
+  for each row execute function public.{{fn_name}}();
 
--- 4 ── RLS: habilitar SEMPRE + policies por perfil (specs 01-DATABASE §RLS)
-alter table public.{{tabela}} enable row level security;
+-- 4 ── RLS: ALWAYS enable it + policies per persona (specs 01-DATABASE §RLS)
+alter table public.{{table}} enable row level security;
 
 create policy "{{policy_select}}"
-  on public.{{tabela}} for select
-  using ({{condição — ex.: auth.uid() = user_id ou função de papel do projeto}});
+  on public.{{table}} for select
+  using ({{condition — e.g. auth.uid() = user_id, or the project's role function}});
 
 create policy "{{policy_write}}"
-  on public.{{tabela}} for insert
-  with check ({{condição}});
+  on public.{{table}} for insert
+  with check ({{condition}});
 
--- 5 ── GRANTs mínimos (nunca grant all; papéis anônimos só quando a spec exigir)
-grant select on public.{{tabela}} to {{papel_autenticado}};
-grant insert on public.{{tabela}} to {{papel_autenticado}};
+-- 5 ── Minimum GRANTs (never grant all; anonymous roles only when the spec requires it)
+grant select on public.{{table}} to {{authenticated_role}};
+grant insert on public.{{table}} to {{authenticated_role}};
 
 -- ============================================================================
--- ROLLBACK REVERSO (documentação — NÃO executar nesta migration):
--- drop trigger if exists {{trg_nome}} on public.{{tabela}};
--- drop function if exists public.{{fn_nome}}();
--- drop table if exists public.{{tabela}};
+-- REVERSE ROLLBACK (documentation — DO NOT execute in this migration):
+-- drop trigger if exists {{trg_name}} on public.{{table}};
+-- drop function if exists public.{{fn_name}}();
+-- drop table if exists public.{{table}};
 -- ============================================================================

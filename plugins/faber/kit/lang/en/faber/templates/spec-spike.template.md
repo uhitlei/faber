@@ -1,48 +1,48 @@
-# Spec — {{TASK-XXX}}: spike — {{pergunta curta}}
+# Spec — {{TASK-XXX}}: spike — {{the short question}}
 
-<!-- Template: SPIKE / investigação (ARQUITETURA §14). SEM implementação de
-     produção — a saída é uma DECISÃO TÉCNICA registrada (mini-ADR). Pode
-     gerar demandas filhas. Timebox definido no intake e respeitado: estourou,
-     para e registra o que se sabe. -->
+<!-- Template: SPIKE / investigation (ARCHITECTURE §14). NO production
+     implementation — the output is a recorded TECHNICAL DECISION (a mini-ADR).
+     It may spawn child demands. The timebox is set at intake and respected: if
+     it runs out, stop and record what is known. -->
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| Demanda | {{TASK-XXX}} |
-| Tipo | spike |
-| Timebox | {{ex.: 4h \| 1 dia}} |
-| Data | {{AAAA-MM-DD}} |
+| Demand | {{TASK-XXX}} |
+| Type | spike |
+| Timebox | {{e.g. 4h \| 1 day}} |
+| Date | {{YYYY-MM-DD}} |
 
-## 1. Pergunta a responder
+## 1. The question to answer
 
-<!-- UMA pergunta objetiva. Mais de uma pergunta = mais de um spike. -->
+<!-- ONE objective question. More than one question means more than one spike. -->
 {{...}}
 
-## 2. Contexto
+## 2. Context
 
-<!-- Por que a dúvida existe; o que já se sabe; specs/código relevantes. -->
+<!-- Why the doubt exists; what is already known; the relevant specs and code. -->
 {{...}}
 
-## 3. Investigação
+## 3. Investigation
 
-<!-- O que foi tentado/medido/lido, com evidências reais em evidence/
-     (protótipos descartáveis são permitidos; código de produção, não). -->
-- {{experimento → resultado → evidence/NN-*.log}}
+<!-- What was tried, measured or read, with real evidence in evidence/
+     (disposable prototypes are allowed; production code is not). -->
+- {{experiment → result → evidence/NN-*.log}}
 
-## 4. Mini-ADR (a saída do spike)
+## 4. Mini-ADR (the spike's output)
 
-- **Contexto:** {{o problema em 2–3 frases}}
-- **Opções consideradas:**
-  | Opção | Prós | Contras |
+- **Context:** {{the problem in 2–3 sentences}}
+- **Options considered:**
+  | Option | Pros | Cons |
   |---|---|---|
   | {{A}} | {{...}} | {{...}} |
   | {{B}} | {{...}} | {{...}} |
-- **Decisão:** {{a opção escolhida e o porquê}}
-- **Consequências:** {{o que fica mais fácil/difícil a partir daqui}}
-- **Autor/data:** {{cto \| senior-developer}} · {{AAAA-MM-DD}}
+- **Decision:** {{the option chosen, and why}}
+- **Consequences:** {{what gets easier or harder from here}}
+- **Author / date:** {{cto \| senior-developer}} · {{YYYY-MM-DD}}
 
-<!-- Copiar este mini-ADR para decisions.md da demanda; o doc-writer leva o
-     relevante para specs/ no G9 (§15). -->
+<!-- Copy this mini-ADR into the demand's decisions.md; the doc-writer carries
+     the relevant part into specs/ at G9 (§15). -->
 
-## 5. Demandas filhas propostas
+## 5. Proposed child demands
 
-- {{TASK-YYY: … ou "nenhuma"}}
+- {{TASK-YYY: … or "none"}}

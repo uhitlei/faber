@@ -1,14 +1,14 @@
-# 05 · Testes
+# 05 · Testing
 
-## 1. Estratégia (pirâmide)
+## 1. Strategy (the pyramid)
 
-| Nível | Ferramenta | Comando | Onde |
+| Level | Tool | Command | Where |
 |---|---|---|---|
-| unitário | {{...}} | `@@FABER_CMD_TEST@@` | {{path}} |
-| integração | {{...}} | {{...}} | {{path}} |
+| unit | {{...}} | `@@FABER_CMD_TEST@@` | {{path}} |
+| integration | {{...}} | {{...}} | {{path}} |
 | E2E | {{Playwright / Cypress / n/a}} | `@@FABER_CMD_E2E@@` | {{path}} |
 
-## 2. Como rodar
+## 2. How to run them
 
 ```bash
 @@FABER_CMD_LINT@@
@@ -17,28 +17,29 @@
 @@FABER_CMD_E2E@@
 ```
 
-## 3. Suíte E2E
+## 3. The E2E suite
 
-- {{lista de specs e o que cada uma cobre}}
-- Servidor/ambiente: {{como sobe; alvo SEMPRE local para seed/reset}}
-- Evidência para o G5: `faber/scripts/evidence.sh TASK-XXX e2e -- @@FABER_CMD_E2E@@` (comando direto, sem pipe).
+- {{the list of specs and what each one covers}}
+- Server / environment: {{how it comes up; the target is ALWAYS local for seeds and resets}}
+- Evidence for G5: `faber/scripts/evidence.sh TASK-XXX e2e -- @@FABER_CMD_E2E@@`
+  (the command called directly, with no pipe).
 
-## 4. Padrões de estabilidade
+## 4. Stability patterns
 
-1. Esperar por **estado**, não por tempo.
-2. Seletores acessíveis (role/label) > seletores CSS.
-3. Idempotência: cada teste cria seus dados ou usa seeds resetados.
-4. Nada de `console.log` fora de modo debug.
+1. Wait for **state**, not for time.
+2. Accessible selectors (role/label) beat CSS selectors.
+3. Idempotence: each test creates its own data, or uses seeds that were reset.
+4. No `console.log` outside debug mode.
 
-## 5. Dados de teste
+## 5. Test data
 
-- {{seeds, factories, usuários de teste — como criar/resetar localmente}}
+- {{seeds, factories, test users — how to create and reset them locally}}
 
-## 6. Cobertura
+## 6. Coverage
 
-- Alvos atuais: {{informativos | bloqueantes por diretório}}
-- Exceções a coverage só com decisão documentada do CTO (§18).
+- Current targets: {{informational | blocking, per directory}}
+- Coverage exceptions only with a documented CTO decision (§18).
 
-## 7. Como escrever um teste novo
+## 7. How to write a new test
 
-- {{convenções de nome, pasta, helpers a reusar}}
+- {{naming and folder conventions, the helpers to reuse}}

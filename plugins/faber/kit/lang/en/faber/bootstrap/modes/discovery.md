@@ -1,25 +1,30 @@
-# Modo discovery — transcrições, notas e documentos de cliente
+# Mode `discovery` — transcripts, notes and client documents
 
-Seleção explícita: `/faber-init --mode discovery` ou instalação `--mode discovery`.
-O CTO identifica os paths fornecidos pelo usuário e confirma apenas o escopo
-que não puder inferir deles. Nenhuma exigência de reunião real para instalar o kit.
+Chosen explicitly: `/faber-init --mode discovery`, or `--mode discovery` at
+install time. The CTO identifies the paths the user supplied and only confirms
+the scope it cannot infer from them. Installing the kit never requires a real
+meeting.
 
-1. Use `faber/bootstrap/requirements/`. Invoque business-analyst com fontes
-   e escopo do produto; ele usa as duas skills de requirements. Estado e
-   pendências ficam em CONTEXT.md/PERGUNTAS.md, sem inventar uma TASK.
-2. Produza BRD/PRD e projeção SDD; registre cobertura das fontes. Lacunas
-   bloqueantes geram perguntas antes de qualquer especificação técnica.
-3. PO/QA revisam a especificação de negócio e o BA reconcilia o modelo.
-   Score >=95 e zero bloqueios: selo por requirements-gate.py seal.
-4. Parada de aprovação do PRD/BRD já existente no bootstrap: apresente os
-   paths, dúvidas restantes não críticas e completude. Registre a decisão do
-   Owner, data e hash de `requirements-gate.py delivery` em CONTEXT.md.
-   Antes de continuar, verifique que o hash ainda corresponde ao aprovado.
-5. Continue nas etapas 2–5 do modo prd, consumindo as projeções em requirements
-   (não crie cópias divergentes em docs). Preserve REQ/AC IDs nas features e
-   no backlog. Demandas futuras importam apenas o subconjunto relevante,
-   conservam IDs e origem e geram seu próprio selo/G1.
-6. Siga encerramento do faber-init. Sem criar issues automaticamente no bootstrap.
+1. Use `faber/bootstrap/requirements/`. Invoke the business-analyst with the
+   sources and the product's scope; it uses the two requirements skills. State
+   and pending items live in `CONTEXT.md` / `PERGUNTAS.md`, without inventing a
+   TASK.
+2. Produce the BRD/PRD and the SDD projection; record the sources' coverage.
+   Blocking gaps become questions before any technical specification.
+3. The PO and QA review the business specification and the BA reconciles the
+   model. A score ≥ 95 with zero blockers: seal it with
+   `requirements-gate.py seal`.
+4. The PRD/BRD approval stop that the bootstrap already has: present the paths,
+   the remaining non-critical doubts and the completeness. Record the Owner's
+   decision, the date and the hash from `requirements-gate.py delivery` in
+   `CONTEXT.md`. Before continuing, verify that the hash still matches what was
+   approved.
+5. Continue with steps 2–5 of mode `prd`, consuming the projections in
+   `requirements` (do not create divergent copies under `docs`). Preserve the
+   REQ/AC IDs in the features and in the backlog. Future demands import only the
+   relevant subset, keep the IDs and the origin, and produce their own seal and G1.
+6. Follow the closing steps of `/faber-init`. Do not create issues automatically
+   during bootstrap.
 
-Áudio bruto é inventário pendente de transcrição, não fonte textual analisada.
-Não configure serviço de transcrição nem instale Spec Kit nesse fluxo.
+Raw audio is inventory awaiting transcription, not an analysed textual source.
+Do not configure a transcription service and do not install Spec Kit in this flow.

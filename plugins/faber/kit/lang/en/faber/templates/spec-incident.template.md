@@ -1,50 +1,52 @@
-# Spec — {{TASK-XXX}}: incidente — {{título}}
+# Spec — {{TASK-XXX}}: incident — {{title}}
 
-<!-- Template: INCIDENTE (ARQUITETURA §14). Fluxo rápido com @@FABER_OWNER_NAME@@ síncrono:
-     contenção → diagnóstico → fix → post-mortem. O POST-MORTEM VIRA A SPEC.
-     NADA de correção direta em PROD (H1): o fix segue o pipeline normal. -->
+<!-- Template: INCIDENT (ARCHITECTURE §14). A fast flow with
+     @@FABER_OWNER_NAME@@ synchronous: containment → diagnosis → fix →
+     post-mortem. THE POST-MORTEM BECOMES THE SPEC.
+     NO fixing straight in PRODUCTION (H1): the fix follows the normal pipeline. -->
 
-| Campo | Valor |
+| Field | Value |
 |---|---|
-| Demanda | {{TASK-XXX}} |
-| Tipo | incident |
-| Severidade | {{SEV1 total \| SEV2 degradado \| SEV3 pontual}} |
-| Início / fim do impacto | {{AAAA-MM-DDTHH:MM}} → {{...}} |
+| Demand | {{TASK-XXX}} |
+| Type | incident |
+| Severity | {{SEV1 total \| SEV2 degraded \| SEV3 localised}} |
+| Impact start / end | {{YYYY-MM-DDTHH:MM}} → {{...}} |
 
-## 1. Linha do tempo
+## 1. Timeline
 
-<!-- Registrar em tempo real, com horários. Fatos, não suposições. -->
-| Hora | Evento |
+<!-- Record it in real time, with timestamps. Facts, not assumptions. -->
+| Time | Event |
 |---|---|
-| {{HH:MM}} | {{detecção: como o problema foi percebido}} |
+| {{HH:MM}} | {{detection: how the problem was noticed}} |
 | {{HH:MM}} | {{...}} |
 
-## 2. Contenção aplicada
+## 2. Containment applied
 
-<!-- Ação imediata para estancar o impacto (e evidência). Contenção NÃO é o
-     fix definitivo. -->
+<!-- The immediate action that stopped the bleeding (and its evidence).
+     Containment is NOT the real fix. -->
 {{...}}
 
-## 3. Diagnóstico (causa raiz)
+## 3. Diagnosis (root cause)
 
-<!-- O que quebrou e por quê; evidências em evidence/. -->
+<!-- What broke and why; evidence in evidence/. -->
 {{...}}
 
-## 4. Fix definitivo
+## 4. The real fix
 
-<!-- Escopo do conserto permanente — segue o pipeline (feature branch → PR →
-     @@FABER_TRUNK@@ → @@FABER_MAIN@@). Gates comprimidos com @@FABER_OWNER_NAME@@ síncrono (§14). -->
+<!-- The scope of the permanent fix — it follows the pipeline (feature branch →
+     PR → @@FABER_TRUNK@@ → @@FABER_MAIN@@). Compressed gates, with
+     @@FABER_OWNER_NAME@@ synchronous (§14). -->
 {{...}}
 
 ## 5. Post-mortem
 
-<!-- Sem culpados; foco em processo. Este bloco é o coração da spec. -->
-- **O que falhou:** {{...}}
-- **O que funcionou:** {{...}}
-- **Onde tivemos sorte:** {{...}}
-- **Ações preventivas:** <!-- cada uma vira demanda filha se não for trivial -->
+<!-- Blameless; focused on process. This block is the heart of the spec. -->
+- **What failed:** {{...}}
+- **What worked:** {{...}}
+- **Where we got lucky:** {{...}}
+- **Preventive actions:** <!-- each becomes a child demand unless it is trivial -->
   - {{...}}
 
-## 6. Demandas filhas geradas
+## 6. Child demands created
 
-- {{TASK-YYY: … ou "nenhuma"}}
+- {{TASK-YYY: … or "none"}}
