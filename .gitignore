@@ -22,3 +22,5 @@ faber-*.zip
 # Editors
 .idea/
 *.swp
+*.tgz
+node_modules/

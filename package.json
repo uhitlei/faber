@@ -1,0 +1,47 @@
+{
+  "name": "@uhitlei/faber",
+  "version": "2.0.0",
+  "description": "A gated software factory for Claude Code: an orchestrator, 9 subagents, 10 skills, 12 commands and 7 deterministic hooks that enforce the rules in code, not in prompts.",
+  "keywords": [
+    "claude-code",
+    "claude",
+    "ai-agents",
+    "software-factory",
+    "spec-driven-development",
+    "workflow",
+    "governance",
+    "code-review"
+  ],
+  "homepage": "https://github.com/uhitlei/faber#readme",
+  "bugs": "https://github.com/uhitlei/faber/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uhitlei/faber.git"
+  },
+  "license": "MIT",
+  "author": "uhitlei",
+  "type": "commonjs",
+  "bin": {
+    "faber": "bin/faber.js"
+  },
+  "files": [
+    "bin/",
+    "plugins/",
+    "install.sh",
+    "INSTALL.md",
+    "INSTALL.pt-BR.md",
+    "README.md",
+    "README.pt-BR.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

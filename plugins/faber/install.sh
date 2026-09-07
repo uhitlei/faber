@@ -16,12 +16,14 @@
 #   ./install.sh [<dir-do-repo>] [opções]
 #     --mode <existing-repo|spec-kit|prd|brainstorm|discovery|empty>   força o modo
 #     --interaction <gates|step-by-step>   pula a pergunta do modo de interação
+#     --lang <en|pt-BR>   idioma dos prompts (agentes/comandos/skills) e de
+#                         FABER_LANG; o contrato de máquina é inglês nos dois
 #     --project "<nome>"  --owner <slug>  --owner-name "<Nome>"
 #     --trunk <branch>    --main <branch>  --specs-dir <dir>
 #     --gh <on|off>  --board <on|off>  --dashboard <on|off>
 #     --profile <generic|node-web|node-supabase|python|/caminho.env>
 #     --prd-guide <arquivo.md>   seu guia de PRD/BRD (vira faber/templates/prd-brd-guide.md)
-#     --labels                  cria as labels 'faber' e 'estado:*' no GitHub (gh)
+#     --labels                  cria as labels 'faber' e 'state:*' no GitHub (gh)
 #     --yes                     aceita todos os defaults sem perguntar (exceto o
 #                               que vier por flag); exige --interaction
 #     --dry-run                 só mostra o plano
@@ -36,7 +38,7 @@ KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 KIT_SRC="$KIT_DIR/kit"
 VERSAO="$(cat "$KIT_DIR/VERSION" 2>/dev/null || echo dev)"
 
-ALVO=""; MODO=""; INTERACAO=""; PROJETO=""; OWNER=""; OWNER_NOME=""; TRUNK=""; MAIN=""
+ALVO=""; MODO=""; INTERACAO=""; LANG_PACK=""; PROJETO=""; OWNER=""; OWNER_NOME=""; TRUNK=""; MAIN=""
 SPECS_DIR=""; GH=""; BOARD=""; DASHBOARD=""; PERFIL=""; GUIA_PRD=""; LABELS=0; SIM=0; DRY=0; FORCAR=0
 
 uso() { sed -n '2,32p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
@@ -48,6 +50,7 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --mode)       MODO="${2:?}"; shift 2 ;;
     --interaction)  INTERACAO="${2:?}"; shift 2 ;;
+    --lang)       LANG_PACK="${2:?}"; shift 2 ;;
     --project)    PROJETO="${2:?}"; shift 2 ;;
     --owner)      OWNER="${2:?}"; shift 2 ;;
     --owner-name) OWNER_NOME="${2:?}"; shift 2 ;;
@@ -69,7 +72,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 ALVO="${ALVO:-$(pwd)}"
-[ -d "$KIT_SRC" ] || erro "kit/ não encontrado ao lado de install.sh ($KIT_SRC)"
+[ -d "$KIT_SRC/shared" ] || erro "kit/shared não encontrado ao lado de install.sh ($KIT_SRC)"
 mkdir -p "$ALVO" 2>/dev/null || erro "não consegui criar/acessar $ALVO"
 ALVO="$(cd "$ALVO" && pwd)"
 
@@ -201,6 +204,20 @@ if [ -z "$INTERACAO" ]; then
   printf 'Escolha [1]: '; read -r R; case "${R:-1}" in 2) INTERACAO="step-by-step" ;; *) INTERACAO="gates" ;; esac
 fi
 case "$INTERACAO" in gates|step-by-step) ;; *) erro "--interaction inválido: $INTERACAO (gates|step-by-step)" ;; esac
+if [ -z "$LANG_PACK" ]; then
+  if [ "$SIM" -eq 1 ] || [ ! -t 0 ]; then
+    LANG_PACK="en"
+  else
+    echo
+    echo "Em que idioma os agentes devem trabalhar / In which language should the agents work?"
+    echo "  1) English  — prompts, specs, issues and handoffs in English"
+    echo "  2) Português — prompts, specs, issues e handoffs em português"
+    echo "  (o state.yaml e os nomes de comando são inglês nos dois casos)"
+    printf 'Escolha / Choose [1]: '; read -r R; case "${R:-1}" in 2) LANG_PACK="pt-BR" ;; *) LANG_PACK="en" ;; esac
+  fi
+fi
+case "$LANG_PACK" in en|pt-BR) ;; *) erro "--lang inválido: $LANG_PACK (en|pt-BR)" ;; esac
+[ -d "$KIT_SRC/lang/$LANG_PACK" ] || erro "pacote de idioma ausente: kit/lang/$LANG_PACK"
 [ -n "$GH" ]        || pergunta GH "Usar GitHub Issues (ID da demanda = número da issue)? on/off" "$D_GH"
 [ "$GH" = "on" ] && [ "$TEM_GH" -eq 0 ] && { echo "   AVISO: gh ausente — FABER_GH ficará on, mas new-task.sh vai falhar até você instalar/autenticar o gh"; }
 if [ "$GH" = "on" ]; then [ -n "$BOARD" ] || pergunta BOARD "Sincronizar board GitHub Projects v2? on/off" "off"; else BOARD="off"; fi
@@ -221,7 +238,7 @@ fi
 echo
 echo "── Plano ────────────────────────────────────────────────────────────"
 echo "   projeto=$PROJETO · owner=$OWNER_NOME ($OWNER) · trunk=$TRUNK · main=$MAIN"
-echo "   interação=$INTERACAO · gh=$GH${GH_REPO:+ ($GH_REPO)} · board=$BOARD · dashboard=$DASHBOARD · specs=$SPECS_DIR/"
+echo "   idioma=$LANG_PACK · interação=$INTERACAO · gh=$GH${GH_REPO:+ ($GH_REPO)} · board=$BOARD · dashboard=$DASHBOARD · specs=$SPECS_DIR/"
 echo "   lint='$D_LINT' · build='$D_BUILD' · test='$D_TEST' · e2e=$D_E2E · migrations='${D_MIG:-—}' · perfil=${PERFIL:-—}"
 echo "   modo de bootstrap=$MODO → depois: claude → /faber-init"
 [ "$DRY" -eq 1 ] && { echo "(dry-run: nada foi escrito)"; exit 0; }
@@ -237,11 +254,16 @@ copia() {  # copia <origem-relativa-ao-kit> <destino-relativo-ao-alvo>
   mkdir -p "$(dirname "$dst")" && cp "$src" "$dst" || erro "falha ao copiar $2" 2
 }
 info "copiando a fábrica"
-( cd "$KIT_SRC" && find .claude faber -type f ! -path './faber/dashboard/*' ! -name '.DS_Store' ! -path '*/__pycache__/*' ! -name '*.pyc' ) | while IFS= read -r f; do
-  f="${f#./}"; copia "$f" "$f"
+# Duas camadas: shared/ (código e contrato de máquina, uma cópia só) e
+# lang/<pack>/ (a prosa). O contrato é idêntico nos dois idiomas de propósito —
+# um state.yaml por idioma faria scripts, board e dashboard falarem dois dialetos.
+for BASE in shared "lang/$LANG_PACK"; do
+  ( cd "$KIT_SRC/$BASE" && find .claude faber -type f ! -path './faber/dashboard/*' ! -name '.DS_Store' ! -path '*/__pycache__/*' ! -name '*.pyc' 2>/dev/null ) | while IFS= read -r f; do
+    f="${f#./}"; copia "$BASE/$f" "$f"
+  done
 done
 if [ "$DASHBOARD" = "on" ]; then
-  ( cd "$KIT_SRC" && find faber/dashboard -type f ! -name '.DS_Store' ! -path '*/__pycache__/*' ! -name '*.pyc' ) | while IFS= read -r f; do copia "$f" "$f"; done
+  ( cd "$KIT_SRC/shared" && find faber/dashboard -type f ! -name '.DS_Store' ! -path '*/__pycache__/*' ! -name '*.pyc' ) | while IFS= read -r f; do copia "shared/$f" "$f"; done
 fi
 mkdir -p "$ALVO/faber/tasks" "$ALVO/faber/bootstrap/evidence"; touch "$ALVO/faber/tasks/.gitkeep" "$ALVO/faber/bootstrap/evidence/.gitkeep"
 chmod +x "$ALVO"/faber/scripts/*.sh "$ALVO"/faber/scripts/lib/*.sh "$ALVO"/.claude/hooks/*.sh 2>/dev/null
@@ -250,15 +272,15 @@ chmod +x "$ALVO"/faber/scripts/*.sh "$ALVO"/faber/scripts/lib/*.sh "$ALVO"/.clau
 # CLAUDE.md: preserva regras do projeto, se já houver
 if [ -f "$ALVO/CLAUDE.md" ] && ! grep -q "Constituição do CTO" "$ALVO/CLAUDE.md"; then
   cp "$ALVO/CLAUDE.md" "$ALVO/CLAUDE.md.bak-faber"
-  { cat "$KIT_SRC/CLAUDE.md"; echo; echo "## 9. Regras herdadas do CLAUDE.md anterior (preservadas na instalação)"; echo; cat "$ALVO/CLAUDE.md.bak-faber"; } > "$ALVO/CLAUDE.md"
+  { cat "$KIT_SRC/lang/$LANG_PACK/CLAUDE.md"; echo; echo "## 9. Regras herdadas do CLAUDE.md anterior (preservadas na instalação)"; echo; cat "$ALVO/CLAUDE.md.bak-faber"; } > "$ALVO/CLAUDE.md"
   ok "CLAUDE.md anterior preservado como seção 9 (backup em CLAUDE.md.bak-faber)"
 elif [ ! -f "$ALVO/CLAUDE.md" ] || [ "$FORCAR" -eq 1 ]; then
-  cp "$KIT_SRC/CLAUDE.md" "$ALVO/CLAUDE.md"
+  cp "$KIT_SRC/lang/$LANG_PACK/CLAUDE.md" "$ALVO/CLAUDE.md"
 fi
 
 # settings.json: mescla permissões e hooks se já existir um
-if [ -f "$ALVO/.claude/settings.json" ] && ! cmp -s "$KIT_SRC/.claude/settings.json" "$ALVO/.claude/settings.json"; then
-  python3 - "$KIT_SRC/.claude/settings.json" "$ALVO/.claude/settings.json" <<'PY' || erro "falha ao mesclar .claude/settings.json" 2
+if [ -f "$ALVO/.claude/settings.json" ] && ! cmp -s "$KIT_SRC/shared/.claude/settings.json" "$ALVO/.claude/settings.json"; then
+  python3 - "$KIT_SRC/shared/.claude/settings.json" "$ALVO/.claude/settings.json" <<'PY' || erro "falha ao mesclar .claude/settings.json" 2
 import json, sys
 kit = json.load(open(sys.argv[1])); cur = json.load(open(sys.argv[2]))
 perm = cur.setdefault("permissions", {})
@@ -288,20 +310,20 @@ if [ -f "$ENV_OUT" ] && [ "$FORCAR" -eq 0 ]; then
   echo "   mantido: faber/config/faber.env (já existia)"
 else
   info "gravando faber/config/faber.env"
-  python3 - "$KIT_SRC/faber/config/faber.env.example" "$ENV_OUT" "$PERFIL_ARQ" <<PY || erro "falha ao gerar faber.env" 2
+  python3 - "$KIT_SRC/shared/faber/config/faber.env.example" "$ENV_OUT" "$PERFIL_ARQ" <<PY || erro "falha ao gerar faber.env" 2
 import re, sys
 tpl = open(sys.argv[1], encoding="utf-8").read()
 valores = {
  "FABER_PROJECT": """$PROJETO""", "FABER_OWNER": "$OWNER", "FABER_OWNER_NAME": """$OWNER_NOME""",
  "FABER_TRUNK": "$TRUNK", "FABER_MAIN": "$MAIN", "FABER_INTERACTION": "$INTERACAO",
  "FABER_GH": "$GH", "FABER_GH_REPO": "$GH_REPO", "FABER_BOARD": "$BOARD", "FABER_GH_PROJECT_TITLE": """$PROJ_TITULO""",
- "FABER_SPECS_DIR": "$SPECS_DIR", "FABER_CMD_LINT": """$D_LINT""", "FABER_CMD_BUILD": """$D_BUILD""", "FABER_CMD_TEST": """$D_TEST""",
+ "FABER_SPECS_DIR": "$SPECS_DIR", "FABER_LANG": "$LANG_PACK", "FABER_CMD_LINT": """$D_LINT""", "FABER_CMD_BUILD": """$D_BUILD""", "FABER_CMD_TEST": """$D_TEST""",
  "FABER_E2E": "$D_E2E", "FABER_CMD_E2E": """$D_CMD_E2E""", "FABER_MIGRATIONS_DIR": "$D_MIG", "FABER_MIGRATION_CHECKS": """$D_MIG_CHECKS""",
  "FABER_SECRET_FILES": "$D_SECRETS", "FABER_DASHBOARD": "$DASHBOARD",
 }
 # perfil por cima dos defaults detectados (flags/perguntas já estão em 'valores'
 # e prevalecem sobre o perfil apenas nas chaves de identidade/branches/interação)
-identidade = {"FABER_PROJECT","FABER_OWNER","FABER_OWNER_NAME","FABER_TRUNK","FABER_MAIN","FABER_INTERACTION","FABER_GH","FABER_GH_REPO","FABER_BOARD","FABER_GH_PROJECT_TITLE","FABER_SPECS_DIR","FABER_DASHBOARD"}
+identidade = {"FABER_PROJECT","FABER_OWNER","FABER_OWNER_NAME","FABER_TRUNK","FABER_MAIN","FABER_INTERACTION","FABER_GH","FABER_GH_REPO","FABER_BOARD","FABER_GH_PROJECT_TITLE","FABER_SPECS_DIR","FABER_DASHBOARD","FABER_LANG"}
 if sys.argv[3]:
     for linha in open(sys.argv[3], encoding="utf-8"):
         m = re.match(r'^\s*([A-Z0-9_]+)\s*=\s*"(.*)"\s*(#.*)?$', linha.rstrip("\n"))
@@ -329,7 +351,7 @@ fi
 if [ ! -d "$ALVO/$SPECS_DIR/global" ]; then
   info "criando $SPECS_DIR/ (README + globais 00–08 como esqueleto)"
   mkdir -p "$ALVO/$SPECS_DIR/global" "$ALVO/$SPECS_DIR/features" "$ALVO/$SPECS_DIR/assets/diagrams"
-  for f in "$KIT_SRC"/faber/templates/specs-global/*.md; do
+  for f in "$KIT_SRC/lang/$LANG_PACK"/faber/templates/specs-global/*.md; do
     b="$(basename "$f")"
     if [ "$b" = "README.md" ]; then [ -e "$ALVO/$SPECS_DIR/README.md" ] || cp "$f" "$ALVO/$SPECS_DIR/README.md"
     else cp "$f" "$ALVO/$SPECS_DIR/global/$b"; fi
@@ -386,7 +408,7 @@ cat > "$ALVO/faber/bootstrap/CONTEXT.md" <<EOF
 # Contexto do bootstrap — escrito por install.sh em $(date +%Y-%m-%dT%H:%M:%S%z)
 
 \`\`\`yaml
-status: pendente            # /faber-init muda para 'concluido'
+status: pending             # /faber-init muda para 'done'
 modo: $MODO
 interacao: $INTERACAO
 kit_versao: $VERSAO
@@ -442,7 +464,7 @@ fi
 if [ "$GH" = "on" ] && [ "$TEM_GH" -eq 1 ]; then
   FAZ=0
   if [ "$LABELS" -eq 1 ]; then FAZ=1
-  elif [ "$SIM" -eq 0 ] && [ -t 0 ]; then printf 'Criar as labels faber/estado:* no GitHub agora (gh label create)? [s/N]: '; read -r R; case "$R" in s|S|y|Y) FAZ=1 ;; esac; fi
+  elif [ "$SIM" -eq 0 ] && [ -t 0 ]; then printf 'Criar as labels faber/state:* no GitHub agora (gh label create)? [s/N]: '; read -r R; case "$R" in s|S|y|Y) FAZ=1 ;; esac; fi
   if [ "$FAZ" -eq 1 ]; then
     ( cd "$ALVO" && bash faber/scripts/board.sh bootstrap-labels ) || echo "   AVISO: labels não criadas (gh autenticado? repo correto?) — rode depois: faber/scripts/board.sh bootstrap-labels"
   fi

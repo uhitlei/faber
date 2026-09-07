@@ -1,0 +1,154 @@
+# =============================================================================
+# state.template.yaml — Schema canônico do state.yaml (fonte de verdade máquina)
+# ARQUITETURA: §6 (estados/projeções), §14 (tipos), §15 (anti-loop), §18 (gates)
+#
+# Uso: copiado para faber/tasks/TASK-XXX/state.yaml na criação da
+# demanda (o bloco _schema NÃO é copiado — ele fica só aqui e é a referência
+# que o gate-check.sh usa para validar instâncias). A cópia template→instância
+# é SEMPRE scriptada por new-task.sh (remove _schema, preenche
+# demanda/issue/titulo/tipo/branch/criada_em) — nunca cópia manual.
+#
+# Regra de ouro (§6.2): toda transição de estado = atualização do state.yaml
+# + commit + comentário-padrão na issue + movimento no board via script.
+# =============================================================================
+
+# ── _schema: enums válidos (referência para validação; não copiar) ──────────
+_schema:
+  # Aprovador humano dos gates G1/G6/G8 (slug; renderizado pelo install.sh a
+  # partir de FABER_OWNER). gate-check/gate-set/workflow-unlock leem daqui.
+  owner: "@@FABER_OWNER@@"
+  # §6.2 — 15 estados finos, na ordem da tabela
+  states:
+    - intake
+    - clarification
+    - specifying
+    - refinement
+    - ready-for-dev
+    - in-development
+    - developed
+    - code-review
+    - validation
+    - my-review
+    - ready-for-pr
+    - pr-open
+    - done
+    - blocked
+    - cancelled
+  # §14 — 10 tipos de demanda (slug → linha da tabela)
+  types:
+    - feature          # Nova funcionalidade / Evolução
+    - bug              # Bug (reprodução obrigatória antes da spec)
+    - incident        # Incidente (fluxo rápido, post-mortem vira spec)
+    - tech-debt   # Débito técnico / Demanda técnica (PO pulado)
+    - security        # Segurança (DevSecOps lidera)
+    - infra            # Infraestrutura / CI (diff em workflows exige revisão do Owner)
+    - database            # Banco de dados (db-guardian desde o refinamento)
+    - docs     # Documentação (direto ao doc-writer)
+    - spike            # Investigação / Spike (timebox; saída = mini-ADR)
+    - design           # Design/UX puro (designer lidera)
+  # §18 — 9 gates
+  gates: [G1, G2, G3, G4, G5, G6, G7, G8, G9]
+  human_gates: [G1, G6, G8]        # só aceitam aprovador = _schema.owner (§15)
+  gate_status: [pending, approved, rejected, not-applicable]
+  approvers: ["@@FABER_OWNER@@", cto, gate-check]
+  # §6.1 — estado fino → coluna macro do board (FONTE ÚNICA para o board.sh;
+  # nomes exatamente como as opções do campo Status no Projects v2).
+  board_columns:
+    "Backlog": [intake, clarification]
+    "Specification": [specifying, refinement]
+    "Ready for Dev": [ready-for-dev]
+    "In Development": [in-development, developed]
+    "Review & Validation": [code-review, validation]
+    "My Review": [my-review, ready-for-pr]
+    "PR Open": [pr-open]
+    "Done": [done]
+    "Blocked": [blocked]
+    # cancelled: sem coluna — a issue é fechada com motivo registrado (§6.2)
+
+# ── Identificação ───────────────────────────────────────────────────────────
+task: TASK-000        # TASK-<número-da-issue> (decisão D5)
+issue: 0                   # número da issue (GitHub) ou do contador local
+title: ""
+type: feature              # um de _schema.tipos
+branch: feature/TASK-000
+pr: null                   # número/URL da PR — preenchido em ready-for-pr → pr-open
+related_to: null        # TASK-XXX de origem — reabertura de done gera
+                           # nova demanda vinculada, nunca reabre (§6.2)
+
+# Ativado pelo CTO para demandas originadas de discovery. A presença de
+# requirements/ também ativa a validação. Demandas históricas sem campo/pasta
+# mantêm seu fluxo. G1 recebe requirements_hash via gate-set.sh ao aprovar.
+discovery:
+  required: false
+
+# ── Impacto de interface ────────────────────────────────────────────────────
+# true  = a demanda muda a interface do produto (tela nova/alterada, fluxo do
+#         usuário, componente que o usuário vê ou opera);
+# false = banco/infra/documentação/scripts da fábrica — nada visível muda.
+# Quem preenche: quem conduz o REFINAMENTO (CTO + senior-developer), antes do
+# G1. Critério explícito e auditável, nunca heurística de diff.
+# Para que serve (gate-check.sh): (1) entrar em `ready-for-dev` exige o campo
+# preenchido com true|false (só na primeira entrada); (2) quando `true` e
+# FABER_E2E=on, a transição `validation → minha-avaliacao` (G5) exige
+# evidência de E2E REALMENTE executado (log do evidence.sh cujo `# comando:`
+# casa FABER_E2E_CMD_REGEX, exit 0 e sumário do runner no corpo).
+ui_impact: null           # true|false — null só no template
+
+# ── Estado corrente ─────────────────────────────────────────────────────────
+state: intake             # um de _schema.estados
+blocking: null             # obrigatório quando estado = blocked (§6.2):
+# bloqueio:
+#   reason: ""             # motivo obrigatório, também comentado na issue
+#   since: ""              # ISO-8601 com timezone
+#   previous_state: ""      # estado ao qual retorna quando sanado
+
+# ── Timestamps (ISO-8601 com timezone) ──────────────────────────────────────
+created_at: null
+updated_at: null
+
+# ── Histórico de transições ─────────────────────────────────────────────────
+history: []
+# - from_state: intake
+#   to_state: specifying
+#   at: "2026-01-01T10:00:00-03:00"
+#   by: cto                # quem executou a transição
+#   reason: null           # OBRIGATÓRIO em regressão de estado
+
+# ── Gates (§18) — G1/G6/G8 exigem aprovador = _schema.owner; gate-check ─────
+# rejeita autoaprovação (§15). 'evidence' = path relativo à pasta da demanda
+# ou URL. Regra de fechamento: a transição para `done` exige G1–G8 em
+# `aprovado` ou `nao-aplicavel`; G9 é aprovado DENTRO de `done`, ao final da
+# consolidação pós-merge do doc-writer. Gate condicional não fica `pendente`
+# para sempre — é marcado `nao-aplicavel` explicitamente, com 'note'.
+gates:
+  G1: { name: ready-for-development, status: pending, approver: null, at: null, evidence: null, note: null }
+  G2: { name: technical-consensus,      status: pending, approver: null, at: null, evidence: null, note: null }
+  G3: { name: developed,             status: pending, approver: null, at: null, evidence: null, note: null }
+  G4: { name: code-review,           status: pending, approver: null, at: null, evidence: null, note: null }
+  G5: { name: technical-validation,     status: pending, approver: null, at: null, evidence: null, note: null }
+  G6: { name: my-review,       status: pending, approver: null, at: null, evidence: null, note: null }
+  G7: { name: ready-for-pr,          status: pending, approver: null, at: null, evidence: null, note: null }
+  G8: { name: merge,                 status: pending, approver: null, at: null, evidence: null, note: null }
+  G9: { name: done,                  status: pending, approver: null, at: null, evidence: null, note: null }
+# 'note' registra exceções formais (§18-G5: análise estática Medium/Low ou
+# coverage, com decisão documentada do CTO; Critical/High jamais excepcionável).
+
+# ── Auto-unlock de edição de workflow (H2) ──────────────────────────────────
+# Quando 'autorizado: true' por _schema.owner, o H2 LIBERA a edição de
+# .github/workflows/* nesta demanda (sem prompt); null/false → H2 pede
+# confirmação manual por execução (§2/§19). Escrito SÓ por
+# faber/scripts/workflow-unlock.sh --por <owner>.
+workflow_unlock: null
+# workflow_unlock:
+#   authorized: false
+#   by: null            # só o owner habilita
+#   at: null             # ISO-8601 com timezone
+#   reason: null         # tarefa DevSecOps que justifica
+
+# ── Invocações de subagentes (base do anti-loop H5, §15) ────────────────────
+# Máx. 2 invocações do mesmo agente para a mesma tarefa sem mudança de input;
+# a 3ª tentativa vira blocked + escalonamento ao Owner.
+invocations: []
+# - agente: senior-developer
+#   em: "2026-01-01T11:00:00-03:00"
+#   input: "handoffs/02-cto-para-dev.md"   # referência do input entregue

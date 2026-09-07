@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block titulo %}{{ d.nome }}{% endblock %}
+
+{% block conteudo %}
+<article class="detalhe" data-demanda="{{ d.nome }}" data-estado="{{ d.estado }}"
+         data-coluna="{{ d.coluna or '' }}" data-valido="{{ 'sim' if d.valido else 'nao' }}">
+  <p class="voltar"><a href="{{ url_for('kanban') }}">← quadro</a></p>
+  <h1>{{ d.nome }} <span class="estado estado-{{ d.estado }}">{{ d.estado if d.valido else 'leitura inválida' }}</span></h1>
+  <p class="titulo-grande">{{ d.titulo or '(sem título)' }}</p>
+
+  {% if not d.valido %}
+    <p class="aviso">Leitura inválida: {{ d.erro }}. Nenhum estado é exibido para esta demanda —
+      a fábrica proíbe número/estado inferido.</p>
+  {% endif %}
+  {% if d.destaque == 'clarification' %}
+    <p class="aviso">Aguardando decisão do Owner (clarification).</p>
+  {% elif d.destaque == 'blocked' %}
+    <p class="aviso">Bloqueada: {{ d.motivo_bloqueio }}
+      {% if d.bloqueio and d.bloqueio.desde %}(desde {{ d.bloqueio.desde }}){% endif %}
+      {% if d.bloqueio and d.bloqueio.estado_origem %}· retorna para {{ d.bloqueio.estado_origem }}{% endif %}</p>
+  {% endif %}
+
+  <dl class="ficha">
+    <dt>coluna</dt><dd>{{ d.coluna or '— (fora do quadro ativo)' }}</dd>
+    <dt>tipo</dt><dd>{{ d.tipo or '—' }}{% if d.tipo and not d.tipo_valido %}
+      <span class="alerta">fora da lista de tipos oficiais</span>{% endif %}</dd>
+    <dt>issue</dt><dd>{{ d.issue if d.issue is not none else '—' }}</dd>
+    <dt>PR</dt><dd>{{ d.pr if d.pr is not none else '—' }}</dd>
+    <dt>relacionada a</dt><dd>{{ d.relacionada_a if d.relacionada_a is not none else '—' }}</dd>
+    <dt>agente atuante</dt><dd>{{ d.agente or '—' }}</dd>
+    <dt>atualizada em</dt><dd>{{ d.atualizada_em or '—' }}</dd>
+  </dl>
+
+  <h2>Telemetria de execução</h2>
+  {% if minha %}
+  <dl class="ficha telemetria" data-ao-vivo="{{ 'sim' if minha.ao_vivo else 'nao' }}"
+      data-tokens-saida="{{ minha.tokens.saida }}">
+    <dt>ao vivo</dt>
+    <dd>{% if minha.ao_vivo %}sim — atividade há {{ minha.idade }} s
+        {% else %}não{% if minha.idade is not none %} — última atividade há {{ minha.idade }} s
+        {% endif %}{% endif %}</dd>
+    {# Todos os agentes na janela de atividade, com o horário de cada um.
+       O card mostra o mais recente + "+N"; aqui não se resume nada. #}
+    <dt>agentes ao vivo</dt>
+    <dd>{% if minha.agentes_vivos %}
+        {% for agente, em in minha.agentes_vivos %}
+          <span class="agente">{{ agente }}</span> <small>({{ em }})</small>{% if not loop.last %} · {% endif %}
+        {% endfor %}
+        {% else %}nenhum (sem atividade nos últimos {{ limiar }} s){% endif %}</dd>
+    {# AC-13: modelo como veio, sem traduzir; ausente é "sem dados", nunca inferido #}
+    <dt>modelo</dt><dd>{{ minha.modelo or 'sem dados' }}</dd>
+    {# RN-10: os quatro campos separados. Somá-los num "total" não tem
+       significado (cache_read tem outra ordem de grandeza e outro custo), e
+       nada aqui vira R$ — a fábrica proíbe número inferido. #}
+    <dt>tokens de output</dt><dd>{{ '{:,}'.format(minha.tokens.saida).replace(',', '.') }}
+      <small>(deduplicado por requestId com MAX, {{ minha.tokens.requisicoes }} requisições)</small></dd>
+    <dt>tokens de input</dt><dd>{{ '{:,}'.format(minha.tokens.entrada).replace(',', '.') }}</dd>
+    <dt>cache (criação)</dt><dd>{{ '{:,}'.format(minha.tokens.cache_criacao).replace(',', '.') }}</dd>
+    <dt>cache (leitura)</dt><dd>{{ '{:,}'.format(minha.tokens.cache_leitura).replace(',', '.') }}</dd>
+    <dt>transcripts</dt><dd>{{ minha.transcripts|length }}</dd>
+  </dl>
+  {% elif tel.indisponivel %}
+  <p class="vazio">Telemetria indisponível — ver aviso acima.</p>
+  {% else %}
+  <p class="vazio" data-sem-telemetria="sim">Sem execução registrada para esta demanda.</p>
+  {% endif %}
+
+  <h2>Histórico de output <span class="contagem">{{ total_historico }}</span></h2>
+  {# AC-2: histórico completo, sem autenticação (decisão do Owner; o controle
+     é o bind em 127.0.0.1 + a checagem de Host). Vem RELIDO do JSONL, nunca
+     do banco — o banco não guarda conteúdo (RN-2). Paginado para que uma
+     execução de milhares de mensagens não trave a tela. #}
+  {% if historico %}
+  <ul class="saida historico-saida" data-mensagens="{{ historico|length }}">
+    {% for m in historico %}
+    <li class="msg msg-{{ m.tipo }}">
+      <span class="quem">{{ m.agente }}</span><small class="quando">{{ m.em }}</small>
+      {{ m.texto }}</li>
+    {% endfor %}
+  </ul>
+  {% if paginas > 1 %}
+  <p class="paginacao" data-pagina="{{ pagina }}" data-paginas="{{ paginas }}">
+    {% if pagina > 1 %}<a href="?pagina={{ pagina - 1 }}">← mais recentes</a>{% endif %}
+    <span>página {{ pagina }} de {{ paginas }}</span>
+    {% if pagina < paginas %}<a href="?pagina={{ pagina + 1 }}">mais antigas →</a>{% endif %}
+  </p>
+  {% endif %}
+  {% elif minha and minha.transcripts %}
+  {# AC-11 (borda): o transcript foi removido do disco. Os tokens acima
+     continuam, porque não dependem dele. #}
+  <p class="vazio" data-historico="sem-dados">Sem dados — os transcripts desta demanda
+    não estão mais no disco. Os tokens acima seguem válidos: eles estão persistidos.</p>
+  {% else %}
+  <p class="vazio" data-historico="vazio">Nenhum output registrado para esta demanda.</p>
+  {% endif %}
+
+  <h2>Gates</h2>
+  <table class="gates">
+    <thead><tr><th>gate</th><th>nome</th><th>status</th><th>aprovador</th><th>em</th><th>evidência</th></tr></thead>
+    <tbody>
+      {% for g in d.gates_lista %}
+      <tr data-gate="{{ g.gate }}" data-status="{{ g.status }}">
+        <td>{{ g.gate }}</td><td>{{ g.nome or '—' }}</td>
+        <td><span class="status status-{{ g.status }}">{{ g.status }}</span></td>
+        <td>{{ g.aprovador or '—' }}</td><td>{{ g.em or '—' }}</td><td>{{ g.evidencia or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Histórico de transições</h2>
+  {% if d.historico %}
+  <table class="historico">
+    <thead><tr><th>at</th><th>from</th><th>to</th><th>by</th><th>reason</th></tr></thead>
+    <tbody>
+      {% for h in d.historico %}
+      <tr><td>{{ h.at or '—' }}</td><td>{{ h.from_state or '—' }}</td><td>{{ h.to_state or '—' }}</td>
+          <td>{{ h.by or '—' }}</td><td>{{ h.reason or '—' }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="vazio">Sem transições registradas ainda.</p>
+  {% endif %}
+
+  <h2>Cópias desta demanda <span class="contagem">{{ d.total_copias }}</span></h2>
+  <p class="nota">A cópia autoritativa é a de maior <code>atualizada_em</code> (RN-13), varridas
+    todas as fontes. {% if d.estados_divergentes %}<strong>Cópias divergentes:
+    {{ d.estados_divergentes|join(', ') }}.</strong>{% endif %}</p>
+  <table class="copias">
+    <thead><tr><th></th><th>fonte</th><th>estado</th><th>atualizada em</th><th>origem</th></tr></thead>
+    <tbody>
+      {% for c in d.copias %}
+      <tr class="{{ 'vencedora' if c.fonte == d.fonte and c.origem == d.origem else '' }}">
+        <td>{{ '✓' if c.fonte == d.fonte and c.origem == d.origem else '' }}</td>
+        <td>{{ c.fonte }}</td>
+        <td>{{ c.estado if c.valido else 'inválida (' ~ c.erro ~ ')' }}</td>
+        <td>{{ c.atualizada_em or '—' }}</td>
+        <td class="origem">{{ c.origem }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</article>
+{% endblock %}
