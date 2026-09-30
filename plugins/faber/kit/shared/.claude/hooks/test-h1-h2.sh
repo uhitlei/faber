@@ -50,8 +50,10 @@ caso() {  # caso <nome> <esperado> <h1|h2> <json>
   if [ "$got" = "$esperado" ]; then PASS=$((PASS+1)); st="OK  "; else FAIL=$((FAIL+1)); st="FALHOU"; fi
   printf '%-6s %-58s esperado=%-5s obtido=%s\n' "$st" "$nome" "$esperado" "$got"
 }
-jbash() { python3 -c 'import json,sys; print(json.dumps({"tool_name":"Bash","tool_input":{"command":sys.argv[1]},"cwd":sys.argv[2]}))' "$1" "$SB"; }
-jedit() { python3 -c 'import json,sys; print(json.dumps({"tool_name":"Edit","tool_input":{"file_path":sys.argv[1]},"cwd":sys.argv[2]}))' "$1" "$SB"; }
+# MODO = permission_mode da sessão no JSON do hook (vazio = campo ausente)
+MODO=""
+jbash() { python3 -c 'import json,sys; d={"tool_name":"Bash","tool_input":{"command":sys.argv[1]},"cwd":sys.argv[2]}; sys.argv[3] and d.update(permission_mode=sys.argv[3]); print(json.dumps(d))' "$1" "$SB" "$MODO"; }
+jedit() { python3 -c 'import json,sys; d={"tool_name":"Edit","tool_input":{"file_path":sys.argv[1]},"cwd":sys.argv[2]}; sys.argv[3] and d.update(permission_mode=sys.argv[3]); print(json.dumps(d))' "$1" "$SB" "$MODO"; }
 
 echo "== H1 — deny =="
 caso "token PROIBIDO (ref de PROD) em qualquer comando" deny h1 "$(jbash 'algum-cli db push --project-ref prod-ref-abc123')"
@@ -82,12 +84,17 @@ caso "gh api graphql board (ProjectV2)"          pass h1 "$(jbash "gh api graphq
 caso "gh api GET pulls/5"                        pass h1 "$(jbash 'gh api repos/o/r/pulls/5')"
 caso "docker compose up (local)"                 pass h1 "$(jbash 'docker compose up -d')"
 caso "grep em workflow (leitura, sem redir)"     pass h1 "$(jbash 'grep -n on: .github/workflows/ci.yml')"
+caso "grep em hooks com 2>/dev/null (leitura)"   pass h1 "$(jbash 'grep -rn H1 .claude/hooks/ 2>/dev/null')"
+caso "cat de .env.example com 2>&1 (leitura)"   pass h1 "$(jbash 'cat .env.example 2>&1 | head')"
+caso "redir real mesmo com 2>/dev/null junto"    ask  h1 "$(jbash 'echo x > .env 2>/dev/null')"
 
 echo "== H1 — gates humanos via gate-set =="
 caso "gate-set G1 approved -> ask (aprovacao=Owner)"  ask  h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G1 approved --by owner')"
 caso "gate-set G6 approved (com bash na frente)"      ask  h1 "$(jbash 'bash faber/scripts/gate-set.sh TASK-74 G6 approved --by owner')"
 caso "gate-set G2 approved por cto (gate do CTO)"     pass h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G2 approved --by cto')"
 caso "gate-set G1 pending (nao e aprovacao)"         pass h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G1 pending --by cto')"
+caso "workflow-unlock -> ask (decisao do Owner)"     ask  h1 "$(jbash 'faber/scripts/workflow-unlock.sh TASK-74 --by owner')"
+caso "workflow-unlock --revoke (restringe) livre"    pass h1 "$(jbash 'faber/scripts/workflow-unlock.sh TASK-74 --by owner --revoke')"
 
 echo "== H2 =="
 caso "Edit em path protegido (prefixo src/generated/)" deny h2 "$(jedit 'src/generated/types.ts')"
@@ -116,6 +123,49 @@ echo "== H2 — guarda-vidas da fábrica =="
 caso "Edit em .claude/settings.json -> ask"           ask  h2 "$(jedit '.claude/settings.json')"
 caso "Edit em .claude/hooks/h1-bash-guard.sh -> ask"  ask  h2 "$(jedit '.claude/hooks/h1-bash-guard.sh')"
 caso "Edit em .claude/commands/faber-task.md (livre)"    pass h2 "$(jedit '.claude/commands/faber-task.md')"
+
+echo "== Modo bypass (permission_mode=bypassPermissions, FABER_BYPASS=on) =="
+MODO="bypassPermissions"
+caso "bypass: token de CONFIRMAR passa livre"         pass  h1 "$(jbash 'algum-cli db push --project-ref hml-ref-xyz789')"
+caso "bypass: regex de CONFIRMAR (docker push) livre" pass  h1 "$(jbash 'docker push minha-imagem:latest')"
+caso "bypass: comando comum segue livre"              pass  h1 "$(jbash 'npm run test')"
+caso "bypass: token PROIBIDO segue deny"              deny  h1 "$(jbash 'algum-cli db push --project-ref prod-ref-abc123')"
+caso "bypass: regex PROIBIDA segue deny"              deny  h1 "$(jbash 'terraform destroy -auto-approve')"
+caso "bypass: push para o trunk segue deny"           deny  h1 "$(jbash 'git push origin develop')"
+caso "bypass: gh pr merge segue deny"                 deny  h1 "$(jbash 'gh pr merge 12 --squash')"
+caso "bypass: gate-set G1 approved SEGUE ask (humano)" ask  h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G1 approved --by owner')"
+caso "bypass: gate-set G8 approved SEGUE ask (humano)" ask  h1 "$(jbash 'bash faber/scripts/gate-set.sh TASK-74 G8 approved --by owner')"
+caso "bypass: workflow-unlock SEGUE ask (humano)"    ask   h1 "$(jbash 'bash faber/scripts/workflow-unlock.sh TASK-74 --by owner')"
+caso "bypass: gate-set G2 do CTO livre"               pass  h1 "$(jbash 'faber/scripts/gate-set.sh TASK-74 G2 approved --by cto')"
+caso "bypass: sed -i em workflow -> deny (não ask)"   deny  h1 "$(jbash 'sed -i s/a/b/ .github/workflows/ci.yml')"
+caso "bypass: tee em faber.env -> deny"               deny  h1 "$(jbash 'echo FABER_OWNER=eu | tee faber/config/faber.env')"
+caso "bypass: redir em path protegido -> deny"        deny  h1 "$(jbash 'echo x > src/generated/types.ts')"
+caso "bypass: grep em hooks com 2>/dev/null livre"    pass  h1 "$(jbash 'grep -rn H1 .claude/hooks/ 2>/dev/null')"
+caso "bypass: Edit em .env segue deny"                deny  h2 "$(jedit '.env')"
+caso "bypass: Edit em path protegido segue deny"      deny  h2 "$(jedit 'src/generated/types.ts')"
+caso "bypass: migration no histórico segue deny"      deny  h2 "$(jedit 'db/migrations/20250101000000_antiga.sql')"
+caso "bypass: migration nova livre"                   pass  h2 "$(jedit 'db/migrations/20260720120000_nova.sql')"
+caso "bypass: arquivo comum livre"                    pass  h2 "$(jedit 'src/App.tsx')"
+caso "bypass: Edit em .claude/settings.json -> deny"  deny  h2 "$(jedit '.claude/settings.json')"
+caso "bypass: Edit em hook -> deny"                   deny  h2 "$(jedit '.claude/hooks/h1-bash-guard.sh')"
+caso "bypass: Edit em faber.env -> deny"              deny  h2 "$(jedit 'faber/config/faber.env')"
+caso "bypass: workflow sem unlock -> deny"            deny  h2 "$(jedit '.github/workflows/ci.yml')"
+wu true owner
+caso "bypass: workflow com unlock do owner -> allow"  allow h2 "$(jedit '.github/workflows/ci.yml')"
+rm -f "$DEM/state.yaml"
+
+echo "== Modo bypass — só vale para bypassPermissions e com FABER_BYPASS=on =="
+MODO="acceptEdits"
+caso "acceptEdits: docker push segue ask"             ask   h1 "$(jbash 'docker push minha-imagem:latest')"
+caso "acceptEdits: Edit em settings.json segue ask"   ask   h2 "$(jedit '.claude/settings.json')"
+MODO="default"
+caso "default: token de CONFIRMAR segue ask"          ask   h1 "$(jbash 'algum-cli db push --project-ref hml-ref-xyz789')"
+MODO="bypassPermissions"
+echo 'FABER_BYPASS="off"' >> "$SB/faber/config/faber.env"
+caso "FABER_BYPASS=off: docker push segue ask"        ask   h1 "$(jbash 'docker push minha-imagem:latest')"
+caso "FABER_BYPASS=off: workflow sem unlock -> ask"   ask   h2 "$(jedit '.github/workflows/ci.yml')"
+caso "FABER_BYPASS=off: sed -i em workflow -> ask"    ask   h1 "$(jbash 'sed -i s/a/b/ .github/workflows/ci.yml')"
+MODO=""
 
 echo
 echo "RESULTADO: $PASS ok, $FAIL falha(s)."

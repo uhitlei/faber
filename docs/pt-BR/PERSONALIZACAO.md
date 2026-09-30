@@ -14,6 +14,7 @@ owner/branches depois, ajuste o `.env` e faça um `grep` pelos textos antigos em
 | `FABER_OWNER` / `FABER_OWNER_NAME` | quem aprova G1/G6/G8 (`gate-set --by <slug>`); também em `_schema.owner` do `state.template.yaml` (renderizado) |
 | `FABER_TRUNK` / `FABER_MAIN` | branches protegidas pelo H1; base das demandas; alvo das PRs |
 | `FABER_INTERACTION` | `gates` (para só em G1/G6/G8 e dúvidas críticas) ou `step-by-step` |
+| `FABER_BYPASS` | `on` (padrão): em sessão `bypassPermissions` H1/H2 nunca abrem diálogo de confirmação — confirmações passam livres ou viram deny; só G1/G6/G8 ainda pedem o Owner. `off`: os hooks ignoram o modo da sessão |
 | `FABER_WORKTREES` | `on` = cada demanda em `.claude/worktrees/TASK-XXX` |
 | `FABER_GH` / `FABER_GH_REPO` | issues como ID da demanda; `off` = contador local |
 | `FABER_BOARD` / `FABER_GH_PROJECT_TITLE` | Projects v2 (opções do campo Status = 9 colunas de §6.1) |
@@ -22,7 +23,7 @@ owner/branches depois, ajuste o `.env` e faça um `grep` pelos textos antigos em
 | `FABER_SECRET_FILES` | H2 nega edição; H1 pede confirmação em escrita via shell |
 | `FABER_PROTECTED_PATHS` | paths/prefixos que nenhum agente edita (gerados, snapshots) |
 | `FABER_REFS_DENY` | qualquer comando contendo um destes tokens é **negado** (ex.: ref do projeto de produção) |
-| `FABER_REFS_CONFIRM` | comando contendo o token **pede confirmação** (ex.: ref de homologação) |
+| `FABER_REFS_CONFIRM` | comando contendo o token **pede confirmação** (ex.: ref de homologação); em sessão bypass passa livre — o que nunca pode rodar sem ninguém olhando vai em `FABER_REFS_DENY` |
 | `FABER_CMDS_DENY` / `FABER_CMDS_CONFIRM` | regex (separadas por ` ;; `) para comandos perigosos da sua stack |
 
 ## Módulos opcionais

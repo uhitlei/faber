@@ -136,14 +136,14 @@ faber/
 The factory's own rules are tested. After installing, in your repository:
 
 ```bash
-bash .claude/hooks/test-h1-h2.sh           # 46 cases: what the hooks deny, confirm, allow
+bash .claude/hooks/test-h1-h2.sh           # 82 cases: what the hooks deny, confirm, allow
 bash faber/scripts/test-gate-check.sh      # 43 cases: transitions blocked and released
 bash faber/scripts/test-sonar-gate.sh      # 20 cases (Sonar module, curl stubbed)
 python3 faber/scripts/test-monitor.py      # 40 cases (state monitor)
 python3 faber/scripts/test-requirements.py # 21 cases (requirements readiness)
 ```
 
-170 cases. They build throwaway sandboxes and never touch your repository.
+206 cases. They build throwaway sandboxes and never touch your repository.
 `/faber:doctor` runs them for you and reports what is missing.
 
 ## Language

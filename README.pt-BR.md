@@ -135,14 +135,14 @@ faber/
 As regras da fábrica são testadas. Depois de instalar, no seu repositório:
 
 ```bash
-bash .claude/hooks/test-h1-h2.sh           # 46 casos: o que os hooks negam, confirmam e liberam
+bash .claude/hooks/test-h1-h2.sh           # 82 casos: o que os hooks negam, confirmam e liberam
 bash faber/scripts/test-gate-check.sh      # 43 casos: transições bloqueadas e liberadas
 bash faber/scripts/test-sonar-gate.sh      # 20 casos (módulo Sonar, com curl stubado)
 python3 faber/scripts/test-monitor.py      # 40 casos (monitor de estado)
 python3 faber/scripts/test-requirements.py # 21 casos (readiness de requisitos)
 ```
 
-170 casos. Todos criam sandboxes descartáveis e nunca tocam no seu
+206 casos. Todos criam sandboxes descartáveis e nunca tocam no seu
 repositório. O `/faber:doctor` roda essas suítes por você e reporta o que falta.
 
 ## Idioma

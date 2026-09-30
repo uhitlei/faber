@@ -301,13 +301,15 @@ Board sync is a script (`board.sh`), not a skill: zero LLM.
 
 | # | Event | Rule enforced |
 |---|---|---|
-| H1 | `PreToolUse` (Bash) | **Deny**: push/merge/commit involving the trunk or production · `gh pr merge` · a writing `gh api` against merges, protected refs or workflows · tokens from `FABER_REFS_DENY` · regexes from `FABER_CMDS_DENY`. **Ask**: tokens from `FABER_REFS_CONFIRM` · regexes from `FABER_CMDS_CONFIRM` · shell writes to H2's paths · a `gate-set` marking G1/G6/G8 as `approved` (the confirmation IS the Owner's approval) |
+| H1 | `PreToolUse` (Bash) | **Deny**: push/merge/commit involving the trunk or production · `gh pr merge` · a writing `gh api` against merges, protected refs or workflows · tokens from `FABER_REFS_DENY` · regexes from `FABER_CMDS_DENY`. **Ask**: tokens from `FABER_REFS_CONFIRM` · regexes from `FABER_CMDS_CONFIRM` · shell writes to H2's paths · a `gate-set` marking G1/G6/G8 as `approved` and `workflow-unlock.sh` (the confirmation IS the Owner's decision) |
 | H2 | `PreToolUse` (Write/Edit) | **Deny**: `FABER_SECRET_FILES` · `FABER_PROTECTED_PATHS` · a migration whose timestamp is already in the history. **Allow/Ask**: `.github/workflows/*` (allow with the Owner's `workflow_unlock`; otherwise ask). **Ask**: `.claude/settings.json`, `.claude/hooks/*`, `faber/config/faber.env` |
 | H3 | `PostToolUse` (a Write in migrations) | Validates the placeholders and the statements in `FABER_MIGRATION_CHECKS`; warns and notes the pending item in the demand's log |
 | H4 | `PostToolUse` (git commit) | `type(scope): description` + a `TASK-XXX` reference on a demand's branch |
 | H5 | `SubagentStop` | A handoff in the §17 format, with evidence that exists; records the invocation (anti-loop) |
 | H6 | `SessionStart` | The minimum context: active demands, the interaction mode, reminders; or a warning that the bootstrap is pending |
 | H7 | `PreCompact` | A checkpoint: warns about uncommitted demand artifacts |
+
+**Bypass mode** (`FABER_BYPASS=on`, the default). When the session runs in `bypassPermissions`, nobody is necessarily watching — and a hook's `ask` opens a dialog even in that mode, stalling the session. So H1/H2 read `permission_mode` and **never ask for confirmation**: tokens from `FABER_REFS_CONFIRM` and regexes from `FABER_CMDS_CONFIRM` go through; shell writes to H2's paths, `.github/workflows/*` without a `workflow_unlock` and the factory's own guardrails become a **deny** (the CTO records the item for the Owner at the next gate and carries on). Every deny stays as it is. The only stops left are human ones: a `gate-set` marking G1/G6/G8 as `approved` and `workflow-unlock.sh` still ask. H3/H4/H5 are unchanged — they hand the reason back to the agent without stalling the session. `FABER_BYPASS=off` makes the hooks ignore the session's mode.
 
 ## 13-bis. Integrations
 

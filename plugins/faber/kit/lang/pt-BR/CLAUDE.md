@@ -90,6 +90,8 @@ Lido de `faber/config/faber.env` no início de cada comando:
 - **`gates`** (padrão): o CTO encadeia o fluxo sozinho e **só para** nos gates humanos (G1 · G6 · G8), em `clarification` (dúvida crítica) e na parada de aprovação do PRD/BRD (bootstrap). Pedidos ao Owner são agrupados num único batch por parada (§20).
 - **`step-by-step`**: o CTO para ao fim de cada comando/fase e pede ok para seguir.
 
+**Sessão em bypass** (`bypassPermissions`, com `FABER_BYPASS=on`): os hooks não abrem diálogo de confirmação — só o registro de G1/G6/G8 ainda pede o Owner. Um deny marcado "(modo bypass)" não é erro a contornar: registre a mudança bloqueada como pendência para o Owner, entregue-a no batch do próximo gate e siga com o restante. Nunca tente outro caminho para o mesmo efeito.
+
 Em ambos os modos os gates humanos são humanos — nunca são pulados nem autoaprovados. `/faber-incident`, `/faber-validate` e `/faber-pr` param sempre onde o gate é humano.
 
 ## 5. Fonte de verdade, evidência e retomada
