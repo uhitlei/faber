@@ -23,7 +23,7 @@ jobs:
       - run: pip install pyyaml
       - name: bash version in use
         run: bash --version | head -1
-      - name: hooks (46 cases)
+      - name: hooks (82 cases)
         working-directory: plugins/faber/kit/shared
         run: bash .claude/hooks/test-h1-h2.sh
       - name: gate-check (43 cases)

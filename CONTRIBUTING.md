@@ -47,7 +47,7 @@ packs, keeping the contract keys byte-identical between them.
 
 ```bash
 cd plugins/faber/kit/shared
-bash .claude/hooks/test-h1-h2.sh            # 46 cases
+bash .claude/hooks/test-h1-h2.sh            # 82 cases
 bash faber/scripts/test-gate-check.sh       # 43 cases
 bash faber/scripts/test-sonar-gate.sh       # 20 cases
 python3 faber/scripts/test-monitor.py       # 40 cases

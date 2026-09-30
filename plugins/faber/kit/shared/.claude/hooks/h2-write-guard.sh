@@ -10,6 +10,10 @@
 #       só via faber/scripts/workflow-unlock.sh.
 # Ask:  .claude/settings.json, .claude/hooks/* e faber/config/faber.env —
 #       os guarda-vidas da própria fábrica; edição só com confirmação do Owner.
+# Modo bypass (sessão em bypassPermissions + FABER_BYPASS=on): nenhum ask —
+#       ninguém está na tela para confirmar. Workflow sem workflow_unlock e
+#       guarda-vidas da fábrica viram DENY (o agente registra a pendência para
+#       o Owner e segue); o resto das regras não muda.
 # Nota: a checagem de migrations depende de <remote>/<trunk> e <remote>/<main>
 #       atualizados — gate-check.sh e /faber-pr executam `git fetch` antes. Sem
 #       remoto, usa fallback conservador pelo index local.
@@ -41,6 +45,7 @@ if not path:
 
 cwd = data.get("cwd") or os.getcwd()
 cfg = fc.carregar(cwd) if fc else {}
+BYPASS = fc.em_bypass(data, cfg) if fc else False
 OWNER = cfg.get("FABER_OWNER", "owner")
 OWNER_NOME = cfg.get("FABER_OWNER_NAME", "Owner")
 TRUNK = cfg.get("FABER_TRUNK", "develop")
@@ -127,6 +132,11 @@ if rel.startswith(".github/workflows/") or "/.github/workflows/" in path:
     if workflow_unlock_autorizado(root):
         allow(f"H2: edição de .github/workflows/ liberada — workflow_unlock autorizado por "
               f"'{OWNER}' no state.yaml da demanda ativa (auto-unlock).")
+    if BYPASS:
+        deny("H2 (modo bypass): editar .github/workflows/ sem workflow_unlock é negado — "
+             f"sem {OWNER_NOME} na tela para confirmar. Peça o unlock no próximo gate "
+             f"('faber/scripts/workflow-unlock.sh TASK-XXX --by {OWNER}', decisão de "
+             f"{OWNER_NOME}) e siga com o restante da demanda.")
     ask(f"H2: editar .github/workflows/ exige confirmação de {OWNER_NOME}, por execução "
         "(§2/§19). Autorize de vez na demanda com "
         f"'faber/scripts/workflow-unlock.sh TASK-XXX --by {OWNER}' (auto-unlock).")
@@ -135,6 +145,11 @@ if rel.startswith(".github/workflows/") or "/.github/workflows/" in path:
 if rel == ".claude/settings.json" or rel.startswith(".claude/hooks/") \
    or "/.claude/hooks/" in path or path.endswith("/.claude/settings.json") \
    or rel == "faber/config/faber.env":
+    if BYPASS:
+        deny("H2 (modo bypass): '.claude/settings.json', '.claude/hooks/' e "
+             "'faber/config/faber.env' são os guarda-vidas da fábrica — sem "
+             f"{OWNER_NOME} na tela, a edição é negada. Registre a mudança proposta "
+             f"como pendência para {OWNER_NOME} no próximo gate e siga.")
     ask("H2: '.claude/settings.json', '.claude/hooks/' e 'faber/config/faber.env' são "
         f"os guarda-vidas da fábrica — edição exige confirmação explícita de {OWNER_NOME} (§19).")
 

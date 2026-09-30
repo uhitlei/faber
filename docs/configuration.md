@@ -22,6 +22,7 @@ configuration would approve gates it has no business approving.
 | `FABER_OWNER` / `FABER_OWNER_NAME` | who approves G1/G6/G8 (`gate-set --by <slug>`); also lands in `_schema.owner` of `state.template.yaml` |
 | `FABER_TRUNK` / `FABER_MAIN` | the branches H1 protects; the base of every task; the target of every PR |
 | `FABER_INTERACTION` | `gates` (stops only at G1/G6/G8 and critical doubts) or `step-by-step` |
+| `FABER_BYPASS` | `on` (default): in a `bypassPermissions` session H1/H2 never open a confirmation dialog — confirmations go through or become a deny; only G1/G6/G8 still ask. `off`: the hooks ignore the session's mode |
 | `FABER_WORKTREES` | `on` puts each task in `.claude/worktrees/TASK-XXX` |
 | `FABER_GH` / `FABER_GH_REPO` | GitHub issues as task IDs; `off` uses a local counter |
 | `FABER_BOARD` / `FABER_GH_PROJECT_TITLE` | Projects v2 sync (the Status field's options are the 9 columns of §6.1) |
@@ -31,7 +32,7 @@ configuration would approve gates it has no business approving.
 | `FABER_SECRET_FILES` | H2 denies editing these; H1 asks for confirmation on shell writes to them |
 | `FABER_PROTECTED_PATHS` | paths or prefixes no agent may edit (generated files, snapshots) |
 | `FABER_REFS_DENY` | any command containing one of these tokens is **denied** (e.g. your production project ref) |
-| `FABER_REFS_CONFIRM` | a command containing the token **asks for confirmation** (e.g. a staging ref) |
+| `FABER_REFS_CONFIRM` | a command containing the token **asks for confirmation** (e.g. a staging ref); in a bypass session it goes through — move anything that must never run unattended to `FABER_REFS_DENY` |
 | `FABER_CMDS_DENY` / `FABER_CMDS_CONFIRM` | regexes (separated by ` ;; `) for the dangerous commands of your stack |
 
 ## Optional modules

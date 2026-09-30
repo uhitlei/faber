@@ -44,6 +44,7 @@ faber_require_install() {
 : "${FABER_MAIN:=main}"
 : "${FABER_WORKTREES:=on}"
 : "${FABER_INTERACTION:=gates}"
+: "${FABER_BYPASS:=on}"
 : "${FABER_GH:=on}"
 : "${FABER_GH_REPO:=}"
 : "${FABER_BOARD:=off}"

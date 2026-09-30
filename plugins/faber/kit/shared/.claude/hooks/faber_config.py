@@ -19,6 +19,7 @@ DEFAULTS = {
     "FABER_MAIN": "main",
     "FABER_WORKTREES": "on",
     "FABER_INTERACTION": "gates",
+    "FABER_BYPASS": "on",
     "FABER_GH": "on",
     "FABER_GH_REPO": "",
     "FABER_BOARD": "off",
@@ -122,6 +123,15 @@ def regexes(cfg, chave):
 
 def ligado(cfg, chave):
     return str(cfg.get(chave, "")).strip().lower() in ("on", "true", "1", "sim", "yes")
+
+
+def em_bypass(data, cfg):
+    """Sessão em modo bypass (permission_mode=bypassPermissions) E a fábrica
+    honra o modo (FABER_BYPASS=on, o padrão). Nesse caso H1/H2 não pedem
+    confirmação: o que seria 'ask' vira passagem livre ou deny — exceto o
+    registro de gate humano (G1/G6/G8), que continua 'ask'."""
+    return (data or {}).get("permission_mode") == "bypassPermissions" \
+        and ligado(cfg, "FABER_BYPASS")
 
 
 def branches_protegidas(cfg):

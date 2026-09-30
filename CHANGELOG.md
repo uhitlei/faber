@@ -4,6 +4,26 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- **Bypass mode for the hooks** (`FABER_BYPASS`, default `on`). A hook's `ask`
+  opens a dialog even when the session runs in `bypassPermissions`, so an
+  unattended session stalled on every confirmation. H1/H2 now read
+  `permission_mode`: in bypass, `FABER_REFS_CONFIRM`/`FABER_CMDS_CONFIRM` go
+  through, while shell writes to protected paths, workflow edits without a
+  `workflow_unlock` and edits to the factory's guardrails become a deny. Every
+  deny is unchanged, and recording G1/G6/G8 as `approved` still asks — the
+  session stops only at the human gates. `FABER_BYPASS=off` restores the old
+  behaviour. 36 new hook cases (82 in total).
+
+### Fixed
+- H1 asks before `workflow-unlock.sh` grants an unlock (revoking stays free).
+  Nothing stopped the agent from authorising its own workflow edits with
+  `--by <owner>`; in bypass mode that would have left workflows unguarded.
+- H1 no longer treats `2>/dev/null`, `>&2` or `2>&1` as a shell write, so reading
+  a protected path with stderr silenced stops asking for confirmation.
+
 ## [2.0.0] — Faber
 
 ### Added

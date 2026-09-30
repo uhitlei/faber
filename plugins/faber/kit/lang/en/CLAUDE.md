@@ -91,6 +91,8 @@ Read from `faber/config/faber.env` at the start of every command:
 - **`gates`** (default): the CTO chains the flow on its own and **only stops** at the human gates (G1 · G6 · G8), at `clarification` (a critical doubt) and at the PRD/BRD approval stop during bootstrap. Requests to the Owner are grouped into a single batch per stop (§20).
 - **`step-by-step`**: the CTO stops at the end of every command or phase and asks before continuing.
 
+**Bypass session** (`bypassPermissions`, with `FABER_BYPASS=on`): the hooks open no confirmation dialogs — only recording G1/G6/G8 still asks the Owner. A deny marked "(modo bypass)" is not an error to route around: record the blocked change as a pending item for the Owner, hand it over in the next gate's batch and carry on with the rest. Never look for another path to the same effect.
+
 In both modes the human gates stay human — they are never skipped and never self-approved. `/faber-incident`, `/faber-validate` and `/faber-pr` always stop where the gate is human.
 
 ## 5. Source of truth, evidence and resuming
