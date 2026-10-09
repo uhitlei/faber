@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>A fábrica Faber</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +27,7 @@
 
 html{box-sizing:border-box;height:100%}
 *,*::before,*::after{box-sizing:inherit}
-body{height:100%;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--fs-body);line-height:1.5;overflow:hidden}
+body{margin:0;height:100%;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--fs-body);line-height:1.5;overflow:hidden}
 h1,h2,h3,p,ul,ol,pre{margin:0}
 ul,ol{padding:0;list-style:none}
 code,.mono{font-family:var(--f-mono)}
@@ -38,7 +43,7 @@ button{font:inherit;color:inherit}
 .inner{width:100%;max-width:1240px;margin:auto;display:flex;flex-direction:column;gap:clamp(18px,3vh,34px)}
 
 .eyebrow{font-family:var(--f-mono);font-size:var(--fs-small);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-h2{font-family:var(--f-display);font-weight:800;font-size:var(--fs-h);line-height:.96;letter-spacing:.005em;text-wrap:balance;max-width:20ch}
+h2{font-family:var(--f-display);font-weight:800;font-size:var(--fs-h);line-height:.96;letter-spacing:.005em;text-wrap:balance;max-width:27ch}
 .lead{font-size:var(--fs-lead);line-height:1.45;max-width:62ch;color:var(--ink)}
 .muted{color:var(--muted)}
 .hum{color:var(--human)}
@@ -61,8 +66,8 @@ h2{font-family:var(--f-display);font-weight:800;font-size:var(--fs-h);line-heigh
 .term-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
 .term-bar i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.16)}
 .term-bar em{margin-left:8px;font-style:normal;font-family:var(--f-mono);font-size:.72rem;color:var(--term-dim);letter-spacing:.04em}
-.term-body{font-family:var(--f-mono);font-size:clamp(.74rem,1.02vw,.88rem);line-height:1.6;padding:14px 16px;min-height:18em;white-space:pre-wrap;word-break:break-word}
-.ln{min-height:1.6em}
+.term-body{font-family:var(--f-mono);font-size:clamp(.74rem,1.02vw,.88rem);line-height:1.5;padding:14px 16px;min-height:18em;white-space:pre-wrap;word-break:break-word}
+.ln{min-height:1.5em}
 .ln .ps{color:var(--t-acc)}
 .ln.typing .cmd::after{content:"";display:inline-block;width:.55em;height:1.05em;background:var(--term-ink);vertical-align:-2px;margin-left:1px;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
@@ -150,7 +155,7 @@ kbd{font-family:var(--f-mono);border:1px solid var(--line);border-bottom-width:2
 
 /* 5 · evidência */
 .checks{display:flex;flex-direction:column;gap:8px}
-.checks li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--line);border-radius:4px;background:var(--card);opacity:.45;transition:opacity .3s,border-color .3s}
+.checks li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;padding:8px 12px;border:1px solid var(--line);border-radius:4px;background:var(--card);opacity:.45;transition:opacity .3s,border-color .3s}
 .checks li .box{width:22px;height:22px;border:1.5px solid var(--muted);border-radius:3px;display:grid;place-items:center;font-size:.8rem;font-weight:700;color:var(--paper);transition:background .25s,border-color .25s}
 .checks li.on{opacity:1;border-color:var(--ok)}
 .checks li.on .box{background:var(--ok);border-color:var(--ok)}
@@ -161,7 +166,7 @@ kbd{font-family:var(--f-mono);border:1px solid var(--line);border-bottom-width:2
 
 /* 6 · hooks */
 .hooks{display:flex;flex-direction:column;gap:6px}
-.hooks li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:4px 12px;padding:8px 10px;border-left:3px solid var(--line);transition:border-color .3s,background .3s}
+.hooks li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:2px 12px;padding:6px 10px;border-left:3px solid var(--line);transition:border-color .3s,background .3s}
 .hooks li b{font-family:var(--f-display);font-weight:900;font-size:1.5rem;line-height:1;grid-row:span 2}
 .hooks li span{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);letter-spacing:.04em}
 .hooks li p{font-size:var(--fs-small);line-height:1.35}
@@ -169,8 +174,8 @@ kbd{font-family:var(--f-mono);border:1px solid var(--line);border-bottom-width:2
 .hooks li.hit.ask{border-color:var(--human-fill);background:color-mix(in srgb,var(--human-fill) 14%,transparent)}
 
 /* 7 · equipe */
-.team{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.team .cto{grid-column:span 2;grid-row:span 2;background:var(--ink);color:var(--paper);border-color:var(--ink);justify-content:space-between}
+.team{display:grid;grid-template-columns:minmax(0,1.25fr) repeat(3,minmax(0,1fr));gap:10px}
+.team .cto{grid-column:1;grid-row:1 / span 3;background:var(--ink);color:var(--paper);border-color:var(--ink);justify-content:space-between}
 .team .cto .role{color:color-mix(in srgb,var(--paper) 78%,var(--ink))}
 .team .cto .chip{border-color:color-mix(in srgb,var(--paper) 40%,var(--ink));color:var(--paper)}
 .ag{border:1px solid var(--line);border-radius:4px;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--card);min-width:0}
@@ -179,7 +184,7 @@ kbd{font-family:var(--f-mono);border:1px solid var(--line);border-bottom-width:2
 .team .cto h3{font-family:var(--f-display);font-weight:900;font-size:clamp(3rem,6vw,5rem);line-height:.85}
 .team .cto .role{font-size:var(--fs-body);max-width:34ch}
 .ag .chips{display:flex;gap:6px;flex-wrap:wrap}
-@media (max-width:900px){.team{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:900px){.team{grid-template-columns:repeat(2,minmax(0,1fr))}.team .cto{grid-column:1 / -1;grid-row:auto}}
 
 /* 8 · board */
 .board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
@@ -215,7 +220,7 @@ kbd{font-family:var(--f-mono);border:1px solid var(--line);border-bottom-width:2
 
 /* 10 · instalador */
 .modes{display:flex;flex-direction:column;gap:6px}
-.modes li{display:grid;grid-template-columns:minmax(0,9.5rem) minmax(0,1fr);gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:4px;align-items:baseline;transition:background .3s,border-color .3s,color .3s}
+.modes li{display:grid;grid-template-columns:minmax(0,9.5rem) minmax(0,1fr);gap:12px;padding:7px 12px;border:1px solid var(--line);border-radius:4px;align-items:baseline;transition:background .3s,border-color .3s,color .3s}
 .modes code{font-weight:600;font-size:.9rem}
 .modes p{font-size:var(--fs-small);color:var(--muted)}
 .modes li.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
@@ -271,6 +276,8 @@ a{color:var(--agent)}
   .slide.before,.slide{transform:none}
 }
 </style>
+</head>
+<body>
 
 <div class="deck">
 <main class="stage" id="stage">
@@ -316,15 +323,15 @@ a{color:var(--agent)}
       <div><b class="num" data-to="10">10</b><span>skills</span></div>
       <div><b class="num" data-to="7">7</b><span>hooks</span></div>
       <div><b class="num" data-to="9">9</b><span>gates</span></div>
-      <div><b class="num" data-to="170">170</b><span>casos de teste</span></div>
+      <div><b class="num" data-to="206">206</b><span>casos de teste</span></div>
     </div>
     <div class="bar-wrap rise" style="--d:4">
-      <p class="muted">As próprias regras da fábrica são testadas: 170 casos em cinco suítes, em sandboxes descartáveis.</p>
-      <div class="bar" role="img" aria-label="Distribuição dos 170 casos: hooks 46, gate-check 43, monitor 40, requisitos 21, sonar 20">
-        <div style="--w:27.06%;--i:0">46</div><div style="--w:25.29%;--i:1">43</div><div style="--w:23.53%;--i:2">40</div><div style="--w:12.35%;--i:3">21</div><div style="--w:11.77%;--i:4">20</div>
+      <p class="muted">As próprias regras da fábrica são testadas: 206 casos em cinco suítes, em sandboxes descartáveis.</p>
+      <div class="bar" role="img" aria-label="Distribuição dos 206 casos: hooks 82, gate-check 43, monitor 40, requisitos 21, sonar 20">
+        <div style="--w:39.81%;--i:0">82</div><div style="--w:20.87%;--i:1">43</div><div style="--w:19.42%;--i:2">40</div><div style="--w:10.19%;--i:3">21</div><div style="--w:9.71%;--i:4">20</div>
       </div>
       <ul class="legend">
-        <li><b>46 · hooks</b><code>test-h1-h2.sh</code></li>
+        <li><b>82 · hooks</b><code>test-h1-h2.sh</code></li>
         <li><b>43 · transições</b><code>test-gate-check.sh</code></li>
         <li><b>40 · estado</b><code>test-monitor.py</code></li>
         <li><b>21 · requisitos</b><code>test-requirements.py</code></li>
@@ -518,7 +525,7 @@ a{color:var(--agent)}
       <div class="rise" style="display:flex;flex-direction:column;gap:12px;min-width:0;--d:3">
         <p><code>/faber:doctor</code> roda as suítes e diz o que falta:</p>
         <ul class="suites">
-          <li><span>.claude/hooks/test-h1-h2.sh</span><b>46</b></li>
+          <li><span>.claude/hooks/test-h1-h2.sh</span><b>82</b></li>
           <li><span>faber/scripts/test-gate-check.sh</span><b>43</b></li>
           <li><span>faber/scripts/test-monitor.py</span><b>40</b></li>
           <li><span>faber/scripts/test-requirements.py</span><b>21</b></li>
@@ -775,3 +782,5 @@ a{color:var(--agent)}
   go(m?(+m[1]-1):0);
 })();
 </script>
+</body>
+</html>
