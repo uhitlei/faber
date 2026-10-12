@@ -1,5 +1,10 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/faber-mark.svg">
+  <img src="docs/brand/faber-mark-light.svg" alt="Faber: cabeça de raposa cortada em fatias deslocadas" width="200">
+</picture>
+
 # Faber
 
 **Uma fábrica de software governada por gates, para o Claude Code.**
