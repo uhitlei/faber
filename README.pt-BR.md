@@ -13,7 +13,7 @@ Nove subagentes especializados, doze comandos, dez skills e sete hooks
 determinísticos que impõem as regras **por código, não por prompt**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/testes-170%20casos-black.svg)](#verificação--evidência-não-promessa)
+[![Tests](https://img.shields.io/badge/testes-206%20casos-black.svg)](#verificação--evidência-não-promessa)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-black.svg)](https://code.claude.com/docs/en/plugins)
 
 [Instalar](#instalação) · [Como funciona](#como-funciona) · [O que é instalado](#o-que-é-instalado) · [English](README.md)
@@ -33,6 +33,12 @@ O orquestrador (o CTO) roda na sua sessão principal. Os especialistas rodam
 como subagentes com contexto limpo. Tudo que importa vai a disco e é commitado
 na branch da demanda, então `/faber-resume TASK-42` reconstrói qualquer sessão
 do zero. Sessões são descartáveis; o repositório é a memória.
+
+<div align="center">
+<img src="presentation/faber.gif" width="100%" alt="Um tour animado pelo Faber: uma demanda atravessando os nove gates, os hooks negando um push no trunk e o card andando pelo board enquanto o state.yaml se atualiza">
+<br>
+<sub>O tour é um deck HTML de 12 slides. Para a versão interativa, abra <a href="presentation/faber.html"><code>presentation/faber.html</code></a> a partir de um clone, em qualquer navegador.</sub>
+</div>
 
 ## Instalação
 
@@ -174,6 +180,7 @@ mesmo dado — então uma instalação em português continua gravando
 - [docs/pt-BR/PERSONALIZACAO.md](docs/pt-BR/PERSONALIZACAO.md) — cada chave do `faber.env` e os módulos opcionais.
 - [docs/pt-BR/REQUISITOS-DISCOVERY.md](docs/pt-BR/REQUISITOS-DISCOVERY.md) — o business analyst e o gate de readiness.
 - `plugins/faber/kit/faber/ARCHITECTURE.md` — a arquitetura completa.
+- [presentation/faber.html](presentation/faber.html) — o tour animado acima, como deck de 12 slides. Abra no navegador.
 
 ## Contribuindo
 

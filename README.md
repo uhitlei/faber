@@ -13,7 +13,7 @@ Nine specialised subagents, twelve commands, ten skills and seven deterministic
 hooks that enforce the rules **in code, not in prompts**.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-170%20cases-black.svg)](#verification--evidence-not-promises)
+[![Tests](https://img.shields.io/badge/tests-206%20cases-black.svg)](#verification--evidence-not-promises)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-black.svg)](https://code.claude.com/docs/en/plugins)
 
 [Install](#install) · [How it works](#how-it-works) · [What gets installed](#what-gets-installed) · [Português](README.pt-BR.md)
@@ -34,6 +34,12 @@ The orchestrator (the CTO) runs in your main session. The specialists run as
 subagents with clean context. Everything that matters is written to disk and
 committed on the task's branch, so `/faber-resume TASK-42` rebuilds any
 session from scratch. Sessions are disposable; the repository is the memory.
+
+<div align="center">
+<img src="presentation/faber.gif" width="100%" alt="An animated tour of Faber: a task crossing the nine gates, the hooks denying a push to the trunk, and the card moving across the board while state.yaml updates">
+<br>
+<sub>The tour is a 12-slide HTML deck, in Portuguese. For the interactive version, open <a href="presentation/faber.html"><code>presentation/faber.html</code></a> from a clone, in any browser.</sub>
+</div>
 
 ## Install
 
@@ -175,6 +181,7 @@ dialects of the same data — so a Portuguese install still writes
 - [docs/configuration.md](docs/configuration.md) — every `faber.env` key, and the optional modules.
 - [docs/requirements-discovery.md](docs/requirements-discovery.md) — the business analyst and the readiness gate.
 - `plugins/faber/kit/faber/ARCHITECTURE.md` — the full architecture.
+- [presentation/faber.html](presentation/faber.html) — the animated tour above, as a 12-slide deck (Portuguese). Open it in a browser.
 
 ## Contributing
 
