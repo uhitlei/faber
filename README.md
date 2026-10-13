@@ -1,5 +1,10 @@
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/faber-mark.svg">
+  <img src="docs/brand/faber-mark-light.svg" alt="Faber: a fox head cut into shifted slices" width="200">
+</picture>
+
 # Faber
 
 **A gated software factory for Claude Code.**
