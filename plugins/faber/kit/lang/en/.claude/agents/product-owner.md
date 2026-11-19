@@ -99,7 +99,7 @@ paths only.
 Your final message is only a pointer to `spec.md` plus the suggested state, in
 one line.
 
-## Discovery (ARCHITECTURE §21)
+## Discovery (ARCHITECTURE §23)
 
 When the contract includes `requirements/`, read `model.yaml`, the BRD/PRD and
 the report. Do not repeat elicitation that was already resolved. A blocked

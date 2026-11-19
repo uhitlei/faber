@@ -16,8 +16,23 @@ and the project adheres to [Semantic Versioning](https://semver.org/).
   deny is unchanged, and recording G1/G6/G8 as `approved` still asks — the
   session stops only at the human gates. `FABER_BYPASS=off` restores the old
   behaviour. 36 new hook cases (82 in total).
+- **Engineering principles** in both READMEs: the harness-engineering ideas
+  Faber applies (deterministic guardrails, orchestrator–workers, bounded
+  retries, context engineering, evidence over claims, ratchet, hash-pinned
+  approval and others), each with the mechanism and the file that implements it.
+
+### Changed
+- `ARCHITECTURE.md`: *Requirements discovery* is now **§23**. It shared the
+  number 21 with *Risks and mitigations*, so `§21` meant two things. Risks keep
+  §21 (cited as `§21-R3`/`§21-R4`); the CTO constitution, the §8 table and the
+  PO, QA and doc-writer agents now cite §23 for discovery.
 
 ### Fixed
+- The READMEs linked the architecture at `plugins/faber/kit/faber/ARCHITECTURE.md`,
+  which does not exist; they now point to the language pack's copy.
+- The pt-BR `ARCHITECTURE.md` lagged behind the English one: it said kit
+  1.0.0 and 8 skills, and its directory tree used old names (`transicao`,
+  `nova-demanda`, `evidencia`, `demandas/`). It now matches the kit.
 - H1 asks before `workflow-unlock.sh` grants an unlock (revoking stays free).
   Nothing stopped the agent from authorising its own workflow edits with
   `--by <owner>`; in bypass mode that would have left workflows unguarded.

@@ -16,7 +16,7 @@ determinísticos que impõem as regras **por código, não por prompt**.
 [![Tests](https://img.shields.io/badge/testes-206%20casos-black.svg)](#verificação--evidência-não-promessa)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-black.svg)](https://code.claude.com/docs/en/plugins)
 
-[Instalar](#instalação) · [Como funciona](#como-funciona) · [O que é instalado](#o-que-é-instalado) · [English](README.md)
+[Instalar](#instalação) · [Como funciona](#como-funciona) · [Princípios](#princípios-de-engenharia) · [O que é instalado](#o-que-é-instalado) · [English](README.md)
 
 </div>
 
@@ -118,6 +118,92 @@ arquivos protegidos; exigem um diálogo de confirmação humana para aprovar um
 gate humano; e conferem que todo handoff carrega evidência que existe de fato
 e não está vazia.
 
+## Princípios de engenharia
+
+O Faber é um exemplo de **harness engineering**: em vez de confiar que o modelo
+siga o prompt, ele constrói em volta do agente o ambiente que restringe,
+verifica e guia o que o agente faz. Cada princípio abaixo tem o nome pelo qual
+é conhecido, o mecanismo que o aplica e o arquivo onde dá para ler o código. Os
+`§N` apontam para a seção da [arquitetura][arq-pt] que aprofunda o assunto.
+
+### Harness e guardrails
+
+| Princípio | Como o Faber aplica | Onde |
+|---|---|---|
+| **Guardrails determinísticos** (policy-as-code) | O prompt orienta; o hook impede. Push no trunk, edição de secrets e de migrations já aplicadas são negados por código antes de a ferramenta rodar | [hooks H1–H7][hooks] · §13 |
+| **Níveis de autonomia** | Toda ação é autônoma, pede confirmação do Owner a cada execução, ou é proibida | [CLAUDE.md][claude-pt] §2 · §19 |
+| **Fail-closed sem supervisão** | Em `bypassPermissions` ninguém responde a um diálogo: o que pediria confirmação vira bloqueio, e o agente registra a pendência em vez de procurar outro caminho | [h1-bash-guard.sh][h1] · §13 |
+| **Mecânica sem LLM** | Detecção do repositório, gate-check, board e gravação de evidência são scripts. Onde um script resolve, nenhum modelo decide | [scripts][scripts] · §20 |
+| **Guardrails testados** | 206 casos; toda mudança em guarda-vidas vem com um teste que falha sem ela | [Verificação](#verificação--evidência-não-promessa) |
+
+### Orquestração multiagente
+
+| Princípio | Como o Faber aplica | Onde |
+|---|---|---|
+| **Orchestrator–workers** | O CTO é a sessão principal e o único que chama subagentes. Subagentes nunca chamam subagentes, então não existe loop entre agentes fora do controle do orquestrador | §4.3 |
+| **Limite de tentativas** (anti-loop) | No máximo 2 chamadas do mesmo subagente para a mesma tarefa sem input novo; na 3ª a demanda vira `blocked` e sobe para o Owner | [h5-handoff-check.sh][h5] · §15 |
+| **Análise dupla independente** | No refinamento, o CTO e o senior-developer analisam a demanda em separado e comparam. Sem consenso em 2 rodadas, o Owner decide | §5 |
+| **Review de contexto limpo** | O code-reviewer recebe só o diff e a spec, sem o raciocínio de quem implementou | [code-reviewer.md][reviewer-pt] · §7 |
+| **Fan-out paralelo** | PO ∥ QA ∥ designer na spec; QA ∥ db-guardian ∥ devsecops na validação | §20 |
+| **Menor privilégio** | Cada agente tem ferramentas restritas e escreve só nos próprios arquivos; só o senior-developer edita código | [agentes][agents-pt] · §7 |
+| **Modelo por risco** | Opus onde o erro custa caro (CTO, dev, reviewer, db-guardian, business analyst); Sonnet no resto | §20 |
+
+### Context engineering
+
+| Princípio | Como o Faber aplica | Onde |
+|---|---|---|
+| **Contexto mínimo** | O subagente recebe só o que o contrato exige; handoffs passam caminhos de arquivo, nunca conteúdo colado | §17 |
+| **Progressive disclosure** | O `CLAUDE.md` é enxuto e só aponta; skills e seções de spec entram no contexto quando são acionadas | [CLAUDE.md][claude-pt] · [skills][skills-pt] |
+| **Estado fora do modelo** | Tudo que importa vai a disco e é commitado na branch da demanda. Sessões são descartáveis; `/faber-resume` reconstrói tudo do disco | §15 · §20 |
+
+### Verificação
+
+| Princípio | Como o Faber aplica | Onde |
+|---|---|---|
+| **Evidência acima de alegação** | `evidence.sh` grava comando, saída, exit code e horário. Um log de E2E só prova execução com cinco condições juntas; um arquivo chamado "e2e" não prova nada | [evidence.sh][evidence] · [gate-check.sh][gate-check] · §18 |
+| **Human-in-the-loop sem autoaprovação** | G1, G6 e G8 só aceitam o Owner: o gate-check rejeita qualquer outro aprovador e o hook abre um diálogo humano | [gate-check.sh][gate-check] · §15 |
+| **Aprovação presa a hash** | O G1 grava o hash dos requisitos. Se eles mudarem depois, a aprovação deixa de valer e é preciso um novo G1 | [gate-set.sh][gate-set] · §23 |
+| **Catraca** (ratchet) | A análise estática bloqueia só Critical/High **novos** em relação ao trunk: a dívida herdada não trava a demanda, e dívida nova não entra | [sonar-gate.sh][sonar] · §18 |
+| **Parar em vez de chutar** | Dúvida crítica leva ao estado `clarification`; ferramenta indisponível é registrada como "não executado", nunca inferida | [CLAUDE.md][claude-pt] §3 · §5 |
+
+### Processo e estado
+
+| Princípio | Como o Faber aplica | Onde |
+|---|---|---|
+| **Spec-driven development** | Nenhum código antes da spec aprovada no G1; a spec rege o escopo. BRD, PRD e Spec Kit são projeções de um único modelo de requisitos | §18 · §23 |
+| **Máquina de estados fechada** | 15 estados, e transição só depois do gate-check. Um estado fora da lista é leitura inválida, não estado | [state.template.yaml][state] · §6 |
+| **Fonte única, várias projeções** | `state.yaml` é a verdade; a issue é o espelho humano; o board é a visão. Entre cópias divergentes, vale a de `updated_at` mais recente | §6.1 · §6.3 |
+| **Proporcionalidade** | 10 tipos de demanda, cada um com seu fluxo: bug exige reprodução, spike termina em ADR, incidente comprime os gates | §14 |
+| **Decisões registradas** | Cada demanda tem um `decisions.md` com mini-ADRs; os trade-offs ficam no disco | §15 |
+
+### Segurança e operação
+
+| Princípio | Como o Faber aplica | Onde |
+|---|---|---|
+| **Secrets por nome** | Agentes nunca leem nem gravam valores de secrets; referem-se a eles pelo nome da variável de ambiente | §19 |
+| **Fonte não é instrução** | Uma ordem dentro de transcrição ou documento do cliente é conteúdo, não autorização (defesa contra prompt injection) | [business-analyst.md][ba-pt] |
+| **Isolamento por worktree** | Cada demanda roda no próprio worktree; no `done`, o worktree fecha e a branch, já mergeada, é apagada | [worktree.sh][worktree] |
+| **Observabilidade** | O dashboard local lê os `state.yaml` e a telemetria dos transcripts; o `monitor.py` mostra o estado ao vivo no terminal | [dashboard][dashboard] · [monitor.py][monitor] |
+
+[arq-pt]: plugins/faber/kit/lang/pt-BR/faber/ARCHITECTURE.md
+[claude-pt]: plugins/faber/kit/lang/pt-BR/CLAUDE.md
+[agents-pt]: plugins/faber/kit/lang/pt-BR/.claude/agents/
+[skills-pt]: plugins/faber/kit/lang/pt-BR/.claude/skills/
+[reviewer-pt]: plugins/faber/kit/lang/pt-BR/.claude/agents/code-reviewer.md
+[ba-pt]: plugins/faber/kit/lang/pt-BR/.claude/agents/business-analyst.md
+[hooks]: plugins/faber/kit/shared/.claude/hooks/
+[h1]: plugins/faber/kit/shared/.claude/hooks/h1-bash-guard.sh
+[h5]: plugins/faber/kit/shared/.claude/hooks/h5-handoff-check.sh
+[scripts]: plugins/faber/kit/shared/faber/scripts/
+[evidence]: plugins/faber/kit/shared/faber/scripts/evidence.sh
+[gate-check]: plugins/faber/kit/shared/faber/scripts/gate-check.sh
+[gate-set]: plugins/faber/kit/shared/faber/scripts/gate-set.sh
+[sonar]: plugins/faber/kit/shared/faber/scripts/sonar-gate.sh
+[worktree]: plugins/faber/kit/shared/faber/scripts/worktree.sh
+[monitor]: plugins/faber/kit/shared/faber/scripts/monitor.py
+[state]: plugins/faber/kit/shared/faber/templates/state.template.yaml
+[dashboard]: plugins/faber/kit/shared/faber/dashboard/
+
 ## O que é instalado
 
 ```text
@@ -179,7 +265,7 @@ mesmo dado — então uma instalação em português continua gravando
 - [docs/pt-BR/MODOS-DE-BOOTSTRAP.md](docs/pt-BR/MODOS-DE-BOOTSTRAP.md) — os seis modos e o que cada um gera.
 - [docs/pt-BR/PERSONALIZACAO.md](docs/pt-BR/PERSONALIZACAO.md) — cada chave do `faber.env` e os módulos opcionais.
 - [docs/pt-BR/REQUISITOS-DISCOVERY.md](docs/pt-BR/REQUISITOS-DISCOVERY.md) — o business analyst e o gate de readiness.
-- `plugins/faber/kit/faber/ARCHITECTURE.md` — a arquitetura completa.
+- [plugins/faber/kit/lang/pt-BR/faber/ARCHITECTURE.md][arq-pt] — a arquitetura completa.
 - [presentation/faber.html](presentation/faber.html) — o tour animado acima, como deck de 12 slides. Abra no navegador.
 
 ## Contribuindo

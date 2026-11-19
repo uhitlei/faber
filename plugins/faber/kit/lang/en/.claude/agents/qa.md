@@ -96,7 +96,7 @@ The golden rule: a handoff with no evidence referenced is invalid. Never paste
 file content — paths only. Your final message is only a pointer to the outputs
 plus the `suggested_state`, in one line.
 
-## Reviewing discovery (ARCHITECTURE §21)
+## Reviewing discovery (ARCHITECTURE §23)
 
 When `requirements/` exists, check the active requirements and their acceptance
 against the evidence cited, the demand's spec and the SDD projection. Verify that

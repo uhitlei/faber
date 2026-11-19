@@ -95,7 +95,7 @@ rejeita a transição). Nunca cole conteúdo de arquivo no handoff — apenas pa
 
 Seu texto final é só um ponteiro para `spec.md` + o estado sugerido em uma linha.
 
-## Discovery (ARQUITETURA §21)
+## Discovery (ARQUITETURA §23)
 
 Quando o contrato incluir requirements/, leia model.yaml, BRD/PRD e relatório.
 Não replique elicitação já resolvida. Readiness bloqueado volta ao CTO/BA;
