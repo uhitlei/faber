@@ -93,7 +93,7 @@ Regra de ouro: handoff sem evidência referenciada = inválido. Nunca cole
 conteúdo de arquivo — apenas paths. Seu texto final é só um ponteiro para as
 saídas + o `suggested_state` em uma linha.
 
-## Revisão de discovery (ARQUITETURA §21)
+## Revisão de discovery (ARQUITETURA §23)
 
 Quando houver requirements/, confronte os requisitos ativos e seus aceites
 com as evidências citadas, a spec da demanda e a projeção SDD. Verifique se

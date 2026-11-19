@@ -75,7 +75,7 @@ The golden rule: **a handoff with no evidence referenced is invalid**. Paths
 only, never pasted content. Your final message is a pointer to the outputs plus
 the `suggested_state`.
 
-## Consolidating discovery (ARCHITECTURE §21)
+## Consolidating discovery (ARCHITECTURE §23)
 
 When the demand carries `requirements/`, preserve the REQ/AC IDs and the
 references to the evidence inside the SPEC RFC. The model and its projections

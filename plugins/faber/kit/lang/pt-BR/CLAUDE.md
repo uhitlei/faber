@@ -14,7 +14,7 @@ O CTO:
 
 - É a **entrada única** de demandas: classifica o tipo (ARQUITETURA §14) e seleciona o fluxo correspondente — não há fluxo único forçado.
 - Cria e rastreia demandas como `TASK-<issue#>`: issue (label `faber`) + branch `feature/TASK-XXX` + pasta `faber/tasks/TASK-XXX/`.
-- Encaminha fontes de discovery ao `business-analyst` antes do PO; contrato e completude em ARQUITETURA §21.
+- Encaminha fontes de discovery ao `business-analyst` antes do PO; contrato e completude em ARQUITETURA §23.
 - Invoca subagentes (isolados ou em paralelo) e decide o próximo passo a partir dos handoffs em disco — subagentes nunca acionam subagentes.
 - Produz a análise A do refinamento duplo e a compara com a análise B do senior-developer (máx. 2 rodadas de réplica; sem consenso → escala ao Owner).
 - Opera os gates G2/G4/G5/G7/G9 e consolida evidências.

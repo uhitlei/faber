@@ -1,7 +1,7 @@
 # Fábrica de Software com Agentes — @@FABER_PROJECT@@
 
-> **Versão do kit:** 1.0.0 · Arquitetura de referência portátil, derivada de uma
-> fábrica operada em produção (versão 1.1 do projeto de origem) e generalizada.
+> **Versão do kit:** 2.0.0 · Arquitetura de referência portátil, derivada de uma
+> fábrica operada em produção e generalizada.
 > **Configuração deste projeto:** `faber/config/faber.env`. Aprovador humano:
 > **@@FABER_OWNER_NAME@@** (`@@FABER_OWNER@@`). Trunk: `@@FABER_TRUNK@@` ·
 > produção: `@@FABER_MAIN@@`.
@@ -24,7 +24,7 @@ Implementada com os mecanismos nativos do Claude Code:
 
 - **1 orquestrador (CTO)** = a sessão principal, governada pelo `CLAUDE.md`.
 - **9 subagentes especializados** (6 do fluxo padrão + 3 condicionais), contexto isolado, ferramentas e modelo por risco.
-- **8 Skills** de conhecimento operacional (evidências, specs, migrations, ambiente local, E2E, análise estática, design system, consolidação).
+- **10 Skills** de conhecimento operacional (evidências, specs, migrations, ambiente local, E2E, análise estática, design system, consolidação, discovery, readiness).
 - **12 comandos** de operação (`/faber-init`, `/faber-discovery`, `/faber-task`, `/faber-bug`, `/faber-spike`, `/faber-incident`, `/faber-status`, `/faber-resume`, `/faber-approve`, `/faber-develop`, `/faber-validate`, `/faber-pr`).
 - **7 hooks determinísticos** que impõem as regras invioláveis por código, parametrizados por `faber/config/faber.env`.
 - **GitHub Issues (+ board Projects v2 opcional)** como rastreamento visível; **arquivos versionados na branch da demanda** como fonte de verdade; **`@@FABER_SPECS_DIR@@/`** como destino canônico.
@@ -199,7 +199,7 @@ Uma demanda pode existir em várias cópias de `state.yaml` (worktrees ativos e 
 
 | Agente | Modelo | Acionado quando | Responsabilidade |
 |---|---|---|---|
-| **business-analyst** | **Opus** | Fontes de discovery/brainstorm e novas evidências de negócio | Evidências, requisitos, BRD/PRD, perguntas e prontidão; antes do PO (§21) |
+| **business-analyst** | **Opus** | Fontes de discovery/brainstorm e novas evidências de negócio | Evidências, requisitos, BRD/PRD, perguntas e prontidão; antes do PO (§23) |
 | **db-guardian** | **Opus** | Impacto em dados/banco | Pré-análise no refinamento; na validação: migration (GRANT/RLS/policy/índices/integridade), destrutividade, compatibilidade, rollback, exposição indevida |
 | **product-designer** | Sonnet | Impacto de UX/UI | Reuso do Design System, fluxos, estados de interface, responsivo, acessibilidade, tokens semânticos |
 
@@ -342,17 +342,17 @@ CLAUDE.md                      # Constituição do CTO (enxuta)
 ├── commands/                  # 12 comandos
 └── hooks/                     # H1–H7 + faber_config.py + test-h1-h2.sh
 faber/
-├── ARCHITECTURE.md             # este documento
-├── config/faber.env         # configuração (fonte única, lida por scripts e hooks)
+├── ARCHITECTURE.md            # este documento
+├── config/faber.env           # configuração (fonte única, lida por scripts e hooks)
 ├── bootstrap/                 # CONTEXT.md, modes/*.md, PERGUNTAS.md, BACKLOG.md
-├── templates/                 # state.template.yaml · spec-*.template.md · SPEC-feature · migration · handoff · PRD/BRD · specs-global/
-├── scripts/                   # gate-check · transicao · gate-set · nova-demanda · worktree · evidencia · board · workflow-unlock · local-env · sonar-* · design-system-check · monitor.py · testes
+├── templates/                 # state.template.yaml · spec-*.template.md · migration · handoff · PRD/BRD · specs-global/ · requirements/
+├── scripts/                   # gate-check · transition · gate-set · new-task · worktree · evidence · board · workflow-unlock · local-env · sonar-* · design-system-check · monitor.py · as suítes de teste
 ├── dashboard/                 # (opcional) Kanban web local + telemetria
-└── demandas/
-    └── TASK-052/            # viaja na feature branch
+└── tasks/
+    └── TASK-052/              # viaja na feature branch
         ├── state.yaml · spec.md · refinement.md · decisions.md · tasks.md · review.md
         ├── handoffs/          # NN-<de>-para-cto.md
-        └── evidence/        # NN-*.log (≤ 2 MB/arquivo)
+        └── evidence/          # NN-*.log (≤ 2 MB/arquivo)
 @@FABER_SPECS_DIR@@/
 ├── README.md · global/00–08 · features/NN-nome/SPEC.md · assets/diagrams/
 ```
@@ -444,15 +444,7 @@ Secrets: agentes nunca leem/registram valores; referem-se por **nome**, via vari
 3. **Módulos:** ligar `FABER_E2E`, `FABER_MIGRATIONS_DIR`, `FABER_LOCAL_ENV`, `FABER_SONAR`, `FABER_DESIGN_SYSTEM`, `FABER_BOARD`, `FABER_DASHBOARD` conforme a stack.
 4. **Endurecimento:** cobertura bloqueante progressiva; métricas de consumo/tempo por demanda (dashboard); refino de limites com dados reais.
 
----
-
-## CHANGELOG
-
-> `- <data> · <origem> — <mudança>`, mais recente no topo.
-
-- {{AAAA-MM-DD}} · bootstrap — instalação do kit v1.0.0 neste projeto (`/faber-init` preenche §2).
-
-## 21. Discovery de requisitos — P/B RD MAKE
+## 23. Discovery de requisitos
 
 CTO continua sendo a entrada única. O BA é condicional a fontes de discovery,
 sem substituir PO, QA ou refinamento. Usa clarification/specifying existentes.
@@ -494,3 +486,11 @@ Bootstrap discovery usa o mesmo pacote e a parada de aprovação do PRD/BRD já
 existente; registra hash com a decisão no CONTEXTO. Brainstorm é uma entrada
 desse fluxo. Spec Kit é projeção de negócio; planos/tarefas são do refinamento
 quando esse workflow é usado. Não há instalação automática de ferramentas.
+
+---
+
+## CHANGELOG
+
+> `- <data> · <origem> — <mudança>`, mais recente no topo.
+
+- {{AAAA-MM-DD}} · bootstrap — instalação do kit v2.0.0 neste projeto (`/faber-init` preenche §2).

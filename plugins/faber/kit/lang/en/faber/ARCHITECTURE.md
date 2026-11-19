@@ -223,7 +223,7 @@ responsibility, with its own context, parallelisable after the merge.
 
 | Agent | Model | Triggered when | Responsibility |
 |---|---|---|---|
-| **business-analyst** | **Opus** | There are discovery or brainstorm sources, or new business evidence | Evidence, requirements, BRD/PRD, questions and readiness; before the PO (§21) |
+| **business-analyst** | **Opus** | There are discovery or brainstorm sources, or new business evidence | Evidence, requirements, BRD/PRD, questions and readiness; before the PO (§23) |
 | **db-guardian** | **Opus** | There is data or database impact | The pre-analysis during refinement; at validation: the migration (GRANT/RLS/policy/indexes/integrity), destructiveness, compatibility, rollback, improper exposure |
 | **product-designer** | Sonnet | There is UX/UI impact | Reuse of the design system, flows, interface states, responsiveness, accessibility, semantic tokens |
 
@@ -486,20 +486,7 @@ through an environment variable.
 3. **Modules:** turn on `FABER_E2E`, `FABER_MIGRATIONS_DIR`, `FABER_LOCAL_ENV`, `FABER_SONAR`, `FABER_DESIGN_SYSTEM`, `FABER_BOARD`, `FABER_DASHBOARD` as the stack requires.
 4. **Hardening:** progressively blocking coverage; consumption and time metrics per demand (the dashboard); tuning the limits with real data.
 
----
-
-## CHANGELOG
-
-> `- <date> · <origin> — <change>`, newest at the top.
-
-- {{YYYY-MM-DD}} · bootstrap — the kit v2.0.0 installed in this project (`/faber-init` fills in §2).
-
-## 21. Requirements discovery
-
-<!-- NOTE: this section is numbered 21 in the original, alongside "Risks and
-     mitigations". The numbering is a contract cited by agents (§21 for
-     discovery; §21-R3 for the risk), so it is preserved as it was rather than
-     renumbered. -->
+## 23. Requirements discovery
 
 The CTO is still the single entry point. The BA is conditional on discovery
 sources, and does not replace the PO, QA or the refinement. It uses the existing
@@ -548,3 +535,11 @@ that already exists; it records the hash alongside the decision in CONTEXT.
 Brainstorm is one input into that flow. Spec Kit is a business projection; plans
 and tasks belong to the refinement when that workflow is in use. No tool is
 installed automatically.
+
+---
+
+## CHANGELOG
+
+> `- <date> · <origin> — <change>`, newest at the top.
+
+- {{YYYY-MM-DD}} · bootstrap — the kit v2.0.0 installed in this project (`/faber-init` fills in §2).

@@ -71,7 +71,7 @@ suggested_next_action: "aprovar G9 (consolidação concluída)"
 Regra de ouro: **handoff sem evidência referenciada = inválido**. Só paths, nunca
 conteúdo colado. Seu texto final é um ponteiro para as saídas + `suggested_state`.
 
-## Consolidação de discovery (ARQUITETURA §21)
+## Consolidação de discovery (ARQUITETURA §23)
 
 Quando a demanda contiver requirements/, preserve REQ/AC IDs e referências
 às evidências na SPEC RFC. O modelo e suas projeções ficam como histórico da

@@ -14,7 +14,7 @@ The CTO:
 
 - Is the **single entry point** for demands: classifies the type (ARCHITECTURE §14) and selects the matching flow — there is no one forced pipeline.
 - Creates and tracks demands as `TASK-<issue#>`: an issue (label `faber`) + a `feature/TASK-XXX` branch + a `faber/tasks/TASK-XXX/` folder.
-- Routes discovery sources to the `business-analyst` before the PO; contract and completeness in ARCHITECTURE §21.
+- Routes discovery sources to the `business-analyst` before the PO; contract and completeness in ARCHITECTURE §23.
 - Invokes subagents (isolated or in parallel) and decides the next step from the handoffs on disk — subagents never invoke subagents.
 - Produces analysis A of the double refinement and compares it against the senior-developer's analysis B (at most 2 rounds of rebuttal; no consensus → escalate to the Owner).
 - Operates gates G2/G4/G5/G7/G9 and consolidates evidence.
